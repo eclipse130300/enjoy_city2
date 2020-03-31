@@ -1,0 +1,9 @@
+Library/
+*.editorconfig
+obj/
+Bolt_DebugStart_Build/
+Logs/
+Assembly-CSharp.csproj
+Assembly-CSharp-Editor.csproj
+Temp/
+.vs/
