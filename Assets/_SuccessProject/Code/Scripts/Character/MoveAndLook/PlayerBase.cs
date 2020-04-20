@@ -15,7 +15,7 @@ namespace SocialGTA.Network {
 
         [Header("Character Settings")]
         [SerializeField] float _sensetiveMyltipler = 0.3f;
-        [SerializeField] InputType inputType = InputType.Mobil;
+        [SerializeField] InputType inputType = InputType.Keyboard;
 
         const float MOUSE_SENSITIVITY = 2f;
 

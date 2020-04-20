@@ -57,7 +57,7 @@ namespace SocialGTA.Network {
         }
 
         void LateUpdate() {
-            UpdateCamera(true);
+            UpdateCamera(false); //true
         }
 
         void UpdateCamera(bool allowSmoothing) {
@@ -109,6 +109,8 @@ namespace SocialGTA.Network {
         public void SetTarget(BoltEntity entity) {
             _target = entity.transform;
             UpdateCamera(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void CalculateCameraAimTransform(Transform target, float pitch, out Vector3 pos, out Quaternion rot) {

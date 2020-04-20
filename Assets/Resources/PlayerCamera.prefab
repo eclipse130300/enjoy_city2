@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 400006}
-  height: 1.54
-  offset: 1.48
+  height: 2
+  offset: 0
   aimingDistance: 4.24
-  runningDistance: 3
+  runningDistance: 4.5
   runningSmoothTime: 0.1
   dummyRig: {fileID: 400004}
   dummyTarget: {fileID: 400002}

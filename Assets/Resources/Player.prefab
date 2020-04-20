@@ -128,7 +128,7 @@ MonoBehaviour:
   gravityForce: -9.81
   jumpForce: 30
   jumpTotalFrames: 30
-  movingSpeed: 2
+  movingSpeed: 8
   maxVelocity: 32
   drag: {x: 1, y: 0, z: 1}
   layerMask:
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sensetiveMyltipler: 0.07
-  inputType: 0
+  inputType: 1
 --- !u!114 &4366456229637948784
 MonoBehaviour:
   m_ObjectHideFlags: 0
