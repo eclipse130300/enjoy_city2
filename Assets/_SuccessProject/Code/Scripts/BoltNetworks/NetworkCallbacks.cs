@@ -32,9 +32,9 @@ namespace SocialGTA.Network {
             PlayerObjectRegistry.ServerPlayer.Spawn(trans.position);
         }
 
-        public override void ControlOfEntityGained (BoltEntity entity) {
+        /*public override void ControlOfEntityGained (BoltEntity entity) {
             PlayerCamera.instance.SetTarget(entity);
-        }
+        }*/
 
         public override void SceneLoadRemoteDone (BoltConnection connection) {
             var trans = SpawnController.instance.SaveSpawn;
