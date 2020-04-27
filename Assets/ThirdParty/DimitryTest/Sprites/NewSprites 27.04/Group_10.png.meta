@@ -1,107 +1,122 @@
 fileFormatVersion: 2
-guid: a643744152e67b345a9533e52d5e8518
+guid: 22466bacc9ad68243a583ac19f25ba23
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8274034795352636734
-    second: character_icon+name
+      213: -749755740113058619
+    second: Group_10_0
   - first:
-      213: 7111480192409491269
-    second: soft_currency_big
+      213: 3636951189086351124
+    second: soft_currency
   - first:
-      213: 867928799891311338
-    second: soft_currency_small
+      213: 4617116097260660517
+    second: bleak_button
   - first:
-      213: -9031964836415751566
-    second: add_currency
+      213: -5961072217497535932
+    second: menu_underLine
   - first:
-      213: 6767106629027443175
-    second: return_button
+      213: 2997555515885391465
+    second: menu_avatar_disabled
   - first:
-      213: 4761642434993885273
+      213: -6988569262067022434
+    second: menu_avatar_enabled
+  - first:
+      213: -8957594546469811381
+    second: Group_10_6
+  - first:
+      213: -8238758834402807726
     second: hard_currency
   - first:
-      213: 5739969318560492948
-    second: game_inventory_enabled
+      213: -2026213469829331568
+    second: menu_paintball_disabled
   - first:
-      213: 5193798346561348270
-    second: orange_item
+      213: 2797213042200891381
+    second: Group_10_9
   - first:
-      213: -3729033982955239542
-    second: purple_item
+      213: -3880273239539629795
+    second: menu_painball_enabled
   - first:
-      213: -7957251971772314731
-    second: white_item
+      213: -7157515778626861993
+    second: Group_10_11
   - first:
-      213: 4445119844105350859
-    second: red_item
+      213: 7351252330891064094
+    second: Group_10_12
   - first:
-      213: -8879491471722638052
-    second: empty_item
+      213: 2214039591523031603
+    second: Group_10_13
   - first:
-      213: 5973407713649559026
-    second: 23123_12
+      213: -3206247481101626068
+    second: Group_10_14
   - first:
-      213: 7698516572598742680
-    second: game_inventory_disabled
+      213: -4018850309276877200
+    second: Group_10_15
   - first:
-      213: 971326414472593696
-    second: Inventory_background(viewport)
+      213: -7351345804171049561
+    second: charater_icon_main
   - first:
-      213: -2366001316149474823
-    second: item_description_background
+      213: 2584987167285372494
+    second: menu_skate_disabled
   - first:
-      213: -7547112367284701556
-    second: small_arrow
+      213: 1927801181310333174
+    second: menu_skate_enabled
   - first:
-      213: 9133125058907895929
-    second: scroller
+      213: -6844691706491101786
+    second: lvl_empty_line
   - first:
-      213: -4830875483190106694
-    second: RP_yellow
+      213: -502001800898702511
+    second: lvl_filling_line
   - first:
-      213: 8771892174813162472
-    second: 23123_19
+      213: 1886171577788472369
+    second: add_currency
   - first:
-      213: -1048261745826830990
-    second: RP_grey
+      213: -2538783572030156852
+    second: inventory_helm_disabled
   - first:
-      213: -2994860999154434131
-    second: RP_red
+      213: 4164931493408366633
+    second: inventory_helm_enabled
   - first:
-      213: 2804400432854750297
-    second: RP_blue
+      213: -2568113722636617645
+    second: transparent_arrow
   - first:
-      213: -1116233678763608299
-    second: 23123_23
+      213: -5478704855951166501
+    second: bleak_lock
   - first:
-      213: -1385851560072113117
-    second: Game_info_button
+      213: 5636560333165188499
+    second: inventory_boots_disabled
   - first:
-      213: 3116153276143747728
-    second: DONE_button
+      213: -687866108680870759
+    second: inventory_boots_enabled
   - first:
-      213: -161121335942024175
-    second: Buy_button
+      213: -4181123485366631643
+    second: bleak_item
   - first:
-      213: 56271935623817923
-    second: Hard_currency
+      213: 2930616985969890970
+    second: Group_10_29
   - first:
-      213: -9208733822834675087
-    second: Currency_extendable
+      213: -7761919717084658245
+    second: Group_10_30
+  - first:
+      213: -8656459279248762989
+    second: Group_10_31
+  - first:
+      213: -3222217902486708934
+    second: Group_10_32
+  - first:
+      213: -288440258701276517
+    second: soft_currency
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
-    fadeOut: 1
-    borderMipMap: 1
-    mipMapsPreserveCoverage: 1
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
     alphaTestReferenceValue: 0.5
-    mipMapFadeDistanceStart: 2
-    mipMapFadeDistanceEnd: 4
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
@@ -186,12 +201,159 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: character_icon+name
+      name: Group_10_1
       rect:
         serializedVersion: 2
-        x: 19
-        y: 1045
-        width: 100
+        x: 128
+        y: 38
+        width: 1
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41f2dea46db097230800000000000000
+      internalID: 3636951189086351124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group_10_2
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 0
+        width: 190
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 527a5ffb0aa431040800000000000000
+      internalID: 4617116097260660517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: menu_avatar_disabled
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 1731
+        width: 112
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96e8cd62cd4799920800000000000000
+      internalID: 2997555515885391465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: menu_avatar_enabled
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 1730
+        width: 112
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e95084e784d930f90800000000000000
+      internalID: -6988569262067022434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hard_currency
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 1333
+        width: 192
+        height: 220
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2503f4dad7c0aad80800000000000000
+      internalID: -8238758834402807726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: menu_paintball_disabled
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 1437
+        width: 179
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09506b3a59171e3e0800000000000000
+      internalID: -2026213469829331568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: menu_painball_enabled
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 1437
+        width: 177
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1149c51c00862ac0800000000000000
+      internalID: -3880273239539629795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: charater_icon_main
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 1124
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -200,20 +362,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e3d37340fc643d270800000000000000
-      internalID: 8274034795352636734
+      spriteID: 7a58351b0f5caf990800000000000000
+      internalID: -7351345804171049561
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: soft_currency_big
+      name: menu_skate_disabled
       rect:
         serializedVersion: 2
-        x: 218
-        y: 1044
-        width: 74
-        height: 64
+        x: 534
+        y: 1153
+        width: 122
+        height: 120
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,20 +383,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5475bc78e8d01b260800000000000000
-      internalID: 7111480192409491269
+      spriteID: e46ecfef128bfd320800000000000000
+      internalID: 2584987167285372494
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: soft_currency_small
+      name: menu_skate_enabled
       rect:
         serializedVersion: 2
-        x: 310
-        y: 1052
-        width: 62
-        height: 50
+        x: 836
+        y: 1152
+        width: 122
+        height: 121
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,8 +404,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aea4adf15a08b0c00800000000000000
-      internalID: 867928799891311338
+      spriteID: 6f0b491e5fce0ca10800000000000000
+      internalID: 1927801181310333174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lvl_empty_line
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 1035
+        width: 122
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ad198d5825c201a0800000000000000
+      internalID: -6844691706491101786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lvl_filling_line
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 1012
+        width: 26
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15393d495088809f0800000000000000
+      internalID: -502001800898702511
       vertices: []
       indices: 
       edges: []
@@ -252,10 +456,10 @@ TextureImporter:
       name: add_currency
       rect:
         serializedVersion: 2
-        x: 402
-        y: 1059
-        width: 48
-        height: 40
+        x: 62
+        y: 927
+        width: 56
+        height: 56
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -263,20 +467,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27abe9da5d308a280800000000000000
-      internalID: -9031964836415751566
+      spriteID: 13c158f7e070d2a10800000000000000
+      internalID: 1886171577788472369
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: return_button
+      name: inventory_helm_disabled
       rect:
         serializedVersion: 2
-        x: 19
-        y: 957
-        width: 66
-        height: 66
+        x: 534
+        y: 856
+        width: 156
+        height: 130
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -284,20 +488,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e13f5c10a799ed50800000000000000
-      internalID: 6767106629027443175
+      spriteID: ccf8b83dacd64ccd0800000000000000
+      internalID: -2538783572030156852
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: game_inventory_enabled
+      name: inventory_helm_enabled
       rect:
         serializedVersion: 2
-        x: 18
-        y: 807
-        width: 92
-        height: 86
+        x: 836
+        y: 857
+        width: 156
+        height: 129
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -305,229 +509,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 49d607efea778af40800000000000000
-      internalID: 5739969318560492948
+      spriteID: 9206172602fccc930800000000000000
+      internalID: 4164931493408366633
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: orange_item
+      name: transparent_arrow
       rect:
         serializedVersion: 2
-        x: 220
-        y: 805
-        width: 99
-        height: 99
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ea2ecc90414141840800000000000000
-      internalID: 5193798346561348270
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: purple_item
-      rect:
-        serializedVersion: 2
-        x: 337
-        y: 805
-        width: 99
-        height: 99
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a87c79a895fcf3cc0800000000000000
-      internalID: -3729033982955239542
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: white_item
-      rect:
-        serializedVersion: 2
-        x: 454
-        y: 805
-        width: 99
-        height: 99
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 59b0c32bd79229190800000000000000
-      internalID: -7957251971772314731
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: red_item
-      rect:
-        serializedVersion: 2
-        x: 571
-        y: 805
-        width: 99
-        height: 99
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bce60fb62fc30bd30800000000000000
-      internalID: 4445119844105350859
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: empty_item
-      rect:
-        serializedVersion: 2
-        x: 687
-        y: 806
+        x: 43
+        y: 758
         width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c159cd15d85b5c480800000000000000
-      internalID: -8879491471722638052
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 23123_12
-      rect:
-        serializedVersion: 2
-        x: 814
-        y: 842
-        width: 91
-        height: 59
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2f509a6caaec5e250800000000000000
-      internalID: 5973407713649559026
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: game_inventory_disabled
-      rect:
-        serializedVersion: 2
-        x: 21
-        y: 702
-        width: 89
-        height: 86
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 89ea437c800a6da60800000000000000
-      internalID: 7698516572598742680
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Inventory_background(viewport)
-      rect:
-        serializedVersion: 2
-        x: 353
-        y: 322
-        width: 442
-        height: 454
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 021c7974a38da7d00800000000000000
-      internalID: 971326414472593696
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_description_background
-      rect:
-        serializedVersion: 2
-        x: 872
-        y: 463
-        width: 296
-        height: 310
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9f9cdcca6564a2fd0800000000000000
-      internalID: -2366001316149474823
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: small_arrow
-      rect:
-        serializedVersion: 2
-        x: 1209
-        y: 764
-        width: 15
-        height: 13
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c86b90cc945434790800000000000000
-      internalID: -7547112367284701556
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: scroller
-      rect:
-        serializedVersion: 2
-        x: 263
-        y: 685
-        width: 11
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -536,20 +530,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9787c690ad06fbe70800000000000000
-      internalID: 9133125058907895929
+      spriteID: 358307bfc2a3c5cd0800000000000000
+      internalID: -2568113722636617645
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RP_yellow
+      name: bleak_lock
       rect:
         serializedVersion: 2
-        x: 1193
-        y: 690
-        width: 52
-        height: 51
+        x: 63
+        y: 641
+        width: 32
+        height: 36
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -557,20 +551,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab56f46d75845fcb0800000000000000
-      internalID: -4830875483190106694
+      spriteID: bd3b2dff5fab7f3b0800000000000000
+      internalID: -5478704855951166501
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 23123_19
+      name: inventory_boots_disabled
       rect:
         serializedVersion: 2
-        x: 39
-        y: 600
-        width: 74
-        height: 51
+        x: 534
+        y: 598
+        width: 194
+        height: 92
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -578,20 +572,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8eb64cf15750cb970800000000000000
-      internalID: 8771892174813162472
+      spriteID: 3955e5d52c5193e40800000000000000
+      internalID: 5636560333165188499
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RP_grey
+      name: inventory_boots_enabled
       rect:
         serializedVersion: 2
-        x: 1193
-        y: 619
-        width: 52
-        height: 51
+        x: 836
+        y: 598
+        width: 195
+        height: 92
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -599,20 +593,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2756c500f73d371f0800000000000000
-      internalID: -1048261745826830990
+      spriteID: 994eb0b2b653476f0800000000000000
+      internalID: -687866108680870759
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RP_red
+      name: bleak_item
       rect:
         serializedVersion: 2
-        x: 1192
-        y: 548
-        width: 52
-        height: 51
+        x: 5
+        y: 203
+        width: 247
+        height: 275
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -620,20 +614,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: daf7ab9e9cd1076d0800000000000000
-      internalID: -2994860999154434131
+      spriteID: 523cda4b75aa9f5c0800000000000000
+      internalID: -4181123485366631643
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RP_blue
+      name: Group_10_0
       rect:
         serializedVersion: 2
-        x: 1193
-        y: 477
-        width: 52
-        height: 51
+        x: 116
+        y: 35
+        width: 14
+        height: 3
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -641,20 +635,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9545248d55b3be620800000000000000
-      internalID: 2804400432854750297
+      spriteID: 5c4404270255895f0800000000000000
+      internalID: -749755740113058619
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 23123_23
+      name: menu_underLine
       rect:
         serializedVersion: 2
-        x: 1209
-        y: 442
-        width: 15
-        height: 13
+        x: 24
+        y: 1976
+        width: 608
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -662,113 +656,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 517b7fa12675280f0800000000000000
-      internalID: -1116233678763608299
+      spriteID: 44afb9bb664064da0800000000000000
+      internalID: -5961072217497535932
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Game_info_button
+      name: soft_currency
       rect:
         serializedVersion: 2
-        x: 412
-        y: 198
-        width: 388
-        height: 84
+        x: 0
+        y: 1664
+        width: 222
+        height: 220
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3241b72495774cce0800000000000000
-      internalID: -1385851560072113117
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: DONE_button
-      rect:
-        serializedVersion: 2
-        x: 945
-        y: 204
-        width: 80
-        height: 80
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 092c73205ecce3b20800000000000000
-      internalID: 3116153276143747728
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Buy_button
-      rect:
-        serializedVersion: 2
-        x: 1041
-        y: 229
-        width: 54
-        height: 54
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1147075aff493cdf0800000000000000
-      internalID: -161121335942024175
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hard_currency
-      rect:
-        serializedVersion: 2
-        x: 216
-        y: 964
-        width: 66
-        height: 63
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3ca6eadf60be7c000800000000000000
-      internalID: 56271935623817923
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Currency_extendable
-      rect:
-        serializedVersion: 2
-        x: 283
-        y: 968
-        width: 19
-        height: 51
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 17270dac061043080800000000000000
-      internalID: -9208733822834675087
+      spriteID: b9a4039ec114ffbf0800000000000000
+      internalID: -288440258701276517
       vertices: []
       indices: 
       edges: []
@@ -776,7 +686,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 2db4b965233fb2042a440e507538ce47
+    spriteID: ce569f447f1ab63488798d3f4a95cd20
     internalID: 0
     vertices: []
     indices: 
