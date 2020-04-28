@@ -104,6 +104,9 @@ TextureImporter:
   - first:
       213: -288440258701276517
     second: soft_currency
+  - first:
+      213: 6587967087961071102
+    second: back_button
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -414,9 +417,9 @@ TextureImporter:
       name: lvl_empty_line
       rect:
         serializedVersion: 2
-        x: 56
+        x: 88
         y: 1035
-        width: 122
+        width: 92
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -671,7 +674,7 @@ TextureImporter:
         width: 222
         height: 220
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -679,6 +682,27 @@ TextureImporter:
       bones: []
       spriteID: b9a4039ec114ffbf0800000000000000
       internalID: -288440258701276517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: back_button
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 1731
+        width: 162
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efd52e579292d6b50800000000000000
+      internalID: 6587967087961071102
       vertices: []
       indices: 
       edges: []
