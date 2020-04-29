@@ -228,10 +228,10 @@ TextureImporter:
       name: Group_10_2
       rect:
         serializedVersion: 2
-        x: 1
+        x: 34
         y: 0
-        width: 190
-        height: 61
+        width: 157
+        height: 58
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -648,10 +648,10 @@ TextureImporter:
       name: menu_underLine
       rect:
         serializedVersion: 2
-        x: 24
-        y: 1976
-        width: 608
-        height: 10
+        x: 27
+        y: 1980
+        width: 604
+        height: 6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -695,7 +695,7 @@ TextureImporter:
         width: 162
         height: 124
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
