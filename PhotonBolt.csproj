@@ -65,20 +65,20 @@
      <Compile Include="Assets\Photon\PhotonBolt\scripts\BoltExecutionOrderAttribute.cs" />
      <Compile Include="Assets\Photon\PhotonBolt\scripts\BoltNetworkUtils.cs" />
      <Compile Include="Assets\Photon\PhotonBolt\scripts\BoltUnityDebugDrawer.cs" />
-     <None Include="Assets\Photon\PhotonBolt\assemblies\bolt.xml" />
      <None Include="Assets\Photon\PhotonBolt\editor\resources\backgrounds\ATTRIBUTION.txt" />
-     <None Include="Assets\Photon\PhotonBolt\release_history.txt" />
-     <None Include="Assets\Photon\PhotonBolt\assemblies\editor\bolt.compiler.xml" />
-     <None Include="Assets\Photon\PhotonBolt\bolt_sdk.txt" />
      <None Include="Assets\Photon\PhotonBolt\editor\resources\icons_welcome\ATTRIBUTION.txt" />
-     <None Include="Assets\Photon\PhotonBolt\assemblies\editor\protobuf-net.LICENSE.txt" />
-     <None Include="Assets\Photon\PhotonBolt\license.txt" />
-     <None Include="Assets\Photon\PhotonBolt\link.xml" />
-     <None Include="Assets\Photon\PhotonBolt\assemblies\editor\bolt.editor.xml" />
      <None Include="Assets\Photon\PhotonBolt\packages\bolt_packages.txt" />
      <None Include="Assets\Photon\PhotonBolt\PhotonBolt.asmdef" />
-     <None Include="Assets\Photon\PhotonBolt\README.txt" />
      <None Include="Assets\Photon\PhotonBolt\editor\resources\icons\ATTRIBUTION.txt" />
+     <None Include="Assets\Photon\PhotonBolt\README.txt" />
+     <None Include="Assets\Photon\PhotonBolt\link.xml" />
+     <None Include="Assets\Photon\PhotonBolt\assemblies\bolt.xml" />
+     <None Include="Assets\Photon\PhotonBolt\assemblies\editor\bolt.editor.xml" />
+     <None Include="Assets\Photon\PhotonBolt\license.txt" />
+     <None Include="Assets\Photon\PhotonBolt\release_history.txt" />
+     <None Include="Assets\Photon\PhotonBolt\assemblies\editor\protobuf-net.LICENSE.txt" />
+     <None Include="Assets\Photon\PhotonBolt\assemblies\editor\bolt.compiler.xml" />
+     <None Include="Assets\Photon\PhotonBolt\bolt_sdk.txt" />
  <Reference Include="UnityEditor.UI">
  <HintPath>C:/Users/User/UnityProjects/enjoy-cityV3/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
