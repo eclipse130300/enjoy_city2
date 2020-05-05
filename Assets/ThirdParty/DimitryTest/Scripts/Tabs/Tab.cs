@@ -5,27 +5,23 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class Tab : MonoBehaviour , IPointerClickHandler
 {
-    [SerializeField] private Image inactivebackgroundIMG;
-    [SerializeField] private Image activebackgroundIMG;
-    [SerializeField] private Image activeIconIMG;
-    [SerializeField] private Image inactiveIconIMG;
+    public TabGroup tabGroup;
+
+    public Image icon;
+    [HideInInspector] public Image background;
+
+    void Start()
+    {
+        tabGroup.Subscribe(this);
+        background = GetComponent<Image>();
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        ActivateTab();
+        tabGroup.OnTabSelected(this);
+        Debug.Log("CLICKED!");
     }
-
-    public void ActivateTab()
-    {
-
-    }
-
-    public void DeactivateTab()
-    {
-
-    }
-
-
 }

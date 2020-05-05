@@ -269,6 +269,9 @@
     <Reference Include="UnityEditor.Android.Extensions">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/2019.3.6f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
     <Reference Include="bolt">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/Photon/PhotonBolt/assemblies/bolt.dll</HintPath>
     </Reference>
@@ -305,6 +308,9 @@
     <Reference Include="websocket-sharp">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/Photon/PhotonLibs/WebSocket/websocket-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/PlayFabEditorExtensions/Plugins/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -319,12 +325,6 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/PlayFabEditorExtensions/Plugins/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
-      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/2019.3.6f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
