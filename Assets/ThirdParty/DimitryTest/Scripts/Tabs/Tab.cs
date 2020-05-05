@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security.Permissions;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,19 +7,20 @@ using UnityEngine.UI;
 public class Tab : MonoBehaviour , IPointerClickHandler
 {
     public TabGroup tabGroup;
+    public TextMeshProUGUI tmPro;
 
     public Image icon;
     [HideInInspector] public Image background;
 
-    void Start()
+    void Awake()
     {
         tabGroup.Subscribe(this);
         background = GetComponent<Image>();
+        tmPro = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         tabGroup.OnTabSelected(this);
-        Debug.Log("CLICKED!");
     }
 }

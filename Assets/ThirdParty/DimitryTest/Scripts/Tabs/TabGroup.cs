@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class TabGroup : MonoBehaviour
 {
@@ -45,9 +39,9 @@ public class TabGroup : MonoBehaviour
         tab.background.sprite = activebackgroundIMG;
         tab.icon.color = activeColor;
         tab.GetComponent<RectTransform>().sizeDelta = activeSize;
-        if(withTEXT)
+        if (withTEXT)
         {
-            tab.GetComponentInChildren<TextMeshPro>().color = activeColor;
+            tab.tmPro.color = activeColor;
         }
     }
 
@@ -58,10 +52,10 @@ public class TabGroup : MonoBehaviour
             tab.background.sprite = inactivebackgroundIMG;
             tab.icon.color = standardColor;
             tab.GetComponent<RectTransform>().sizeDelta = inactiveSize;
-/*            if (withTEXT)
+            if (withTEXT)
             {
-                tab.GetComponentInChildren<TextMeshPro>().color = standardColor;
-            }*/
+                tab.tmPro.color = standardColor;
+            }
         }
     }
 }
