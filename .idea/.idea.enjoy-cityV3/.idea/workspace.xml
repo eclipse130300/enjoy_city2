@@ -11,17 +11,17 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Utility/SimpleActivatorMenu.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_SuccessProject/Code/Scripts/BoltNetworks/NetworkCallbacks.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Cameras/Scripts/PivotBasedCameraRig.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Cameras/Scripts/FreeLookCam.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/ThirdParty/DimitryTest/Scripts/PlayerController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/CrossPlatformInput/Scripts/MobileControlRig.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/D815B7EF-AC42-4EEB-8E05-3965CCCB1F98/0e/c35b5408/Transform.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Cameras/Scripts/AbstractTargetFollower.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Utility/SimpleActivatorMenu.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_SuccessProject/Code/Scripts/Character/PlayerCallback.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Cameras/Scripts/FreeLookCam.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/CrossPlatformInput/Scripts/MobileControlRig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_SuccessProject/Code/Scripts/Character/CharacterSkinModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/ThirdParty/DimitryTest/Scripts/UI/ButtonActivator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/D815B7EF-AC42-4EEB-8E05-3965CCCB1F98/0e/c35b5408/Transform.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Unity/2019.3.6f1/Editor/Data/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/InputModules/BaseInput.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Standard Assets/Cameras/Scripts/AbstractTargetFollower.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -36,6 +36,10 @@
         <option value="$PROJECT_DIR$/Assets/ThirdParty/Standard Assets/Cameras/Scripts/PivotBasedCameraRig.cs" />
         <option value="$PROJECT_DIR$/Assets/Standard Assets/Utility/SimpleActivatorMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Standard Assets/CrossPlatformInput/Scripts/MobileControlRig.cs" />
+        <option value="$PROJECT_DIR$/Assets/ThirdParty/DimitryTest/Scripts/ItemDisplay.cs" />
+        <option value="$PROJECT_DIR$/Assets/ThirdParty/DimitryTest/Scripts/Tabs/TabGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/ThirdParty/DimitryTest/Scripts/UI/StyleButton.cs" />
+        <option value="$PROJECT_DIR$/Assets/ThirdParty/DimitryTest/Scripts/UI/ButtonActivator.cs" />
       </list>
     </option>
   </component>
@@ -90,6 +94,9 @@
       <workItem from="1587729361903" duration="6980000" />
       <workItem from="1587933557360" duration="519000" />
       <workItem from="1587934445046" duration="1935000" />
+      <workItem from="1588746288520" duration="2259000" />
+      <workItem from="1588755589098" duration="685000" />
+      <workItem from="1588757138580" duration="726000" />
     </task>
     <servers />
   </component>

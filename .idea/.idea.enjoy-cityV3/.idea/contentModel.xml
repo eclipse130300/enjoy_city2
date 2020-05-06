@@ -424,10 +424,10 @@
               </e>
             </e>
           </e>
-        </e>
-        <e p="Plugins" t="Include">
-          <e p="JsonDotNet" t="Include">
-            <e p="link.xml" t="Include" />
+          <e p="Plugins" t="Include">
+            <e p="JsonDotNet" t="Include">
+              <e p="link.xml" t="Include" />
+            </e>
           </e>
         </e>
         <e p="PostProcessing" t="Include">
@@ -871,11 +871,30 @@
         <e p="ThirdParty" t="Include">
           <e p="DimitryTest" t="Include">
             <e p="Scripts" t="Include">
-              <e p="CameraCollision.cs" t="Include" />
-              <e p="CameraMovement.cs" t="Include" />
-              <e p="ControllerController.cs" t="Include" />
-              <e p="OrbitCamera.cs" t="Include" />
-              <e p="PlayerController.cs" t="Include" />
+              <e p="Camera" t="Include">
+                <e p="CameraCollision.cs" t="Include" />
+                <e p="CameraMovement.cs" t="Include" />
+                <e p="ControllerController.cs" t="Include" />
+                <e p="OrbitCamera.cs" t="Include" />
+                <e p="PlayerController.cs" t="Include" />
+              </e>
+              <e p="UI" t="Include">
+                <e p="ButtonActivator.cs" t="Include" />
+                <e p="ItemDisplay.cs" t="Include" />
+                <e p="StyleButtonGroup.cs" t="Include" />
+                <e p="Tabs" t="Include">
+                  <e p="Tab.cs" t="Include" />
+                  <e p="TabGroup.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="Sprites" t="Include">
+              <e p="NewSprites 27.04" t="Include">
+                <e p="FOR ATLAS" t="Include">
+                  <e p="Новый текстовый документ.txt" t="Include" />
+                </e>
+                <e p="test.cs" t="Include" />
+              </e>
             </e>
           </e>
           <e p="Joystick Pack" t="Include">

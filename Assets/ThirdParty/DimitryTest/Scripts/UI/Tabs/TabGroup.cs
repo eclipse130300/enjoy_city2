@@ -9,9 +9,9 @@ public class TabGroup : MonoBehaviour
 
     public Sprite inactivebackgroundIMG;
     public Sprite activebackgroundIMG;
+    
     public Color activeColor;
-
-    private Color standardColor = Color.white;
+    public Color normalColor;
 
     public Vector2 activeSize;
     public Vector2 inactiveSize;
@@ -50,11 +50,11 @@ public class TabGroup : MonoBehaviour
         foreach (Tab tab in tabs)
         {
             tab.background.sprite = inactivebackgroundIMG;
-            tab.icon.color = standardColor;
+            tab.icon.color = normalColor;
             tab.GetComponent<RectTransform>().sizeDelta = inactiveSize;
             if (withTEXT)
             {
-                tab.tmPro.color = standardColor;
+                tab.tmPro.color = normalColor;
             }
         }
     }
