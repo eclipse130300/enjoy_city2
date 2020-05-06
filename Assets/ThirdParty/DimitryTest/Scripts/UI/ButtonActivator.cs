@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 public class ButtonActivator : MonoBehaviour, IPointerClickHandler, IPointerExitHandler
 {
-    private Color frameIMGcolor;
+    private Image frameIMGcolor;
     private void Awake()
     {
-        frameIMGcolor = GetComponent<Image>().color;
+        frameIMGcolor = GetComponent<Image>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        frameIMGcolor.a = 0;
+        SetFrameAlpha(0f);
     }
 
 
@@ -27,12 +27,19 @@ public class ButtonActivator : MonoBehaviour, IPointerClickHandler, IPointerExit
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        frameIMGcolor.a = 1;
+        SetFrameAlpha(1);
     }
 
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        frameIMGcolor.a = 0;
+        SetFrameAlpha(0);
+    }
+
+    void SetFrameAlpha(float alpha)
+    {
+        Color c = frameIMGcolor.color;
+        c.a = alpha;
+        frameIMGcolor.color = c;
     }
 }
