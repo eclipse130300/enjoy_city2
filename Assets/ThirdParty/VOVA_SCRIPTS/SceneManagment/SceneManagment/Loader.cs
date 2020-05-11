@@ -39,11 +39,13 @@ public class Loader : BaseLoader
         }
         set
         {
-
-            UnloadScene(sceneName);
-            sceneName = value;
-            if (!string.IsNullOrEmpty(value))
-                LoadScene(value, true);
+            if (value != sceneName)
+            {
+                UnloadScene(sceneName);
+                sceneName = value;
+                if (!string.IsNullOrEmpty(value))
+                    LoadScene(value, true);
+            }
             
         }
     }
@@ -58,10 +60,14 @@ public class Loader : BaseLoader
         }
         set
         {
-            UnloadScene(interfaceSceneName);
-            interfaceSceneName = value;
-            if (!string.IsNullOrEmpty(value))
-                LoadScene(value);
+            if(value != interfaceSceneName)
+            {
+                UnloadScene(interfaceSceneName);
+                interfaceSceneName = value;
+                if (!string.IsNullOrEmpty(value))
+                    LoadScene(value);
+            }
+          
         }
     }
     [SerializeField]
@@ -75,10 +81,13 @@ public class Loader : BaseLoader
         }
         set
         {
-            UnloadScene(controllersSceneName);
-            controllersSceneName = value;
-            if (!string.IsNullOrEmpty(value))
-                LoadScene(value);
+            if (value != controllersSceneName)
+            {
+                UnloadScene(controllersSceneName);
+                controllersSceneName = value;
+                if (!string.IsNullOrEmpty(value))
+                    LoadScene(value);
+            }
         }
     }
    // public MapConfig mapConfig;
