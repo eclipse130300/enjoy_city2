@@ -1,11 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayFab", "PlayFab.csproj", "{4F2C2A0F-B68A-3874-734D-4BAA76B0A76C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{5AF0C7FF-5C55-33A0-D9B0-7B0EFCA2DC65}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{B74FE072-E20C-FE26-D985-BCA938CF854C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToonyColorsPro.Runtime", "ToonyColorsPro.Runtime.csproj", "{AF01FC40-A250-B215-61BC-4AA6CBD3DDFD}"
 EndProject
@@ -20,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{CC0C0159-FB2B-E26C-EA94-A7280F0FAFA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToonyColorsPro.Editor", "ToonyColorsPro.Editor.csproj", "{6693A6D0-C4A8-C5E5-3E48-55C813925E9A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{F13CF770-1E18-3C3F-3188-C21F5CA450B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayFabEditorExtensions", "PlayFabEditorExtensions.csproj", "{857FC8B1-0E48-D6E0-A432-C6D36EA4BC1E}"
 EndProject
@@ -43,10 +39,6 @@ Global
 		{5AF0C7FF-5C55-33A0-D9B0-7B0EFCA2DC65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AF0C7FF-5C55-33A0-D9B0-7B0EFCA2DC65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AF0C7FF-5C55-33A0-D9B0-7B0EFCA2DC65}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B74FE072-E20C-FE26-D985-BCA938CF854C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B74FE072-E20C-FE26-D985-BCA938CF854C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B74FE072-E20C-FE26-D985-BCA938CF854C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B74FE072-E20C-FE26-D985-BCA938CF854C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF01FC40-A250-B215-61BC-4AA6CBD3DDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF01FC40-A250-B215-61BC-4AA6CBD3DDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF01FC40-A250-B215-61BC-4AA6CBD3DDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,10 +67,6 @@ Global
 		{6693A6D0-C4A8-C5E5-3E48-55C813925E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6693A6D0-C4A8-C5E5-3E48-55C813925E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6693A6D0-C4A8-C5E5-3E48-55C813925E9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F13CF770-1E18-3C3F-3188-C21F5CA450B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F13CF770-1E18-3C3F-3188-C21F5CA450B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F13CF770-1E18-3C3F-3188-C21F5CA450B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F13CF770-1E18-3C3F-3188-C21F5CA450B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{857FC8B1-0E48-D6E0-A432-C6D36EA4BC1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{857FC8B1-0E48-D6E0-A432-C6D36EA4BC1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{857FC8B1-0E48-D6E0-A432-C6D36EA4BC1E}.Release|Any CPU.ActiveCfg = Release|Any CPU

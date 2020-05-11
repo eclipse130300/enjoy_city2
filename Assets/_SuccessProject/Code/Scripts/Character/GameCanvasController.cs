@@ -15,6 +15,8 @@ namespace SocialGTA {
         [SerializeField] SceneLoaderManager _loaderManager;
         [SerializeField] TouchPlaneController touchPlane;
 
+        [SerializeField] GameObject interactionButton;
+
         private bool _isJumping;
 
         public float Vertical => _joystick.Vertical;
@@ -92,7 +94,21 @@ namespace SocialGTA {
             yield break;
         }
 
-        #endregion
+        public void SwitchInteractionButton(bool value)
+        {
+            interactionButton.SetActive(value);
+        }
 
+        public void SetInteractionButton(Sprite sprite)
+        {
+
+        }
+        
+        public void OnInteractionButtonClick()
+        {
+
+        }
+
+        #endregion
     }
 }

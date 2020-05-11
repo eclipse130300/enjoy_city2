@@ -17,14 +17,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float movementSpeed;
     [SerializeField] private Transform target; //move relative to target(camera)
     [SerializeField] private float jumpHeight;
-    
 
-    // Use this for initialization
-    void Start()
+    private void Awake()
     {
+        _characterController = GetComponent<CharacterController>();
         if (target == null) target = GameObject.FindWithTag("PlayerCamera").transform;
         _animator = GetComponentInChildren<CharacterSkinModel>().animator;
-        _characterController = GetComponent<CharacterController>();
+    }
+    // Use this for initialization
+    void Start() // change to Start or OnEnable?
+    {
+
+        
     }
 
     // Update is called once per frame
