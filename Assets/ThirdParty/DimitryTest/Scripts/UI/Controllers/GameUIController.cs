@@ -13,31 +13,33 @@ public class GameUIController : MonoBehaviour
     public Image filledLine;
     public TextMeshProUGUI lvlText;
 
+    private bool isAnimatingEXP;
+
     private Image defaultInteractionButIMG;
 
     private void Awake()
     {
-        Messenger<Sprite>.AddListener(GameEvents.ENTRY_POINT_ENTERED, OnEntryPointEntered); //entrypoint events
+        Messenger.AddListener<Sprite>(GameEvents.ENTRY_POINT_ENTERED, OnEntryPointEntered); //entrypoint events
         Messenger.AddListener(GameEvents.ENTRY_POINT_EXIT, OnEntryPointExit);
 
-        Messenger<float>.AddListener(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
-        Messenger<int>.AddListener(GameEvents.LVL_CHANGED, OnLvlChanged);
+        Messenger.AddListener<float>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
+        Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
 
     }
 
     private void Start()
     {
-        interactionButton.SetActive(false);
         defaultInteractionButIMG = interactionButtonIMG;
+        interactionButton.SetActive(false);
     }
 
     private void OnDestroy()
     {
-        Messenger<Sprite>.RemoveListener(GameEvents.ENTRY_POINT_ENTERED, OnEntryPointEntered);
+        Messenger.RemoveListener<Sprite>(GameEvents.ENTRY_POINT_ENTERED, OnEntryPointEntered);
         Messenger.RemoveListener(GameEvents.ENTRY_POINT_EXIT, OnEntryPointExit);
 
-        Messenger<float>.RemoveListener(GameEvents.EXP_CHANGED, OnExpChanged);
-        Messenger<int>.RemoveListener(GameEvents.LVL_CHANGED, OnLvlChanged);
+        Messenger.RemoveListener<float>(GameEvents.EXP_CHANGED, OnExpChanged);
+        Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
     }
 
     private void OnLvlChanged(int lvl)
@@ -66,6 +68,7 @@ public class GameUIController : MonoBehaviour
 
     public void OnInteractionButtonTap()
     {
+        interactionButton.SetActive(false);
         Messenger.Broadcast(GameEvents.INTERACTION_BUTTON_TAP);
     }
 

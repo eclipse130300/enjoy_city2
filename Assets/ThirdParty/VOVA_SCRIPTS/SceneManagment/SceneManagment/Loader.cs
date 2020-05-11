@@ -111,7 +111,7 @@ public class Loader : BaseLoader
             AllSceneLoaded.Invoke();
         }
         if(SceneManager.sceneCount == 1 && Application.isPlaying && deafaultScene != null)
-            (Loader.Instance as Loader).LoadGameScene(deafaultScene); 
+            (Loader.Instance as Loader).LoadGameScene(deafaultScene);
     }
     public static void LoadLoaderSceneAdditive(LoadSceneMode mode)
     {

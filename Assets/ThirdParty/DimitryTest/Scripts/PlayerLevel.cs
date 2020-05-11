@@ -11,6 +11,7 @@ public class PlayerLevel : MonoBehaviour
     private float expreienceToNextLevel;
     private Loader loader;
 
+
     [SerializeField] private LevelConfig lvlCFG;
 
     public int Level { get { return level; } }
@@ -28,8 +29,8 @@ public class PlayerLevel : MonoBehaviour
 
     private void InitializeUI()
     {
-        Messenger<int>.Broadcast(GameEvents.LVL_CHANGED, level);
-        Messenger<float>.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
+        Messenger.Broadcast(GameEvents.LVL_CHANGED, level);
+        Messenger.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
     }
 
     private void InitializeLevelConfig()
@@ -48,10 +49,10 @@ public class PlayerLevel : MonoBehaviour
         {
             level++;
             experience -= expreienceToNextLevel;
-            Messenger<int>.Broadcast(GameEvents.LVL_CHANGED, level);
+            Messenger.Broadcast(GameEvents.LVL_CHANGED, level);
         }
 
-        Messenger<float>.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
+        Messenger.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
 
         Debug.Log(GetNormilizedExperience());
     }
@@ -61,8 +62,5 @@ public class PlayerLevel : MonoBehaviour
         return experience / expreienceToNextLevel;
     }
 
-    private void OnDestroy()
-    {
-        Loader.Instance.AllSceneLoaded -= InitializeUI;
-    }
+
 }
