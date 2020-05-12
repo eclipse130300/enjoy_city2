@@ -21,14 +21,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        if (target == null) target = GameObject.FindWithTag("PlayerCamera").transform;
+        if (target == null) target = Camera.main.transform;
         _animator = GetComponentInChildren<CharacterSkinModel>().animator;
-    }
-    // Use this for initialization
-    void Start() // change to Start or OnEnable?
-    {
-
-        
     }
 
     // Update is called once per frame
