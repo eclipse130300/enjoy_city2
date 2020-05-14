@@ -29,5 +29,14 @@ namespace CMS.Editor
             EditorWindow.GetWindow(typeof(LevelEditorWindow));
         }
     }
+
+    public class RoomItemEditorWindow : BaseListEditor<RoomItemConfig>
+    {
+        [MenuItem("Configs/RoomItemCFG %#n")]
+        public static void InitResourcesEditorWindow()
+        {
+            EditorWindow.GetWindow(typeof(RoomItemEditorWindow));
+        }
+    }
 }
 #endif

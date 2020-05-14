@@ -108,6 +108,10 @@ namespace CMS.Editor
         {
             return EditorGUILayout.Vector2Field(label, value);
         }
+        public static Color DrawField(string label, Color value)
+        {
+            return EditorGUILayout.ColorField(label, value);
+        }
         public static Enum DrawField(string label, Enum value)
         {
             return EditorGUILayout.EnumPopup(label, value);

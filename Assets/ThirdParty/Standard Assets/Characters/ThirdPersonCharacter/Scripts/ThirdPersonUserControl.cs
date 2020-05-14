@@ -83,7 +83,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Character.Move(m_Move * Time.fixedDeltaTime * speed);
             m_Jump = false;
 
-            Debug.Log(m_Move);
         }
     }
 }

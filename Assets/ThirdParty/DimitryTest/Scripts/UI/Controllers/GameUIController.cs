@@ -7,15 +7,11 @@ using UnityEngine.UI;
 
 public class GameUIController : MonoBehaviour
 {
-    /*private Loader loader;*/
     public GameObject interactionButton;
     public Image interactionButtonIMG;
     public Image filledLine;
     public TextMeshProUGUI lvlText;
 
-    private bool isAnimatingEXP;
-
-    private Image defaultInteractionButIMG;
 
     private void Awake()
     {
@@ -25,12 +21,11 @@ public class GameUIController : MonoBehaviour
         Messenger.AddListener<float>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
         Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
 
+        interactionButton.SetActive(false);
     }
 
     private void Start()
     {
-        defaultInteractionButIMG = interactionButtonIMG;
-        interactionButton.SetActive(false);
     }
 
     private void OnDestroy()
@@ -40,6 +35,8 @@ public class GameUIController : MonoBehaviour
 
         Messenger.RemoveListener<float>(GameEvents.EXP_CHANGED, OnExpChanged);
         Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
+
+        interactionButton.SetActive(false);
     }
 
     private void OnLvlChanged(int lvl)
@@ -52,11 +49,8 @@ public class GameUIController : MonoBehaviour
         filledLine.fillAmount = lineFill;
     }
 
-
-
     private void OnEntryPointExit()
     {
-        interactionButtonIMG = defaultInteractionButIMG;
         interactionButton.SetActive(false);
     }
 
@@ -68,7 +62,6 @@ public class GameUIController : MonoBehaviour
 
     public void OnInteractionButtonTap()
     {
-        interactionButton.SetActive(false);
         Messenger.Broadcast(GameEvents.INTERACTION_BUTTON_TAP);
     }
 

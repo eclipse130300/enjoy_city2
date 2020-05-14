@@ -53,8 +53,6 @@ public class PlayerLevel : MonoBehaviour
         }
 
         Messenger.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
-
-        Debug.Log(GetNormilizedExperience());
     }
 
     private float GetNormilizedExperience()

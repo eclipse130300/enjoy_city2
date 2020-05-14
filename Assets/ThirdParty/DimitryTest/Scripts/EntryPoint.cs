@@ -7,53 +7,53 @@ using UnityEngine.UI;
 
 public class EntryPoint : MonoBehaviour, IIneractable
 {
-    private Loader loader;
     private SpriteRenderer miniMapPointRenderer;
+
+    public int fromLevelAvailable;
     private bool isListening;
 
-    [SerializeField] private int fromLevelAvailable;
     [SerializeField] private MapConfig mapCFG;
     [SerializeField] private Sprite interactionIcon;
     [SerializeField] private Sprite miniMapIcon;
 
+
     public void Interact()
     {
-        loader.LoadGameScene(mapCFG);
+        Loader.Instance.LoadGameScene(mapCFG);
     }
 
     private void Awake()
     {
-        loader = Loader.Instance;
-
         miniMapPointRenderer = GetComponentInChildren<SpriteRenderer>();
         miniMapPointRenderer.sprite = miniMapIcon;
-
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    public void ShowUI()
     {
-        if (other.GetComponent<PlayerLevel>()?.Level >= fromLevelAvailable)
-        {
             Messenger.Broadcast(GameEvents.ENTRY_POINT_ENTERED, interactionIcon);
-            Messenger.AddListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
-            isListening = true;
-        }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void HideUI()
     {
-        if (other.GetComponent<PlayerLevel>()?.Level >= fromLevelAvailable)
-        {
             Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
-            Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
-            isListening = false;
-        }
+    }
 
+    public void ListenInteractionButton()
+    {
+        Messenger.AddListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+        isListening = true;
+    }
+
+    public void UnlistenInteractionButton()
+    {
+        Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+        isListening = false;
     }
 
     private void OnDestroy()
     {
         if(isListening) Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+        Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
     }
-
 }

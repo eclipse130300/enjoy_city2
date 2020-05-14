@@ -51,7 +51,6 @@ public class PlayerController : MonoBehaviour
 
         movement.y = targetJump;
         targetJump -= Time.deltaTime * 5;
-       
 
         if (_characterController.isGrounded && Input.GetButtonDown("Jump"))
         {
