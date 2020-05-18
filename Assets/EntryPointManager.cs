@@ -88,7 +88,7 @@ public class EntryPointManager : MonoBehaviour
                 }
                 allEntryPoints.Enqueue(point);
             }
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -108,7 +108,7 @@ public class EntryPointManager : MonoBehaviour
 
         if(Physics.Raycast(ray, out RaycastHit hit))
         {
-            bool reuslt = hit.collider.transform.parent.GetComponent<PlayerLevel>();
+            bool reuslt = hit.collider.transform.parent?.GetComponent<PlayerLevel>(); // collider parent! delete with new playermodel
             return reuslt;
         }
         return false;

@@ -10,7 +10,8 @@ public class EntryPoint : MonoBehaviour, IIneractable
     private SpriteRenderer miniMapPointRenderer;
 
     public int fromLevelAvailable;
-    private bool isListening;
+    private bool isListeningUI;
+    private bool isActivePoint;
 
     [SerializeField] private MapConfig mapCFG;
     [SerializeField] private Sprite interactionIcon;
@@ -42,18 +43,19 @@ public class EntryPoint : MonoBehaviour, IIneractable
     public void ListenInteractionButton()
     {
         Messenger.AddListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
-        isListening = true;
+        isListeningUI = true;
     }
 
     public void UnlistenInteractionButton()
     {
-        Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
-        isListening = false;
+
+            Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+            isListeningUI = false;
     }
 
     private void OnDestroy()
     {
-        if(isListening) Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+        if(isListeningUI) Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
         Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
     }
 }

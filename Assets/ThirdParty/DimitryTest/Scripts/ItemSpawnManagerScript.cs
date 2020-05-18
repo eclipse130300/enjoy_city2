@@ -14,12 +14,12 @@ public class ItemSpawnManagerScript : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.G))
         {
-            RoomItemFactory.CreateItem(item1);
+            RoomItemFactory.CreateItem(item1, new Vector3(0, 0 , 4), Quaternion.identity);
         }
 
         if (Input.GetKeyDown(KeyCode.V))
         {
-            RoomItemFactory.CreateItem(item2);
+            RoomItemFactory.CreateItem(item2, new Vector3(0, 0, 7), Quaternion.identity);
         }
 
     }

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerLevel : MonoBehaviour
+public class PlayerLevel : MonoBehaviour, ILevelable
 {
     private int level;
     private float experience;
