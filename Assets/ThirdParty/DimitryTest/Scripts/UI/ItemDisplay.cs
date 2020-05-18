@@ -1,28 +1,25 @@
-﻿using System.Collections;
+﻿using CMS.Config;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemDisplay : MonoBehaviour , IPointerClickHandler, IPointerExitHandler
+public class ItemDisplay : MonoBehaviour, IPointerClickHandler, IPointerExitHandler
 {
-    private Image[] allIMG;
-    private Image frameIMG;
-    
-    [SerializeField] private Vector2 sizeToDisplay;
     [SerializeField] private Color activeFrameColor;
+    public ItemConfig itemConfig;
 
-    private Transform parent;
+    private Image frameIMG;
     private Color startFrameColor;
     private bool isActive;
-    private GameObject item;
+
     
     private void Awake()
     {
-        allIMG = GetComponentsInChildren<Image>();
-        parent = GameObject.FindWithTag("bleak_background").transform;
+        Image[] allImages = GetComponentsInChildren<Image>();
         
-        foreach (Image img in allIMG)
+        foreach (Image img in allImages)
         {
             if(img.gameObject.CompareTag("frame"))
             {
@@ -34,22 +31,24 @@ public class ItemDisplay : MonoBehaviour , IPointerClickHandler, IPointerExitHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        ItemPressed();
+    }
+
+    private void ItemPressed()
+    {
         if (!isActive)
         {
-            item = Instantiate(frameIMG.transform.parent.gameObject, parent.transform.position,
-                Quaternion.identity);
-            item.transform.SetParent(parent);
-            item.GetComponent<RectTransform>().sizeDelta = sizeToDisplay;
-            Destroy(item.GetComponent<ItemDisplay>());
-            frameIMG.color = activeFrameColor; //todo make field
             isActive = true;
+            Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
+            Messenger.Broadcast(GameEvents.PUT_ON_ITEM, itemConfig);
+            frameIMG.color = activeFrameColor;
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        Messenger.Broadcast(GameEvents.ITEM_UNPRESSED);
         frameIMG.color = startFrameColor;
-        Destroy(item);
         isActive = false;
     }
 }

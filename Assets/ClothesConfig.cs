@@ -13,11 +13,10 @@ namespace CMS.Config
 {
     [JsonObject(MemberSerialization.OptIn)]
     [Serializable]
-    public class RoomItemConfig : BaseScriptableDrowableItem
+    public class ClothesConfig : BaseScriptableDrowableItem
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
-        public GameObject prefab;
-        public Color color;
+        public ItemConfig itemConfig;
 
 
 
@@ -25,10 +24,12 @@ namespace CMS.Config
         public override void Draw()
         {
             base.Draw();
-           
-            prefab = ScriptableGUIUtils.DrawObjectField("PREFAB", prefab);
-            color = ScriptableGUIUtils.DrawField("Color", color);
+
+            itemConfig = ScriptableGUIUtils.DrawObjectField("Item", itemConfig);
+
+
         }
 #endif
     }
 }
+

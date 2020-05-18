@@ -38,5 +38,24 @@ namespace CMS.Editor
             EditorWindow.GetWindow(typeof(RoomItemEditorWindow));
         }
     }
+
+    public class ClothesEditorWindow : BaseListEditor<ClothesConfig>
+    {
+        [MenuItem("Configs/ClothesSetCFG %#n")]
+        public static void InitResourcesEditorWindow()
+        {
+            EditorWindow.GetWindow(typeof(ClothesEditorWindow));
+        }
+    }
+
+    public class BootsStyleEditorWindow : BaseListEditor<ItemConfig>
+    {
+        [MenuItem("Configs/ItemConfig %#n")]
+        public static void InitResourcesEditorWindow()
+        {
+            EditorWindow.GetWindow(typeof(BootsStyleEditorWindow));
+        }
+    }
+
 }
 #endif

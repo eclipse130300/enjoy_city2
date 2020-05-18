@@ -12,6 +12,11 @@ public static class GameEvents
     public const string LVL_CHANGED = "LVL_CHANGED";
     public const string EXP_CHANGED = "EXP_CHANGED";
 
+    public const string ITEM_PRESSED = "ITEM_PRESSED";
+    public const string ITEM_UNPRESSED = "ITEM_UNPRESSED";
+
+    public const string PUT_ON_ITEM = "PUT_ON_ITEM";
+
 
 
 }
