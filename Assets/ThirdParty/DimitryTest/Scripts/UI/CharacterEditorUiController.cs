@@ -37,7 +37,7 @@ public class CharacterEditorUiController : MonoBehaviour
         rightPanel.SetActive(false);
     }
 
-    private void DisplayItem(GameObject itemGO) //не работает на Т
+    private void DisplayItem(GameObject itemGO) 
     {
         //display item description
         var itemCFG = itemGO.GetComponent<ItemDisplay>().itemConfig;

@@ -82,6 +82,7 @@ public class InventoryManager : MonoBehaviour
         inventory = ScriptableList<ItemConfig>.instance.list.
             Where(t => t.bodyPart == currentbodyPart).
             Where(t => t.gameMode == currentMode).
+            Where(t => !t.ToString().Contains("default")).
             ToList();
     }
 

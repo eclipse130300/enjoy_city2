@@ -7,13 +7,15 @@ using Utils;
 
 public class PreviewManager : MonoBehaviour
 {
-    public Sex previewingCharSex;
+    public Gender previewingCharSex;
 
     public GameMode previewingGameMode;
 
     private SkinnedMeshRenderer previewingBodyPart;
 
     public ClothesConfig previewingClothesConfig;
+
+    public ClothesConfig defaultConfig;
 
     public ItemConfig itemPreviewing;
 
@@ -38,17 +40,21 @@ public class PreviewManager : MonoBehaviour
 
     void LoadConf()
     {
-        /*        PlayerPrefs.DeleteAll();*/
+        /*PlayerPrefs.DeleteAll();*/
 
 
         string key = previewingCharSex.ToString() + previewingGameMode.ToString();
         var json = PlayerPrefs.GetString(key);
         previewingClothesConfig = JsonUtility.FromJson<ClothesConfig>(json);
 
-        //if null make it default
-        if (previewingClothesConfig == null) previewingClothesConfig = new ClothesConfig();
-
-        previewingClothesConfig.LoadItemsData();
+        if (previewingClothesConfig != null)
+        {
+            previewingClothesConfig.LoadItemsData();
+        }
+        else
+        {
+            previewingClothesConfig = new ClothesConfig();
+        }
     }
 
     private void OnItemVariantChanged(ItemVariant variant)
@@ -62,13 +68,12 @@ public class PreviewManager : MonoBehaviour
         //add item and active variant to config
         if (activeVariant == null)
         {
-            previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId);
+                previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId,previewingCharSex);
         }
         else
         {
-            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId);
+            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId, previewingCharSex);
         }
-
 
 
         //and save it
@@ -86,37 +91,36 @@ public class PreviewManager : MonoBehaviour
     }
 
         //clears items from model
-        private void OnItemAbort()
-        {
-        Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
-        itemPreviewing = null;
-        activeVariant = null;
-        }
-
-        //show item at model(preview)
-        private void OnItemPressed(GameObject item)
-        {
+    private void OnItemAbort()
+    {
+    itemPreviewing = null;
+    activeVariant = null;
+    }
+    
+    //show item at model(preview)
+    private void OnItemPressed(GameObject item)
+    {
         OnItemAbort();
-
-            var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
-            activeVariant = previewingClothesConfig.GetActiveVariant(itemCFG);
-
-            var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
-            previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
-            previewingBodyPart.sharedMesh = itemCFG.mesh;
-
-        previewingBodyPart.material.color = previewingClothesConfig.ItemIsInConfig(itemCFG) == true ?
-        previewingClothesConfig.GetActiveVariant(itemCFG).color : Color.white;
-
-            itemPreviewing = itemCFG;
-        }
-
-        private void OnDestroy()
-        {
-            Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-            Messenger.RemoveListener(GameEvents.ITEM_OPERATION_ABORT, OnItemAbort);
-            Messenger.RemoveListener(GameEvents.ITEM_PICKED, OnItemPicked);
-            Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
-        }
+    
+        var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
+        activeVariant = previewingClothesConfig.GetActiveVariant(itemCFG);
+    
+        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
+        previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
+        previewingBodyPart.sharedMesh = itemCFG.mesh;
+    
+    previewingBodyPart.material.color = previewingClothesConfig.ItemIsInConfig(itemCFG) == true ?
+    previewingClothesConfig.GetActiveVariant(itemCFG).color : Color.white;
+    
+        itemPreviewing = itemCFG;
+    }
+    
+    private void OnDestroy()
+    {
+        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
+        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_ABORT, OnItemAbort);
+        Messenger.RemoveListener(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
+    }
 
 }
