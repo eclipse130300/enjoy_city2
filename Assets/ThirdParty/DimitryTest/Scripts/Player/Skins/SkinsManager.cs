@@ -10,9 +10,14 @@ public class SkinsManager : MonoBehaviour
     public ClothesConfig currentConfig;
     public ClothesConfig defaultConfig;
 
+
     private void Awake()
     {
-        Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+
+        if (GetComponent<PreviewManager>() != null) //ckeck if we are in editor
+        {
+            Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        }
         Messenger.AddListener(GameEvents.CLOTHES_CHANGED, PutOnClothes);
         SetDefaultConfig();
     }
@@ -74,7 +79,10 @@ public class SkinsManager : MonoBehaviour
     private void OnDestroy()
     {
         Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, PutOnClothes);
-        Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        if (GetComponent<PreviewManager>() != null) //ckeck if this manager is prewiew skin manager
+        {
+            Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        }
     }
 
     void LoadConf()
@@ -83,7 +91,14 @@ public class SkinsManager : MonoBehaviour
         var json = PlayerPrefs.GetString(key);
         currentConfig = JsonUtility.FromJson<ClothesConfig>(json);
 
-        currentConfig?.LoadItemsData();
+        if (currentConfig != null)
+        {
+            currentConfig.LoadItemsData();
+        }
+        else
+        {
+            currentConfig = new ClothesConfig();
+        }
     }
 
 }

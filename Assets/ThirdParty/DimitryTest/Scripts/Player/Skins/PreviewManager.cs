@@ -68,11 +68,11 @@ public class PreviewManager : MonoBehaviour
         //add item and active variant to config
         if (activeVariant == null)
         {
-                previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId,previewingCharSex);
+                previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId);
         }
         else
         {
-            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId, previewingCharSex);
+            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId);
         }
 
 
