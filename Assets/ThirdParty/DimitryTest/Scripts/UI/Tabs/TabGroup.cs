@@ -16,11 +16,12 @@ public class TabGroup : MonoBehaviour
     public Vector2 activeSize;
     public Vector2 inactiveSize;
 
-
+    public Tab firstTab;
 
     private void Start()
     {
         ResetTabs();
+        OnTabSelected(firstTab);
     }
 
     public void Subscribe(Tab tabButton)

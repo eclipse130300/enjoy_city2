@@ -1,54 +1,86 @@
 ﻿using CMS.Config;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemDisplay : MonoBehaviour, IPointerClickHandler, IPointerExitHandler
+public class ItemDisplay : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private Color activeFrameColor;
+    [SerializeField] private Color previewFrameColor;
+
     public ItemConfig itemConfig;
+    public Image inventoryImage;
 
     private Image frameIMG;
     private Color startFrameColor;
-    private bool isActive;
+    private bool isPreviewing;
 
-    
+
+
     private void Awake()
     {
-        Image[] allImages = GetComponentsInChildren<Image>();
-        
+        Image[] allImages = GetComponentsInChildren<Image>();  
+
         foreach (Image img in allImages)
         {
-            if(img.gameObject.CompareTag("frame"))
+            if (img.gameObject.CompareTag("frame"))
             {
                 frameIMG = img;
-                startFrameColor = frameIMG.color;
             }
         }
+
+        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    private void ClearIfOtherItem(GameObject item)
     {
-        ItemPressed();
+        if (this == item.GetComponent<ItemDisplay>()) return;
+        frameIMG.color = startFrameColor;
+        isPreviewing = false;
+    }
+
+    public void SetItem(Sprite inventoryIMG, Color frameCol)
+    {
+        inventoryImage.sprite = inventoryIMG;
+        startFrameColor = frameCol;
+        frameIMG.color = frameCol;
+    }
+
+    private void ItemPicked()
+    {
+
+        isPreviewing = false;
+        frameIMG.color = startFrameColor;
+        Messenger.Broadcast(GameEvents.ITEM_PICKED);
+        Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
     }
 
     private void ItemPressed()
     {
-        if (!isActive)
+        isPreviewing = true;
+        Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
+        frameIMG.color = previewFrameColor;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!isPreviewing)
         {
-            isActive = true;
-            Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
-            Messenger.Broadcast(GameEvents.PUT_ON_ITEM, itemConfig);
-            frameIMG.color = activeFrameColor;
+            ItemPressed();
+        }
+        else
+        {
+            ItemPicked();
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void OnDestroy()
     {
-        Messenger.Broadcast(GameEvents.ITEM_UNPRESSED);
-        frameIMG.color = startFrameColor;
-        isActive = false;
+        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
     }
+
 }
+

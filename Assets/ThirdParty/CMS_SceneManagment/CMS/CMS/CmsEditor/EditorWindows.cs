@@ -39,21 +39,21 @@ namespace CMS.Editor
         }
     }
 
-    public class ClothesEditorWindow : BaseListEditor<ClothesConfig>
-    {
-        [MenuItem("Configs/ClothesSetCFG %#n")]
-        public static void InitResourcesEditorWindow()
-        {
-            EditorWindow.GetWindow(typeof(ClothesEditorWindow));
-        }
-    }
-
-    public class BootsStyleEditorWindow : BaseListEditor<ItemConfig>
+    public class ItemEditorWindow : BaseListEditor<ItemConfig>
     {
         [MenuItem("Configs/ItemConfig %#n")]
         public static void InitResourcesEditorWindow()
         {
-            EditorWindow.GetWindow(typeof(BootsStyleEditorWindow));
+            EditorWindow.GetWindow(typeof(ItemEditorWindow));
+        }
+    }
+
+    public class ItemVariantWindow : BaseListEditor<ItemVariant>
+    {
+        [MenuItem("Configs/ItemVariant %#n")]
+        public static void InitResourcesEditorWindow()
+        {
+            EditorWindow.GetWindow(typeof(ItemVariantWindow));
         }
     }
 

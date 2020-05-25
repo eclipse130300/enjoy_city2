@@ -1,35 +1,87 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CMS.Config;
 using System;
-// using Assets.Scripts.Game.Objects.Scene;
-using CMS.Editor;
-using Newtonsoft.Json;
-using UnityEngine.SceneManagement;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-namespace CMS.Config
+using System.Linq;
+
+[Serializable]
+public class ClothesConfig  : ISerializationCallbackReceiver
 {
-    [JsonObject(MemberSerialization.OptIn)]
-    [Serializable]
-    public class ClothesConfig : BaseScriptableDrowableItem
+    public List<ItemConfig> items = new List<ItemConfig>(); 
+    public List<string> activeVariantNames = new List<string>();
+
+    public Dictionary<ItemConfig, string> pickedItemAndVariants = new Dictionary<ItemConfig, string>(); //нужна тольк во время выполнения программы
+                                                                                                        //для связи шмотки и айди активного варианта
+
+    public void LoadItemsData()
     {
-        [Draw(DrawAttributeTypes.NotForDraw, "")]
-        public ItemConfig itemConfig;
+        pickedItemAndVariants = items.Zip(activeVariantNames, (k, v) => new { Key = k, Value = v })
+             .ToDictionary(x => x.Key, x => x.Value);
 
-
-
-#if UNITY_EDITOR
-        public override void Draw()
-        {
-            base.Draw();
-
-            itemConfig = ScriptableGUIUtils.DrawObjectField("Item", itemConfig);
-
-
-        }
-#endif
+        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this);
     }
-}
 
+    public void AdditemToConfig(ItemConfig config, string activeVariant)
+    {
+        if (pickedItemAndVariants.IsNullOrEmpty())
+        {
+            pickedItemAndVariants.Add(config, activeVariant);
+        }
+        else
+        {
+            foreach (ItemConfig item in pickedItemAndVariants.Keys.ToArray())
+            {
+                if (config.bodyPart == item.bodyPart)
+                {
+                    pickedItemAndVariants.Remove(item);
+                }
+            }
+            pickedItemAndVariants.Add(config, activeVariant);
+        }
+    }
+
+    public ItemVariant GetActiveVariant(ItemConfig itemConfig)
+    {
+
+        foreach (KeyValuePair <ItemConfig, string> pair in pickedItemAndVariants)
+        {
+            if(pair.Key == itemConfig)
+            {
+                return ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value);
+            }
+        }
+        return null;
+    }
+
+    public void OnBeforeSerialize()
+    {
+        activeVariantNames.Clear();
+        items.Clear();
+
+        items = pickedItemAndVariants.Keys.ToList();
+        activeVariantNames = pickedItemAndVariants.Values.ToList();
+    }
+
+    public void OnAfterDeserialize()
+    {
+    }
+
+    public bool ItemIsInConfig(ItemConfig item)
+    {
+        foreach (ItemConfig key in pickedItemAndVariants.Keys)
+        {
+            if (key == item) return true;
+        }
+        return false;
+    }
+
+
+
+    /*    public ClothesConfig()
+        {
+            foreach(string name in Enum.GetNames(typeof( BODY_PART)))
+            {
+            }
+        }*/
+}

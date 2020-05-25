@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -8,7 +9,6 @@ public class Tab : MonoBehaviour , IPointerClickHandler
 {
     public TabGroup tabGroup;
     public TextMeshProUGUI tmPro;
-
     public Image icon;
     [HideInInspector] public Image background;
 

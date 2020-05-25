@@ -13,10 +13,17 @@ public static class GameEvents
     public const string EXP_CHANGED = "EXP_CHANGED";
 
     public const string ITEM_PRESSED = "ITEM_PRESSED";
-    public const string ITEM_UNPRESSED = "ITEM_UNPRESSED";
+    public const string ITEM_OPERATION_ABORT = "ITEM_OPERATION_ABORT";
+    public const string ITEM_OPERATION_DONE = "ITEM_OPERATION_DONE";
+    public const string ITEM_PICKED = "ITEM_PICKED";
 
-    public const string PUT_ON_ITEM = "PUT_ON_ITEM";
+    public const string CLOTHES_CHANGED = "CLOTHES_CHANGED";
 
+    public const string ITEM_VARIANT_CHANGED = "ITEM_VARIANT_CHANGED";
 
+    public const string INVENTORY_GAME_MODE_CHANGED = "INVENTORY_GAME_MODE_CHANGED";
+    public const string INVENTORY_BODY_PART_CHANGED = "INVENTORY_BODY_PART_CHANGED";
+
+    public const string CLOTHES_CONFIG_LOADED = "CLOTHES_CONFIG_LOADED";
 
 }
