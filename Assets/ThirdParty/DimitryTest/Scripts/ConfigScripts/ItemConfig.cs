@@ -20,6 +20,7 @@ namespace CMS.Config
         public Mesh mesh;
         public Color Inventory_frameColor;
         public Sprite Inventory_image;
+        public Gender gender;
         public BODY_PART bodyPart;
         public GameMode gameMode;
         public List<ItemVariant> variants = new List<ItemVariant>();
@@ -31,6 +32,7 @@ namespace CMS.Config
             base.Draw();
 
             mesh = ScriptableGUIUtils.DrawObjectField("Mesh", mesh);
+            gender = (Gender)ScriptableGUIUtils.DrawField("GENDER", gender);
             bodyPart = (BODY_PART)ScriptableGUIUtils.DrawField("BODYPART", bodyPart);
             gameMode = (GameMode)ScriptableGUIUtils.DrawField("GameMode", gameMode);
             Inventory_frameColor = ScriptableGUIUtils.DrawField("Inventory_FrameColor", Inventory_frameColor);

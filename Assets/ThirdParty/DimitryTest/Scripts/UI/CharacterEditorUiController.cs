@@ -22,7 +22,6 @@ public class CharacterEditorUiController : MonoBehaviour
         rightPanel.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-        Messenger.AddListener(GameEvents.ITEM_OPERATION_ABORT, HideItemInfo);
         Messenger.AddListener<ClothesConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
     }
 
@@ -93,7 +92,6 @@ public class CharacterEditorUiController : MonoBehaviour
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_ABORT, HideItemInfo);
     }
 
 

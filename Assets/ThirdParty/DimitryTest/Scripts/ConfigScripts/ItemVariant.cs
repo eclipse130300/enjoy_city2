@@ -14,18 +14,18 @@ namespace CMS.Config
     [JsonObject(MemberSerialization.OptIn)]
     [Serializable]
 
-    public class ItemVariant : BaseScriptableDrowableItem
+    public class ItemVariant : IGUIDrawable
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
+        public string ConfigId;
         public Color color;
         public Texture texture;
         public int cost;
         public CurrencyType currencyType;
 
 #if UNITY_EDITOR
-        public override void Draw()
+        public  void Draw()
         {
-            base.Draw();
             color = ScriptableGUIUtils.DrawField("Color", color);
             currencyType = (CurrencyType)ScriptableGUIUtils.DrawField("Currency", currencyType);
             cost = ScriptableGUIUtils.DrawField("Cost", cost);

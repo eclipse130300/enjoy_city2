@@ -8,7 +8,7 @@ public class GameModeInventoryChanger : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         Messenger.Broadcast(GameEvents.INVENTORY_GAME_MODE_CHANGED, gamemode);
-        Messenger.Broadcast(GameEvents.ITEM_OPERATION_ABORT);
+        Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
     }
 
 }

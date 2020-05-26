@@ -24,12 +24,16 @@ public class PreviewManager : MonoBehaviour
     private void Awake()
     {
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.AddListener(GameEvents.ITEM_OPERATION_ABORT, OnItemAbort);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
 
         LoadConf();
+    }
+
+    private void Start()
+    {
+        Messenger.Broadcast(GameEvents.GENDER_CHANGED, previewingCharSex); // TODO MAKE GENDER(character) MANAGER?
     }
 
     private void OnGameModeChanged(GameMode gameMode)
@@ -68,11 +72,11 @@ public class PreviewManager : MonoBehaviour
         //add item and active variant to config
         if (activeVariant == null)
         {
-                previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId,previewingCharSex);
+                previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId);
         }
         else
         {
-            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId, previewingCharSex);
+            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId);
         }
 
 
@@ -93,14 +97,15 @@ public class PreviewManager : MonoBehaviour
         //clears items from model
     private void OnItemAbort()
     {
-    itemPreviewing = null;
-    activeVariant = null;
+        Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
+        itemPreviewing = null;
+        activeVariant = null;
     }
     
     //show item at model(preview)
     private void OnItemPressed(GameObject item)
     {
-        OnItemAbort();
+/*        OnItemAbort();*/
     
         var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
         activeVariant = previewingClothesConfig.GetActiveVariant(itemCFG);
@@ -110,7 +115,7 @@ public class PreviewManager : MonoBehaviour
         previewingBodyPart.sharedMesh = itemCFG.mesh;
     
     previewingBodyPart.material.color = previewingClothesConfig.ItemIsInConfig(itemCFG) == true ?
-    previewingClothesConfig.GetActiveVariant(itemCFG).color : Color.white;
+    previewingClothesConfig.GetActiveVariant(itemCFG).color : /*Color.white*/ itemCFG.variants[0].color;
     
         itemPreviewing = itemCFG;
     }
@@ -118,7 +123,6 @@ public class PreviewManager : MonoBehaviour
     private void OnDestroy()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_ABORT, OnItemAbort);
         Messenger.RemoveListener(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
     }
