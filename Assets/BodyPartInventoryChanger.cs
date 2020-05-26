@@ -8,7 +8,7 @@ public class BodyPartInventoryChanger : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         Messenger.Broadcast(GameEvents.INVENTORY_BODY_PART_CHANGED, bodypart);
-        Messenger.Broadcast(GameEvents.ITEM_OPERATION_ABORT);
+        Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
     }
 
 }

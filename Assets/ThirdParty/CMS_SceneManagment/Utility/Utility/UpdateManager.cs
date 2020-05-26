@@ -74,6 +74,7 @@ namespace Utils
             if (index >= _objects.Length)
             {
                 Array.Resize(ref _objects, 2 * _objects.Length);
+               
             }
 
             Updatable updatable = _objects[index];

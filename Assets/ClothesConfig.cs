@@ -21,7 +21,7 @@ public class ClothesConfig  : ISerializationCallbackReceiver
              .ToDictionary(x => x.Key, x => x.Value);
 
 
-        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this);
+        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this); //TODO NOT NEEDED?
 
     }
 
@@ -78,13 +78,4 @@ public class ClothesConfig  : ISerializationCallbackReceiver
         }
         return false;
     }
-
-
-
-    /*    public ClothesConfig()
-        {
-            foreach(string name in Enum.GetNames(typeof( BODY_PART)))
-            {
-            }
-        }*/
 }

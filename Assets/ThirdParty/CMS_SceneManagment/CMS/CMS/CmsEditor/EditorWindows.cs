@@ -48,14 +48,6 @@ namespace CMS.Editor
         }
     }
 
-    public class ItemVariantWindow : BaseListEditor<ItemVariant>
-    {
-        [MenuItem("Configs/ItemVariant %#n")]
-        public static void InitResourcesEditorWindow()
-        {
-            EditorWindow.GetWindow(typeof(ItemVariantWindow));
-        }
-    }
 
 }
 #endif

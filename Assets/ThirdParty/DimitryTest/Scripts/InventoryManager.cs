@@ -1,4 +1,5 @@
 ﻿using CMS.Config;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,18 @@ public class InventoryManager : MonoBehaviour
 
     public GameMode currentMode;
     public BODY_PART currentbodyPart;
+    public Gender characterGender;
 
     private void Awake()
     { 
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
+        Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
+    }
+
+    private void OnGenderChanged(Gender gender)
+    {
+        characterGender = gender;
     }
 
     private void Start()
@@ -53,7 +61,7 @@ public class InventoryManager : MonoBehaviour
     private void RefreshInventory()
     {
         ClearInventory();
-        GetItems(); //так же, добавить в itemconfig галочку открыт
+        GetItems(); 
         DisplayAppropriateItems();
     }
 
@@ -107,6 +115,7 @@ public class InventoryManager : MonoBehaviour
         inventory = ScriptableList<ItemConfig>.instance.list.
             Where(t => t.bodyPart == currentbodyPart).
             Where(t => t.gameMode == currentMode).
+            Where(t => t.gender == characterGender).
             Where(t => !t.ToString().Contains("default")).
             ToList();
 
@@ -117,5 +126,6 @@ public class InventoryManager : MonoBehaviour
     {
         Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.RemoveListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
+        Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
     }
 }

@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class SkinsManager : MonoBehaviour
+public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GENDER
 {
     public GameMode _gameMode;
     public Gender _characterSex;
@@ -18,7 +18,7 @@ public class SkinsManager : MonoBehaviour
         {
             Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
         }
-        Messenger.AddListener(GameEvents.CLOTHES_CHANGED, PutOnClothes);
+        Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
         SetDefaultConfig();
     }
 
@@ -28,7 +28,10 @@ public class SkinsManager : MonoBehaviour
 
         foreach (string name in Enum.GetNames(typeof(BODY_PART)))
         {
-            cfg.pickedItemAndVariants.Add(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name), "default");
+            if (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name) != null)
+            {
+                cfg.pickedItemAndVariants.Add(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name), "default");
+            }
         }
 
         defaultConfig = cfg;
@@ -51,8 +54,6 @@ public class SkinsManager : MonoBehaviour
     private void PutOnClothes()
     {
         LoadConf();
-
-        Debug.Log("I CALL CLOTHES CHANGING METHOD");
    
             foreach (ItemConfig item in defaultConfig.pickedItemAndVariants.Keys)
             {
@@ -60,7 +61,7 @@ public class SkinsManager : MonoBehaviour
                 bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()).mesh;
                 bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
 
-                Debug.Log("I put " + (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()) + "ON THE " + item.bodyPart.ToString()));
+                /*Debug.Log("I put " + (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()) + "ON THE " + item.bodyPart.ToString()));*/
             }
 
         if (currentConfig != null)
@@ -78,7 +79,7 @@ public class SkinsManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, PutOnClothes);
+        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
         if (GetComponent<PreviewManager>() != null) //ckeck if this manager is prewiew skin manager
         {
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
