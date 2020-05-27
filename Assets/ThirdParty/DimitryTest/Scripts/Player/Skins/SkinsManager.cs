@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+// set as a component of parent of modelBodyparts
 public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GENDER
 {
     public GameMode _gameMode;
@@ -15,7 +16,7 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
     private void Awake()
     {
 
-        if (GetComponent<PreviewManager>() != null) //ckeck if we are in editor
+        if (GetComponent<PreviewManager>() != null) //ckeck if we are in character editor
         {
             Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
         }
@@ -31,7 +32,6 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
         {
             if (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name) != null)
             {
-                /*cfg.pickedItemsAndVariants.Add(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name), "default");*/
                 cfg.AddItemToConfig(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name));
             }
         }
@@ -46,17 +46,20 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
         PutOnClothes();
     }
 
-    // set as a component of parent of modelBodyparts
+
     private void Start()
     {
+        /*PlayerPrefs.DeleteAll();*/
+
         PutOnClothes();
+
     }
 
     // puts on real model
     private void PutOnClothes()
     {
         LoadConf();
-
+        //PUT ON DEFAULT CLOTHES FIRST
         foreach (string dirtyPair in defaultConfig.pickedItemsAndVariants)
         {
             string[] strs = dirtyPair.Split('+');
@@ -65,15 +68,7 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
             bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = item.mesh;
             bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
         }
-        /*            foreach (ItemConfig item in defaultConfig.pickedItemAndVariants.Keys)
-                    {
-                        var bodyTransform = transform.Find(item.bodyPart.ToString());
-                        bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()).mesh;
-                        bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
-
-                        *//*Debug.Log("I put " + (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()) + "ON THE " + item.bodyPart.ToString()));*//*
-                    }*/
-
+        //PUT ON CLOTHES FROM CONFIG
         if (currentConfig != null)
         {
             foreach (string dirtyPair in currentConfig.pickedItemsAndVariants)
@@ -87,16 +82,6 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
                     bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = currentConfig.GetActiveVariant(item).color;
                 }
             }
-            /*        {
-                        foreach (KeyValuePair<ItemConfig, string> pair in currentConfig.pickedItemAndVariants)
-                        {
-                            {
-                                var bodyTransform = transform.Find(pair.Key.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
-                                bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = pair.Key.mesh;
-                                bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white; *//*ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value).color;*//*
-                            }
-                        }
-                    }*/
         }
     }
 
@@ -112,21 +97,9 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
     void LoadConf()
     {
         string key = _characterSex.ToString() + _gameMode.ToString();
-        var json = PlayerPrefs.GetString(key);
-        currentConfig = JsonUtility.FromJson<ClothesConfig>(json);
+        currentConfig = SaveManager.Instance.LoadClothesSet(key);
 
-/*        if (currentConfig != null)
-        {
-            currentConfig.LoadItemsData();
-        }
-        else
-        {
-            currentConfig = new ClothesConfig();
-        }*/
-        if(currentConfig == null)
-        {
-            currentConfig = new ClothesConfig();
-        }
+        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, currentConfig); //!!
     }
 
 }

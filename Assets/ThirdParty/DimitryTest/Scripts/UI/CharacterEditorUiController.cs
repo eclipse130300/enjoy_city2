@@ -71,11 +71,13 @@ public class CharacterEditorUiController : MonoBehaviour
             {
                 alpha = currentClothesConfig.GetActiveVariant(itemCFG) == V ? 1 : 0;
                 varGroup.SetTabFrameAlpha(alpha, varTab);
+                Debug.Log("Item: " + itemCFG + ", active variant :" + currentClothesConfig.GetActiveVariant(itemCFG));
             }
             else
             {
                 alpha = V == itemCFG.variants[0] ? 1 : 0;
                 varGroup.SetTabFrameAlpha(alpha, varTab);
+                Debug.Log("OKAY, I TAKE 1rst VAR");
             }
 
         }

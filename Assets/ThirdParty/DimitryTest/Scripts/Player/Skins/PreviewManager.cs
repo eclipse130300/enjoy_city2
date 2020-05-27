@@ -46,23 +46,8 @@ public class PreviewManager : MonoBehaviour
     {
         /*PlayerPrefs.DeleteAll();*/
 
-
         string key = previewingCharSex.ToString() + previewingGameMode.ToString();
-        var json = PlayerPrefs.GetString(key);
-        previewingClothesConfig = JsonUtility.FromJson<ClothesConfig>(json);
-
-/*        if (previewingClothesConfig != null)
-        {
-            previewingClothesConfig.LoadItemsData();
-        }
-        else
-        {
-            previewingClothesConfig = new ClothesConfig();
-        }*/
-        if (previewingClothesConfig == null)
-        {
-            previewingClothesConfig = new ClothesConfig();
-        }
+        previewingClothesConfig = SaveManager.Instance.LoadClothesSet(key);
     }
 
     private void OnItemVariantChanged(ItemVariant variant)
@@ -74,16 +59,15 @@ public class PreviewManager : MonoBehaviour
     private void OnItemPicked()
     {
         //add item and active variant to config
-        if (activeVariant == null)
-        {
-            /*previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId);*/
-            previewingClothesConfig.AddItemToConfig(itemPreviewing, itemPreviewing.variants[0]); //TODO null check in clothConf.cs
-        }
-        else
-        {
-            previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
-        }
-
+        /*        if (activeVariant == null)
+                {
+                    previewingClothesConfig.AddItemToConfig(itemPreviewing, itemPreviewing.variants[0]); //TODO null check in clothConf.cs
+                }
+                else
+                {
+                    previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
+                }*/
+        previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
 
         //and save it
         SavePreviewingConfig();
@@ -93,10 +77,8 @@ public class PreviewManager : MonoBehaviour
 
     void SavePreviewingConfig()
     {
-
         string key = previewingCharSex.ToString() + previewingGameMode.ToString();
-        var json = JsonUtility.ToJson(previewingClothesConfig);
-        PlayerPrefs.SetString(key, json);
+        SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig); 
     }
 
         //clears items from model
@@ -113,7 +95,7 @@ public class PreviewManager : MonoBehaviour
 /*        OnItemAbort();*/
     
         var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
-        activeVariant = previewingClothesConfig.GetActiveVariant(itemCFG);
+        activeVariant = previewingClothesConfig?.GetActiveVariant(itemCFG);
     
         var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
         previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();

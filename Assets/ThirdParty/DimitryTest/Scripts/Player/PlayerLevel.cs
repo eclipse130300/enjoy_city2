@@ -6,38 +6,32 @@ using UnityEngine;
 
 public class PlayerLevel : MonoBehaviour
 {
-    private int level;
-    private float experience;
-    private float expreienceToNextLevel;
+    public int level;
+    private int experience;
+    private int expreienceToNextLevel = 100;
     private Loader loader;
-
-
-    [SerializeField] private LevelConfig lvlCFG;
-
-    public int Level { get { return level; } }
+    private SaveManager saveManager;
 
     private void Awake()
     {
-        InitializeLevelConfig();
         loader = Loader.Instance;
+        saveManager = SaveManager.Instance;
+        loader.AllSceneLoaded += Initialize;
+        loader.StartSceneLoading += Save;
     }
 
     private void Start()
     {
-        loader.AllSceneLoaded += InitializeUI;
+        Initialize();
     }
 
-    private void InitializeUI()
+    private void Initialize()
     {
+        level = saveManager.GetLvl();
+        experience = saveManager.GetExp();
+
         Messenger.Broadcast(GameEvents.LVL_CHANGED, level);
         Messenger.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
-    }
-
-    private void InitializeLevelConfig()
-    {
-        this.level = lvlCFG.level;
-        this.experience = lvlCFG.experience;
-        this.expreienceToNextLevel = lvlCFG.experienceToNextLevel;
     }
 
     public void AddExperience(int amount)
@@ -57,8 +51,24 @@ public class PlayerLevel : MonoBehaviour
 
     private float GetNormilizedExperience()
     {
-        return experience / expreienceToNextLevel;
+        return (float)experience / expreienceToNextLevel;
     }
 
+    private void OnApplicationPause(bool pause)
+    {
+        Save();
+    }
+
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
+
+    private void Save()
+    {
+        saveManager.SaveExp(experience);
+        saveManager.SaveLvl(level);
+        Debug.Log("SAVE CALL");
+    }
 
 }

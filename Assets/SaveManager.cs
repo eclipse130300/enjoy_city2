@@ -13,6 +13,52 @@ public class SaveManager : Singleton<SaveManager>
         LoadAllConfigs();
     }
 
+
+
+    public void SaveClothesSet(string key, ClothesConfig clothesConf)
+    {
+        changableDataConfig.AddClothesConfig(key, clothesConf);
+        SaveChangableConfig();
+    }
+
+    public ClothesConfig LoadClothesSet(string key)
+    {
+        LoadChangableConfig();
+        return changableDataConfig?.GetClothesConfig(key);
+    }
+
+    public int GetLvl()
+    {
+        LoadImportantConfig();
+        return importantDataConfig.lvl;
+
+    }
+
+    public int GetExp()
+    {
+        LoadImportantConfig();
+        return importantDataConfig.exp;
+    }
+
+    public void SaveLvl(int Lvl)
+    {
+        importantDataConfig.lvl = Lvl;
+        SaveImportantConfig();
+    }
+
+    public void SaveExp(int exp)
+    {
+        importantDataConfig.exp = exp;
+        SaveImportantConfig();
+    }
+
+
+
+
+
+
+
+
     public void LoadAllConfigs()
     {
         LoadShopConfig();
@@ -23,45 +69,49 @@ public class SaveManager : Singleton<SaveManager>
     private void SaveConfig(IDataConfig config)
     {
         Debug.Log(config.ToString());
-        string key = config.ToString();
+        string key = savePrefix + config.ToString();
         var json = JsonUtility.ToJson(config);
         PlayerPrefs.SetString(key, json);
     }
-    public void SaveShopConfig()
+    private void SaveShopConfig()
     {
         SaveConfig(shopDataConfig);
     }
 
-    public void SaveImportantConfig()
+    private void SaveImportantConfig()
     {
         SaveConfig(importantDataConfig);
     }
 
-    public void SaveChangableConfig()
+    private void SaveChangableConfig()
     {
         SaveConfig(changableDataConfig);
     }
 
-    public T LoadConfig<T>(T cfg) where T : IDataConfig
+    private T LoadConfig<T>(T cfg) where T : IDataConfig
     {
 
-        string key = cfg.ToString();
+        string key = savePrefix + cfg?.ToString();
         var json = PlayerPrefs.GetString(key);
         var CONFIG = JsonUtility.FromJson<T>(json);
-        return CONFIG;
+        if (CONFIG != null)
+        {
+            return CONFIG;
+        }
+        return default;
     }
 
-    public void LoadShopConfig()
+    private void LoadShopConfig()
     {
         shopDataConfig = LoadConfig(shopDataConfig);
     }
 
-    public void LoadImportantConfig()
+    private void LoadImportantConfig()
     {
         importantDataConfig = LoadConfig(importantDataConfig);
     }
 
-    public void LoadChangableConfig()
+    private void LoadChangableConfig()
     {
         changableDataConfig = LoadConfig(changableDataConfig);
     }
@@ -86,10 +136,5 @@ public class SaveManager : Singleton<SaveManager>
     public string ToJson<T>(T obj)
     {
         return JsonUtility.ToJson(obj);
-    }
-
-    private void Update()
-    {
-
     }
 }
