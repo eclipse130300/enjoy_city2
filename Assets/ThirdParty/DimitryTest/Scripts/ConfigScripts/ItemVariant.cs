@@ -26,6 +26,7 @@ namespace CMS.Config
 #if UNITY_EDITOR
         public  void Draw()
         {
+            ConfigId = ScriptableGUIUtils.DrawField("ConfigID", ConfigId);
             color = ScriptableGUIUtils.DrawField("Color", color);
             currencyType = (CurrencyType)ScriptableGUIUtils.DrawField("Currency", currencyType);
             cost = ScriptableGUIUtils.DrawField("Cost", cost);

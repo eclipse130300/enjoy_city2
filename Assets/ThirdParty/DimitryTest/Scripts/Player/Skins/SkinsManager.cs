@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GENDER
 {
@@ -30,7 +31,8 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
         {
             if (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name) != null)
             {
-                cfg.pickedItemAndVariants.Add(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name), "default");
+                /*cfg.pickedItemsAndVariants.Add(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name), "default");*/
+                cfg.AddItemToConfig(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name));
             }
         }
 
@@ -54,26 +56,47 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
     private void PutOnClothes()
     {
         LoadConf();
-   
-            foreach (ItemConfig item in defaultConfig.pickedItemAndVariants.Keys)
-            {
-                var bodyTransform = transform.Find(item.bodyPart.ToString());
-                bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()).mesh;
-                bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
 
-                /*Debug.Log("I put " + (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()) + "ON THE " + item.bodyPart.ToString()));*/
-            }
+        foreach (string dirtyPair in defaultConfig.pickedItemsAndVariants)
+        {
+            string[] strs = dirtyPair.Split('+');
+            var item = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
+            var bodyTransform = transform.Find(item.bodyPart.ToString());
+            bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = item.mesh;
+            bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
+        }
+        /*            foreach (ItemConfig item in defaultConfig.pickedItemAndVariants.Keys)
+                    {
+                        var bodyTransform = transform.Find(item.bodyPart.ToString());
+                        bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()).mesh;
+                        bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
+
+                        *//*Debug.Log("I put " + (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + item.bodyPart.ToString()) + "ON THE " + item.bodyPart.ToString()));*//*
+                    }*/
 
         if (currentConfig != null)
         {
-            foreach (KeyValuePair<ItemConfig, string> pair in currentConfig.pickedItemAndVariants)
+            foreach (string dirtyPair in currentConfig.pickedItemsAndVariants)
             {
+                string[] strs = dirtyPair.Split('+');
+                var item = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
+                if (item != null)
                 {
-                    var bodyTransform = transform.Find(pair.Key.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
-                    bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = pair.Key.mesh;
-                    bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value).color;
+                    var bodyTransform = transform.Find(item.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
+                    bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = item.mesh;
+                    bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = currentConfig.GetActiveVariant(item).color;
                 }
             }
+            /*        {
+                        foreach (KeyValuePair<ItemConfig, string> pair in currentConfig.pickedItemAndVariants)
+                        {
+                            {
+                                var bodyTransform = transform.Find(pair.Key.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
+                                bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = pair.Key.mesh;
+                                bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white; *//*ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value).color;*//*
+                            }
+                        }
+                    }*/
         }
     }
 
@@ -92,11 +115,15 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
         var json = PlayerPrefs.GetString(key);
         currentConfig = JsonUtility.FromJson<ClothesConfig>(json);
 
-        if (currentConfig != null)
+/*        if (currentConfig != null)
         {
             currentConfig.LoadItemsData();
         }
         else
+        {
+            currentConfig = new ClothesConfig();
+        }*/
+        if(currentConfig == null)
         {
             currentConfig = new ClothesConfig();
         }

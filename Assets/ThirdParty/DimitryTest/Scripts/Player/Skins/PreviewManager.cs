@@ -51,11 +51,15 @@ public class PreviewManager : MonoBehaviour
         var json = PlayerPrefs.GetString(key);
         previewingClothesConfig = JsonUtility.FromJson<ClothesConfig>(json);
 
-        if (previewingClothesConfig != null)
+/*        if (previewingClothesConfig != null)
         {
             previewingClothesConfig.LoadItemsData();
         }
         else
+        {
+            previewingClothesConfig = new ClothesConfig();
+        }*/
+        if (previewingClothesConfig == null)
         {
             previewingClothesConfig = new ClothesConfig();
         }
@@ -72,11 +76,12 @@ public class PreviewManager : MonoBehaviour
         //add item and active variant to config
         if (activeVariant == null)
         {
-                previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId);
+            /*previewingClothesConfig.AdditemToConfig(itemPreviewing, itemPreviewing.variants[0].ConfigId);*/
+            previewingClothesConfig.AddItemToConfig(itemPreviewing, itemPreviewing.variants[0]); //TODO null check in clothConf.cs
         }
         else
         {
-            previewingClothesConfig.AdditemToConfig(itemPreviewing, activeVariant.ConfigId);
+            previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
         }
 
 

@@ -6,64 +6,114 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ClothesConfig  : ISerializationCallbackReceiver
+public class ClothesConfig : ISerializationCallbackReceiver
 {
-    public List<ItemConfig> items = new List<ItemConfig>(); 
-    public List<string> activeVariantNames = new List<string>();
+    /*    public List<ItemConfig> items = new List<ItemConfig>(); 
+        public List<string> activeVariantNames = new List<string>();
 
-    public Dictionary<ItemConfig, string> pickedItemAndVariants = new Dictionary<ItemConfig, string>(); //нужна тольк во время выполнения программы
-                                                                                                        //для связи шмотки и айди активного варианта
+        public Dictionary<ItemConfig, string> pickedItemAndVariants = new Dictionary<ItemConfig, string>(); *///нужна тольк во время выполнения программы
+                                                                                                              //для связи шмотки и айди активного варианта
+    public List<string> pickedItemsAndVariants = new List<string>();
 
-
-    public void LoadItemsData()
-    {
-        pickedItemAndVariants = items.Zip(activeVariantNames, (k, v) => new { Key = k, Value = v })
-             .ToDictionary(x => x.Key, x => x.Value);
-
-
-        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this); //TODO NOT NEEDED?
-
-    }
-
-    public void AdditemToConfig(ItemConfig config, string activeVariant)
-    {
-        if (pickedItemAndVariants.IsNullOrEmpty())
+    /*    public void LoadItemsData()
         {
-            pickedItemAndVariants.Add(config, activeVariant);
-        }
-        else
+            pickedItemAndVariants = items.Zip(activeVariantNames, (k, v) => new { Key = k, Value = v })
+                 .ToDictionary(x => x.Key, x => x.Value);
+
+
+            Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this); //TODO NOT NEEDED?
+
+        }*/
+
+    /*    public void AdditemToConfig(ItemConfig config, string activeVariant)
         {
-            foreach (ItemConfig item in pickedItemAndVariants.Keys.ToArray())
+            if (pickedItemAndVariants.IsNullOrEmpty())
             {
-                if (config.bodyPart == item.bodyPart)
-                {
-                    pickedItemAndVariants.Remove(item);
-                }
+                pickedItemAndVariants.Add(config, activeVariant);
             }
-            pickedItemAndVariants.Add(config, activeVariant);
-        }
-    }
+            else
+            {
+                foreach (ItemConfig item in pickedItemAndVariants.Keys.ToArray())
+                {
+                    if (config.bodyPart == item.bodyPart)
+                    {
+                        pickedItemAndVariants.Remove(item);
+                    }
+                }
+                pickedItemAndVariants.Add(config, activeVariant);
+            }
+        }*/
 
-    public ItemVariant GetActiveVariant(ItemConfig itemConfig)
+    public void AddItemToConfig(ItemConfig item, ItemVariant variant)
     {
 
-        foreach (KeyValuePair <ItemConfig, string> pair in pickedItemAndVariants)
+        string itemID = item.ConfigId;
+        string variantID = variant.ConfigId;
+
+        foreach(string pair in pickedItemsAndVariants.ToList())
         {
-            if(pair.Key == itemConfig)
+            string[] strs = pair.Split('+');
+            var it = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
+            Debug.Log(it);
+            if(it.bodyPart == item.bodyPart)
             {
-                return ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value);
+                pickedItemsAndVariants.Remove(pair);
+            }
+        }
+
+        pickedItemsAndVariants.Add(string.Concat(itemID, "+", variantID));
+        /*pickedItemsAndVariants.Add(itemID + "_" + variantID);*/
+    }
+
+    public void AddItemToConfig(ItemConfig item)
+    {
+        ItemVariant var = new ItemVariant();
+
+        string itemID = item.ConfigId;
+        string variantID = var.ConfigId;
+
+        pickedItemsAndVariants.Add(itemID + "+" + variantID);
+    }
+
+    public ItemVariant GetActiveVariant(ItemConfig item)
+    {
+        foreach (string dirtyPair in pickedItemsAndVariants)
+        {
+            string[] strs = dirtyPair.Split('+');
+            if (strs.Contains(item.ConfigId))
+            {
+                foreach (ItemVariant var in item.variants)
+                {
+                    if (strs[1] == var.ConfigId)
+                    {
+                        return var;
+                    }
+                }
             }
         }
         return null;
     }
 
+    /*    public ItemVariant GetActiveVariant(ItemConfig itemConfig)
+        {
+
+            foreach (KeyValuePair <ItemConfig, string> pair in pickedItemAndVariants)
+            {
+                if(pair.Key == itemConfig)
+                {
+                    return ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value);
+                }
+            }
+            return null;
+        }*/
+
     public void OnBeforeSerialize()
     {
-        activeVariantNames.Clear();
-        items.Clear();
+        /*        activeVariantNames.Clear();
+                items.Clear();
 
-        items = pickedItemAndVariants.Keys.ToList();
-        activeVariantNames = pickedItemAndVariants.Values.ToList();
+                items = pickedItemAndVariants.Keys.ToList();
+                activeVariantNames = pickedItemAndVariants.Values.ToList();*/
     }
 
     public void OnAfterDeserialize()
@@ -72,10 +122,14 @@ public class ClothesConfig  : ISerializationCallbackReceiver
 
     public bool ItemIsInConfig(ItemConfig item)
     {
-        foreach (ItemConfig key in pickedItemAndVariants.Keys)
+        foreach (string dirtyPair in pickedItemsAndVariants)
         {
-            if (key == item) return true;
+            string[] strs = dirtyPair.Split('+');
+            if (strs.Contains(item.ConfigId))
+            {
+                return true;
+            }
         }
-        return false;
+            return false;
     }
 }
