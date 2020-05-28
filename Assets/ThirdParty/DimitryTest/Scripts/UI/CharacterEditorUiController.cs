@@ -14,15 +14,26 @@ public class CharacterEditorUiController : MonoBehaviour
 
     public ClothesConfig currentClothesConfig;
     private GameObject itemDisplaying;
+    private PreviewManager previewManager;
+
 
     [SerializeField] private Vector2 itemDisplaySize = new Vector2(81, 84); 
 
     private void Awake()
     {
+        previewManager = FindObjectOfType<PreviewManager>();
         rightPanel.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
         Messenger.AddListener<ClothesConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
+        /*Messenger.AddListener(GameEvents.ITEM_BOUGHT, OnItemBought);*/
+    }
+
+    private void OnItemBuyTap()
+    {
+        //try to buy 
+
+        //hide buy button
     }
 
     private void SetCurrentClothesConfig(ClothesConfig cfg)
@@ -77,7 +88,6 @@ public class CharacterEditorUiController : MonoBehaviour
             {
                 alpha = V == itemCFG.variants[0] ? 1 : 0;
                 varGroup.SetTabFrameAlpha(alpha, varTab);
-                Debug.Log("OKAY, I TAKE 1rst VAR");
             }
 
         }

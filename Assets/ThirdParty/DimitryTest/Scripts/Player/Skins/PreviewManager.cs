@@ -21,8 +21,12 @@ public class PreviewManager : MonoBehaviour
 
     public ItemVariant activeVariant;
 
+    private SaveManager saveManager;
+
     private void Awake()
     {
+        saveManager = SaveManager.Instance;
+
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
@@ -59,14 +63,6 @@ public class PreviewManager : MonoBehaviour
     private void OnItemPicked()
     {
         //add item and active variant to config
-        /*        if (activeVariant == null)
-                {
-                    previewingClothesConfig.AddItemToConfig(itemPreviewing, itemPreviewing.variants[0]); //TODO null check in clothConf.cs
-                }
-                else
-                {
-                    previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
-                }*/
         previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
 
         //and save it
@@ -81,13 +77,13 @@ public class PreviewManager : MonoBehaviour
         SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig); 
     }
 
-        //clears items from model
+/*        //clears items from model
     private void OnItemAbort()
     {
         Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
         itemPreviewing = null;
         activeVariant = null;
-    }
+    }*/
     
     //show item at model(preview)
     private void OnItemPressed(GameObject item)
@@ -105,6 +101,15 @@ public class PreviewManager : MonoBehaviour
     previewingClothesConfig.GetActiveVariant(itemCFG).color : /*Color.white*/ itemCFG.variants[0].color;
     
         itemPreviewing = itemCFG;
+    }
+
+    void TryBuyItem()
+    {
+        if (saveManager.CheckIsEnoughMoney(activeVariant.currencyType, activeVariant.cost))
+        {
+            saveManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
+        }
+        //TODO something with rightpanel?or just hide?
     }
     
     private void OnDestroy()

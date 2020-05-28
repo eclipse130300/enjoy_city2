@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ClothesConfig : ISerializationCallbackReceiver
+public class ClothesConfig
 {
     public List<string> pickedItemsAndVariants = new List<string>();
 
@@ -28,7 +28,6 @@ public class ClothesConfig : ISerializationCallbackReceiver
         }
 
         pickedItemsAndVariants.Add(string.Concat(itemID, "+", variantID));
-        /*pickedItemsAndVariants.Add(itemID + "_" + variantID);*/
     }
 
     public void AddItemToConfig(ItemConfig item)
@@ -57,37 +56,11 @@ public class ClothesConfig : ISerializationCallbackReceiver
                             return var;
                         }
                     }
-                /*return item.variants[0];*/
                 }
             }
+            return item.variants[0];
         }
             return null;
-    }
-
-    /*    public ItemVariant GetActiveVariant(ItemConfig itemConfig)
-        {
-
-            foreach (KeyValuePair <ItemConfig, string> pair in pickedItemAndVariants)
-            {
-                if(pair.Key == itemConfig)
-                {
-                    return ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value);
-                }
-            }
-            return null;
-        }*/
-
-    public void OnBeforeSerialize()
-    {
-        /*        activeVariantNames.Clear();
-                items.Clear();
-
-                items = pickedItemAndVariants.Keys.ToList();
-                activeVariantNames = pickedItemAndVariants.Values.ToList();*/
-    }
-
-    public void OnAfterDeserialize()
-    {
     }
 
     public bool ItemIsInConfig(ItemConfig item)
