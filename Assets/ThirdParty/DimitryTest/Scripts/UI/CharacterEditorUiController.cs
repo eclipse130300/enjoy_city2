@@ -2,7 +2,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.XR;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterEditorUiController : MonoBehaviour
 {
@@ -11,29 +14,68 @@ public class CharacterEditorUiController : MonoBehaviour
     [SerializeField] Transform parentForItem;
     [SerializeField] Transform parentForVariants;
     [SerializeField] GameObject variantPrefab;
+    [SerializeField] GameObject buyButton;
+    [SerializeField] GameObject itemBoughtTab;
+    [SerializeField] TextMeshProUGUI variantCostText;
+    [SerializeField] Image variantCurrencyIMG;
+
+    [SerializeField] Sprite softCurrencySprite;
+    [SerializeField] Sprite hardCurrencySprite;
 
     public ClothesConfig currentClothesConfig;
     private GameObject itemDisplaying;
     private PreviewManager previewManager;
-
+    private ShopManager shopManager;
+    private ItemConfig itemCFG;
 
     [SerializeField] private Vector2 itemDisplaySize = new Vector2(81, 84); 
 
     private void Awake()
     {
+        shopManager = ShopManager.Instance;
         previewManager = FindObjectOfType<PreviewManager>();
         rightPanel.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
         Messenger.AddListener<ClothesConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
-        /*Messenger.AddListener(GameEvents.ITEM_BOUGHT, OnItemBought);*/
+        Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
+
+        Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
     }
 
-    private void OnItemBuyTap()
+    private void ManipulateDisplayingInfo(ItemVariant var)
     {
-        //try to buy 
+        if (shopManager.CheckIfItemIsBought(itemCFG, var))
+        {
+            buyButton.SetActive(false);
+            itemBoughtTab.SetActive(true);
+        }
+        else
+        {
+            buyButton.SetActive(true);
+            itemBoughtTab.SetActive(false);
+        }
 
-        //hide buy button
+        variantCostText.text = var.cost.ToString();
+
+        variantCurrencyIMG.sprite = var.currencyType == CurrencyType.HARD ?  hardCurrencySprite
+            : softCurrencySprite;
+
+
+    }
+
+
+
+    private void HideBuyButton(ItemConfig cfg, ItemVariant var)  //TODO cfg is unnecessary && var
+    {
+        //MAY BE DO NOT HIDE?
+        buyButton.SetActive(false);
+        itemBoughtTab.SetActive(true);
+    }
+
+    public void OnItemBuyTap()
+    {
+        previewManager.TryBuyPreviewingItem();
     }
 
     private void SetCurrentClothesConfig(ClothesConfig cfg)
@@ -50,12 +92,21 @@ public class CharacterEditorUiController : MonoBehaviour
     private void DisplayItem(GameObject itemGO) 
     {
         //display item description
-        var itemCFG = itemGO.GetComponent<ItemDisplay>().itemConfig;
+        itemCFG = itemGO.GetComponent<ItemDisplay>().itemConfig;
         rightPanel.SetActive(true);
         itemDisplaying = Instantiate(itemGO, rightPanel.transform.position,  Quaternion.identity);
         itemDisplaying.transform.SetParent(parentForItem);
         itemDisplaying.GetComponent<RectTransform>().ResetTransform();
         itemDisplaying.GetComponent<RectTransform>().sizeDelta = itemDisplaySize;
+        if(shopManager.CheckIfItemIsBought(itemCFG, currentClothesConfig.GetActiveVariant(itemCFG)))
+        {
+            buyButton.SetActive(false);
+        }
+        else
+        {
+            buyButton.SetActive(true);
+        }
+
 
         //clear all variants
         var children = parentForVariants.GetComponentsInChildren<Transform>();
@@ -77,22 +128,25 @@ public class CharacterEditorUiController : MonoBehaviour
             varTab.variant = V;
             varTab.group.Subscribe(varTab);
             varTab.tabBackground.color = V.color;
-            float alpha = 0f;
+            bool val;
             if (currentClothesConfig.ItemIsInConfig(itemCFG))
             {
-                alpha = currentClothesConfig.GetActiveVariant(itemCFG) == V ? 1 : 0;
-                varGroup.SetTabFrameAlpha(alpha, varTab);
-                Debug.Log("Item: " + itemCFG + ", active variant :" + currentClothesConfig.GetActiveVariant(itemCFG));
+                val = currentClothesConfig.GetActiveVariant(itemCFG) == V ? true : false;
+/*                Debug.Log("Item: " + itemCFG + ", active variant :" + currentClothesConfig.GetActiveVariant(itemCFG));*/
             }
             else
             {
-                alpha = V == itemCFG.variants[0] ? 1 : 0;
-                varGroup.SetTabFrameAlpha(alpha, varTab);
+                val = V == itemCFG.variants[0] ? true : false;
             }
+            varTab.activeIMG.gameObject.SetActive(val);
 
+            bool value = shopManager.CheckIfItemIsBought(itemCFG, V) == true ? false : true;
+            varTab.lockIMG.gameObject.SetActive(value);
         }
 
-        Destroy(itemDisplaying.GetComponent<ItemDisplay>());
+
+        ManipulateDisplayingInfo(currentClothesConfig.GetActiveVariant(itemCFG));
+        Destroy(itemDisplaying.GetComponent<ItemClick>());
     }
 
     public void OnDoneButtonTap()
@@ -104,6 +158,10 @@ public class CharacterEditorUiController : MonoBehaviour
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
+
+        Messenger.RemoveListener<ClothesConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
+        Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
+
     }
 
 

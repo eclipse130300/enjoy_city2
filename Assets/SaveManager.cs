@@ -2,15 +2,16 @@
 using PlayFab.ClientModels;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Utils;
 
 public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameManager -- 4 errors now!
 {
-    static ShopDataConfig shopDataConfig = new ShopDataConfig();
-    static ImportantDataConfig importantDataConfig = new ImportantDataConfig();
-    static ChangableDataConfig changableDataConfig = new ChangableDataConfig();
+    public ShopDataConfig shopDataConfig = new ShopDataConfig();
+    public ImportantDataConfig importantDataConfig = new ImportantDataConfig();
+    public ChangableDataConfig changableDataConfig = new ChangableDataConfig();
     static string savePrefix = "save_";
     private void Awake()
     {
@@ -24,7 +25,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         PlayerPrefs.DeleteAll();
         Debug.Log("ALL! CONFIGS DELETED!");
     }
-    [MenuItem("DEBUG/DELETE BOUGHT ITEMS(ROOM, SKINS)")]
+/*    [MenuItem("DEBUG/DELETE BOUGHT ITEMS(ROOM, SKINS)")]
     static void DeleteShopDataConfig()
     {
         PlayerPrefs.DeleteKey(savePrefix + shopDataConfig.ToString());
@@ -43,9 +44,14 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     {
         PlayerPrefs.DeleteKey(savePrefix + changableDataConfig.ToString());
         Debug.Log("CHANGABLE DATA DELETED!");
-    }
+    }*/
     #endregion
 #endif
+
+    public List<string> Get3DItemList()
+    {
+        return shopDataConfig.bought3DModelItems;
+    }
 
     public void SaveClothesSet(string key, ClothesConfig clothesConf)
     {
@@ -80,40 +86,6 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         importantDataConfig.softCurrency = amount;
     }
 
-    public bool CheckIsEnoughMoney(CurrencyType type, int amount)
-    {
-        switch (type)
-        {
-            case CurrencyType.SOFT:
-                if (GetSoftCurrency() >= amount)
-                {
-                    return true;
-                }
-                break;
-            case CurrencyType.HARD:
-                if (GetHardCurrency() >= amount)
-                {
-                    return true;
-                }
-                break;
-        }
-        return false;
-    }
-    //save manager buys?
-    public void Buy(ItemConfig cfg, ItemVariant varitant, int cost, CurrencyType type)
-    {
-        switch (type)
-        {
-            case CurrencyType.SOFT:
-                importantDataConfig.softCurrency -= cost;
-                break;
-            case CurrencyType.HARD:
-                importantDataConfig.hardCurrency -= cost;
-                break;
-        }
-        shopDataConfig.AddItemToBoughtList(cfg, varitant);
-    }
-
     public void SetHardCurrency(int amount)
     {
         importantDataConfig.hardCurrency = amount;
@@ -121,7 +93,27 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     public void Add3DItemToShopList(ItemConfig conf, ItemVariant activeVar)
     {
-
+        var list = shopDataConfig.bought3DModelItems;
+/*        if (list.IsNullOrEmpty())
+        {
+            list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
+        }
+        else
+        {
+            foreach (string str in list)
+            {
+                var pair = str.Split('+');
+                if (pair[0].Contains(conf.ConfigId))
+                {
+                    if (!pair[1].Contains(activeVar.ConfigId))
+                    {
+                        list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
+                        break;
+                    }
+                }
+            }
+        }*/
+        list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
     }
 
     public int GetExp()

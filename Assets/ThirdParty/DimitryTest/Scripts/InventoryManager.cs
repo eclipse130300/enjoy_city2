@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -15,12 +16,16 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private GameObject EmptySlot;
     [SerializeField] private Transform contentObject;
 
+    private ShopManager shopManager;
+
     public GameMode currentMode;
     public BODY_PART currentbodyPart;
     public Gender characterGender;
 
     private void Awake()
-    { 
+    {
+        shopManager = ShopManager.Instance;
+
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
         Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
@@ -33,7 +38,6 @@ public class InventoryManager : MonoBehaviour
 
     private void Start()
     {
-        ClearInventory();
         OnInventoryChanged(GameMode.SandBox, BODY_PART.HAIR);
     }
 
@@ -76,14 +80,17 @@ public class InventoryManager : MonoBehaviour
 
     private void DisplayAppropriateItems()
     {
-        foreach (ItemConfig cfg in inventory)
+        foreach (ItemConfig cfg in inventory) //insantiate and display
         {
             var item = Instantiate(ItemPrefab);
             var itemScript = item.GetComponent<ItemDisplay>();
             item.transform.SetParent(contentObject);
 
+
             itemScript.itemConfig = cfg;
             itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor);
+            bool lockVal = shopManager.CheckIfItemIsBought(cfg) == true ? false : true;
+            itemScript.lockIcon.gameObject.SetActive(lockVal);
         }
         if (inventory?.Count < inventoryMinSize)
         {

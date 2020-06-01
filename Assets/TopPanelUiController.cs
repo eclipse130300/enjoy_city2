@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CMS.Config;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,8 +7,11 @@ using UnityEngine.UI;
 
 public class TopPanelUiController : MonoBehaviour
 {
-    public Image filledLine;
-    public TextMeshProUGUI lvlText;
+    [SerializeField] Image filledLine;
+    [SerializeField] TextMeshProUGUI lvlText;
+    [SerializeField] TextMeshProUGUI softCurrency;
+    [SerializeField] TextMeshProUGUI hardCurrency;
+
     private SaveManager saveManager;
 
     private void Awake()
@@ -16,6 +20,7 @@ public class TopPanelUiController : MonoBehaviour
 
         Messenger.AddListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
         Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
+        Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
     }
 
     private void Start()
@@ -25,13 +30,19 @@ public class TopPanelUiController : MonoBehaviour
 
     private void Initialize()
     {
-        var lvl = saveManager.GetLvl();
         var exp = saveManager.GetExp();
         var expToNextLvl = saveManager.GetExpToNextLevel();
         filledLine.fillAmount = NormilizeExperienceForUI(exp, expToNextLvl);
-        lvlText.text = lvl.ToString();
+        lvlText.text = saveManager.GetLvl().ToString();
+        softCurrency.text = saveManager.GetSoftCurrency().ToString();
+        hardCurrency.text = saveManager.GetHardCurrency().ToString();
     }
 
+    private void UpdateCurrency(ItemConfig cfg, ItemVariant var) //TODO cfg && var is unnecessary
+    {
+        softCurrency.text = saveManager.GetSoftCurrency().ToString();
+        hardCurrency.text = saveManager.GetHardCurrency().ToString();
+    }
 
     private void OnLvlChanged(int lvl)
     {
@@ -52,5 +63,6 @@ public class TopPanelUiController : MonoBehaviour
     {
         Messenger.RemoveListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged);
         Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
+        Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
     }
 }

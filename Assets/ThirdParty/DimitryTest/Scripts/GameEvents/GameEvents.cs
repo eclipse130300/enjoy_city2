@@ -20,6 +20,8 @@ public static class GameEvents
     public const string CLOTHES_CHANGED = "CLOTHES_CHANGED";
 
     public const string ITEM_VARIANT_CHANGED = "ITEM_VARIANT_CHANGED";
+    public const string REFRESH_UI = "REFRESH_UI";
+
 
     public const string INVENTORY_GAME_MODE_CHANGED = "INVENTORY_GAME_MODE_CHANGED";
     public const string INVENTORY_BODY_PART_CHANGED = "INVENTORY_BODY_PART_CHANGED";

@@ -21,11 +21,11 @@ public class PreviewManager : MonoBehaviour
 
     public ItemVariant activeVariant;
 
-    private SaveManager saveManager;
+    private ShopManager shopManager;
 
     private void Awake()
     {
-        saveManager = SaveManager.Instance;
+        shopManager = ShopManager.Instance;
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
@@ -103,13 +103,14 @@ public class PreviewManager : MonoBehaviour
         itemPreviewing = itemCFG;
     }
 
-    void TryBuyItem()
+    public void TryBuyPreviewingItem()
     {
-        if (saveManager.CheckIsEnoughMoney(activeVariant.currencyType, activeVariant.cost))
+        if (shopManager.CheckIsEnoughMoney(activeVariant.currencyType, activeVariant.cost))
         {
-            saveManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
+            shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
+            Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
+            Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
         }
-        //TODO something with rightpanel?or just hide?
     }
     
     private void OnDestroy()

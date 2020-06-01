@@ -20,7 +20,6 @@ public class ClothesConfig
         {
             string[] strs = pair.Split('+');
             var it = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
-            Debug.Log(it);
             if(it.bodyPart == item.bodyPart)
             {
                 pickedItemsAndVariants.Remove(pair);
