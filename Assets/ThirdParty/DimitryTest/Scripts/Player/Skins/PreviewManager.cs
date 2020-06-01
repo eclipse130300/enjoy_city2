@@ -62,13 +62,21 @@ public class PreviewManager : MonoBehaviour
 
     private void OnItemPicked()
     {
-        //add item and active variant to config
-        previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
+        if (shopManager.CheckIfItemIsBought(itemPreviewing, activeVariant))
+        {
+            //add item and active variant to config
+            previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
 
-        //and save it
-        SavePreviewingConfig();
+            //and save it
+            SavePreviewingConfig();
 
-        Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
+            Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
+        }
+        else
+        {
+            // make a window - BUY ITEM, BRO
+            Debug.Log("BUY THIS ITEM FIRST!");
+        }
     }
 
     void SavePreviewingConfig()
@@ -109,7 +117,12 @@ public class PreviewManager : MonoBehaviour
         {
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
+            OnItemPicked();
             Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
+        }
+        else
+        {
+            Debug.Log("nope...ADD MONEY FIRST!");
         }
     }
     

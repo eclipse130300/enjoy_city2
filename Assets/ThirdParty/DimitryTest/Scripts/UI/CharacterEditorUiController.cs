@@ -18,6 +18,8 @@ public class CharacterEditorUiController : MonoBehaviour
     [SerializeField] GameObject itemBoughtTab;
     [SerializeField] TextMeshProUGUI variantCostText;
     [SerializeField] Image variantCurrencyIMG;
+    [SerializeField] TextMeshProUGUI variantNameIDtext;
+    [SerializeField] TextMeshProUGUI varDescriptionText;
 
     [SerializeField] Sprite softCurrencySprite;
     [SerializeField] Sprite hardCurrencySprite;
@@ -61,7 +63,8 @@ public class CharacterEditorUiController : MonoBehaviour
         variantCurrencyIMG.sprite = var.currencyType == CurrencyType.HARD ?  hardCurrencySprite
             : softCurrencySprite;
 
-
+        variantNameIDtext.text = var.ConfigId;
+        varDescriptionText.text = var.description;
     }
 
 
