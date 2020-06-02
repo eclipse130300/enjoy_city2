@@ -6,76 +6,72 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ClothesConfig  : ISerializationCallbackReceiver
+public class ClothesConfig
 {
-    public List<ItemConfig> items = new List<ItemConfig>(); 
-    public List<string> activeVariantNames = new List<string>();
+    public List<string> pickedItemsAndVariants = new List<string>();
 
-    public Dictionary<ItemConfig, string> pickedItemAndVariants = new Dictionary<ItemConfig, string>(); //нужна тольк во время выполнения программы
-                                                                                                        //для связи шмотки и айди активного варианта
-
-
-    public void LoadItemsData()
+    public void AddItemToConfig(ItemConfig item, ItemVariant variant)
     {
-        pickedItemAndVariants = items.Zip(activeVariantNames, (k, v) => new { Key = k, Value = v })
-             .ToDictionary(x => x.Key, x => x.Value);
 
+        string itemID = item.ConfigId;
+        string variantID = variant.ConfigId;
 
-        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this); //TODO NOT NEEDED?
+        foreach(string pair in pickedItemsAndVariants.ToList())
+        {
+            string[] strs = pair.Split('+');
+            var it = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
+            if(it.bodyPart == item.bodyPart)
+            {
+                pickedItemsAndVariants.Remove(pair);
+            }
+        }
 
+        pickedItemsAndVariants.Add(string.Concat(itemID, "+", variantID));
     }
 
-    public void AdditemToConfig(ItemConfig config, string activeVariant)
+    public void AddItemToConfig(ItemConfig item)
     {
-        if (pickedItemAndVariants.IsNullOrEmpty())
+        ItemVariant var = new ItemVariant();
+
+        string itemID = item.ConfigId;
+        string variantID = var.ConfigId;
+
+        pickedItemsAndVariants.Add(itemID + "+" + variantID);
+    }
+
+    public ItemVariant GetActiveVariant(ItemConfig item)
+    {
+        if (pickedItemsAndVariants != null)
         {
-            pickedItemAndVariants.Add(config, activeVariant);
-        }
-        else
-        {
-            foreach (ItemConfig item in pickedItemAndVariants.Keys.ToArray())
+            foreach (string dirtyPair in pickedItemsAndVariants)
             {
-                if (config.bodyPart == item.bodyPart)
+                string[] strs = dirtyPair.Split('+');
+                if (strs.Contains(item.ConfigId))
                 {
-                    pickedItemAndVariants.Remove(item);
+                    foreach (ItemVariant var in item.variants)
+                    {
+                        if (strs[1] == var.ConfigId)
+                        {
+                            return var;
+                        }
+                    }
                 }
             }
-            pickedItemAndVariants.Add(config, activeVariant);
+            return item.variants[0];
         }
-    }
-
-    public ItemVariant GetActiveVariant(ItemConfig itemConfig)
-    {
-
-        foreach (KeyValuePair <ItemConfig, string> pair in pickedItemAndVariants)
-        {
-            if(pair.Key == itemConfig)
-            {
-                return ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value);
-            }
-        }
-        return null;
-    }
-
-    public void OnBeforeSerialize()
-    {
-        activeVariantNames.Clear();
-        items.Clear();
-
-        items = pickedItemAndVariants.Keys.ToList();
-        activeVariantNames = pickedItemAndVariants.Values.ToList();
-    }
-
-    public void OnAfterDeserialize()
-    {
+            return null;
     }
 
     public bool ItemIsInConfig(ItemConfig item)
     {
-        foreach (ItemConfig key in pickedItemAndVariants.Keys)
+        foreach (string dirtyPair in pickedItemsAndVariants)
         {
-            if (key == item) return true;
+            string[] strs = dirtyPair.Split('+');
+            if (strs.Contains(item.ConfigId))
+            {
+                return true;
+            }
         }
-        return false;
+            return false;
     }
 }

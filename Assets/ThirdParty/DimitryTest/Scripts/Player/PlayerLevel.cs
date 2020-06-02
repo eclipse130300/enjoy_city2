@@ -6,38 +6,34 @@ using UnityEngine;
 
 public class PlayerLevel : MonoBehaviour
 {
-    private int level;
-    private float experience;
-    private float expreienceToNextLevel;
+    public int level;
+    [SerializeField] private int experience; //dbug
+    [SerializeField] private int expreienceToNextLevel = 100; //dbug
+
+    [SerializeField] int lvlDifficultyDenominator = 5;
+    [SerializeField] int difficultyMultiplier =2;
+    [SerializeField] int addExpPerLvl = 10;
     private Loader loader;
-
-
-    [SerializeField] private LevelConfig lvlCFG;
-
-    public int Level { get { return level; } }
+    private SaveManager saveManager;
 
     private void Awake()
     {
-        InitializeLevelConfig();
         loader = Loader.Instance;
+        saveManager = SaveManager.Instance;
+        loader.AllSceneLoaded += Initialize;
+        loader.AllSceneUnloaded += Save;
     }
 
     private void Start()
     {
-        loader.AllSceneLoaded += InitializeUI;
+        Initialize();
     }
 
-    private void InitializeUI()
+    private void Initialize()
     {
-        Messenger.Broadcast(GameEvents.LVL_CHANGED, level);
-        Messenger.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
-    }
-
-    private void InitializeLevelConfig()
-    {
-        this.level = lvlCFG.level;
-        this.experience = lvlCFG.experience;
-        this.expreienceToNextLevel = lvlCFG.experienceToNextLevel;
+        level = saveManager.GetLvl();
+        experience = saveManager.GetExp();
+        expreienceToNextLevel = saveManager.GetExpToNextLevel();
     }
 
     public void AddExperience(int amount)
@@ -45,20 +41,37 @@ public class PlayerLevel : MonoBehaviour
         experience += amount;
 
 
-        while (experience > expreienceToNextLevel)
+        while (experience >= expreienceToNextLevel)
         {
             level++;
             experience -= expreienceToNextLevel;
+            AddExpToNextLvl();
             Messenger.Broadcast(GameEvents.LVL_CHANGED, level);
         }
 
-        Messenger.Broadcast(GameEvents.EXP_CHANGED, GetNormilizedExperience());
+        Messenger.Broadcast(GameEvents.EXP_CHANGED, experience, expreienceToNextLevel);
     }
 
-    private float GetNormilizedExperience()
+    private void AddExpToNextLvl()
     {
-        return experience / expreienceToNextLevel;
+        expreienceToNextLevel += addExpPerLvl;
+        if(level % lvlDifficultyDenominator == 0)
+        {
+            addExpPerLvl *= difficultyMultiplier;
+        }
     }
 
+    private void Save()
+    {
+        saveManager.SaveExp(experience);
+        saveManager.SaveLvl(level);
+        saveManager.SaveExpToNextLvl(expreienceToNextLevel);
+        Debug.Log("SAVE CALL");
+    }
+
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
 
 }

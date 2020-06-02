@@ -45,7 +45,7 @@ public class EntryPointManager : MonoBehaviour
     EntryPoint ActivePointCheck(EntryPoint point)
     {
         float distance = Vector3.Distance(player.transform.position, point.transform.position);
-        if (distance <= distanceToTrigger && LvlCheck(player.Level, point.fromLevelAvailable)) return point;
+        if (distance <= distanceToTrigger && LvlCheck(player.level, point.fromLevelAvailable)) return point;
         else return null;
     }
 
