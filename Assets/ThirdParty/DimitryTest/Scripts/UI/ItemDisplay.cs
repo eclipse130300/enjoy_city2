@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemDisplay : MonoBehaviour, IPointerClickHandler
+public class ItemDisplay : MonoBehaviour , IItemHandler
 {
     [SerializeField] private Color previewFrameColor;
 
@@ -18,7 +18,13 @@ public class ItemDisplay : MonoBehaviour, IPointerClickHandler
     private Color startFrameColor;
     private bool isPreviewing;
 
+    public Image lockIcon;
 
+    public bool IsPreviewing
+    {
+        get => isPreviewing;
+        set => isPreviewing = value;
+    }
 
     private void Awake()
     {
@@ -30,10 +36,34 @@ public class ItemDisplay : MonoBehaviour, IPointerClickHandler
             {
                 frameIMG = img;
             }
+
+            else if (img.gameObject.CompareTag("lock"))
+            {
+                lockIcon = img;
+            }
         }
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
+        Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
     }
+
+    private void OnItemBought(ItemConfig cfg, ItemVariant var) // TODO var is unnecessary
+    {
+        if (itemConfig == cfg)
+        {
+            if (lockIcon != null)
+            {
+                lockIcon.gameObject?.SetActive(false);
+            }
+        }
+    }
+
+    /*    public void SetLockImgAlfa(float alpha)
+        {
+            Color col = lockIcon.material.color;
+            col.a = alpha;
+            lockIcon.material.color = col;
+        }*/
 
     private void ClearIfOtherItem(GameObject item)
     {
@@ -47,9 +77,10 @@ public class ItemDisplay : MonoBehaviour, IPointerClickHandler
         inventoryImage.sprite = inventoryIMG;
         startFrameColor = frameCol;
         frameIMG.color = frameCol;
+
     }
 
-    private void ItemPicked()
+    public void ItemPicked()
     {
 
         isPreviewing = false;
@@ -58,29 +89,17 @@ public class ItemDisplay : MonoBehaviour, IPointerClickHandler
         Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
     }
 
-    private void ItemPressed()
+    public void ItemPressed()
     {
         isPreviewing = true;
         Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
         frameIMG.color = previewFrameColor;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (!isPreviewing)
-        {
-            ItemPressed();
-        }
-        else
-        {
-            ItemPicked();
-        }
-    }
-
     public void OnDestroy()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
+        Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
     }
-
 }
 

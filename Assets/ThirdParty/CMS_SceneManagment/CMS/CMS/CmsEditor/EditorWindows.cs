@@ -21,15 +21,6 @@ namespace CMS.Editor
         }
     }
 
-    public class LevelEditorWindow : BaseListEditor<LevelConfig>
-    {
-        [MenuItem("Configs/PlayerLevel %#n")]
-        public static void InitResourcesEditorWindow()
-        {
-            EditorWindow.GetWindow(typeof(LevelEditorWindow));
-        }
-    }
-
     public class RoomItemEditorWindow : BaseListEditor<RoomItemConfig>
     {
         [MenuItem("Configs/RoomItemCFG %#n")]

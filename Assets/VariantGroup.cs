@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VariantGroup : MonoBehaviour
 {
@@ -9,18 +10,18 @@ public class VariantGroup : MonoBehaviour
     public void OnVariantSelected(VariantTab tab)
     {
         ResetVariantsFrameAlpha();
-        SetTabFrameAlpha(1, tab);
+        tab.activeIMG.gameObject.SetActive(true);
     }
 
     public void ResetVariantsFrameAlpha()
     {
         foreach (VariantTab tab in variants)
         {
-            SetTabFrameAlpha(0, tab);
+            if(tab.activeIMG != null)  tab.activeIMG.gameObject.SetActive(false);
         }
     }
 
-    public void SetTabFrameAlpha(float alpha, VariantTab tab)
+/*    public void SetTabFrameAlpha(float alpha, VariantTab tab)
     {
         if (tab.activeIMG != null)
         {
@@ -28,7 +29,8 @@ public class VariantGroup : MonoBehaviour
             c.a = alpha;
             tab.activeIMG.color = c;
         }
-    }
+    }*/
+
 
     public void Subscribe(VariantTab tab)
     {

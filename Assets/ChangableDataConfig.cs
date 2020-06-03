@@ -8,7 +8,7 @@ using System.Linq;
 public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
 {
 
-    public List<ClothesConfig> allConfigs;
+    public List<ClothesConfig> allConfigs = new List<ClothesConfig>();
     public List<string> configNames = new List<string>();
 
 
@@ -18,7 +18,7 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
     public Dictionary<string, ClothesConfig> pickedClothesConfigs = new Dictionary<string, ClothesConfig>(); //нужна тольк во время выполнения программы
                                                                                                         //для связи шмотки и айди активного варианта
 
-    public void AdditemToConfig(string name, ClothesConfig clothesConf)
+    public void AddClothesConfig(string name, ClothesConfig clothesConf)
     {
 
         if (pickedClothesConfigs.ContainsKey(name))
@@ -51,7 +51,7 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
         {
             return pickedClothesConfigs[key];
         }
-        return null;
+        return new ClothesConfig();
     }
 
     public void SetNickName(string nick)
@@ -63,28 +63,5 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
     {
         gender = sex;
     }
-
-
-/*    public ItemVariant GetActiveVariant(ItemConfig itemConfig)
-    {
-
-        foreach (KeyValuePair<ItemConfig, string> pair in pickedClothesConfigs)
-        {
-            if (pair.Key == itemConfig)
-            {
-                return ScriptableList<ItemVariant>.instance.GetItemByID(pair.Value);
-            }
-        }
-        return null;
-    }
-
-    public bool ItemIsInConfig(ItemConfig item)
-    {
-        foreach (ItemConfig key in pickedClothesConfigs.Keys)
-        {
-            if (key == item) return true;
-        }
-        return false;
-    }*/
 }
 
