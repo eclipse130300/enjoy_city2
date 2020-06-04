@@ -14,7 +14,7 @@ namespace CMS.Config
     [JsonObject(MemberSerialization.OptIn)]
     [Serializable]
 
-    public class ItemConfig : BaseScriptableDrowableItem
+    public class ItemConfig : BaseScriptableDrowableItem , IDataConfig
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
         public Mesh mesh;
