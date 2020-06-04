@@ -65,6 +65,21 @@ public class ShopManager : Singleton<ShopManager>
         return false;
     }
 
+    public bool CheckIfItemIsBought(RoomItemConfig cfg) // overload check if bought item only
+    {
+        var list = saveManager.GetRoomItemList();
+
+        foreach (string str in list)
+        {
+            var pair = str.Split('+');
+            if (pair[0].Contains(cfg.ConfigId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool CheckIfItemIsBought(ItemConfig cfg) // overload check if bought item only
     {
         var list = saveManager.Get3DItemList();

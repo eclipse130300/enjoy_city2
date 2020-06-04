@@ -53,6 +53,11 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         return shopDataConfig.bought3DModelItems;
     }
 
+    public List<string> GetRoomItemList()
+    {
+        return shopDataConfig.boughtRoomItems;
+    }
+
     public void SaveClothesSet(string key, ClothesConfig clothesConf)
     {
         changableDataConfig.AddClothesConfig(key, clothesConf);

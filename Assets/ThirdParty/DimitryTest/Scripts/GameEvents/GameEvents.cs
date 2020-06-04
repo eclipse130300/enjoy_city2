@@ -26,6 +26,8 @@ public static class GameEvents
     public const string INVENTORY_GAME_MODE_CHANGED = "INVENTORY_GAME_MODE_CHANGED";
     public const string INVENTORY_BODY_PART_CHANGED = "INVENTORY_BODY_PART_CHANGED";
     public const string GENDER_CHANGED = "GENDER_CHANGED";
+    public const string FURNITURE_CHANGED = "FURNITURE_CHANGED";
+
 
     public const string CLOTHES_CONFIG_LOADED = "CLOTHES_CONFIG_LOADED";
 
