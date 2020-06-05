@@ -120,6 +120,6 @@ public class RoomInventoryManager : MonoBehaviour
 public enum FURNITURE
 {
     SOFA,
-    PICTURE,
+    PLANT,
     TABLE
 }

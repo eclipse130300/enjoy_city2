@@ -3,59 +3,62 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Utils;
 
-public class PreviewManager : MonoBehaviour
+public class RoomPreviewManager : MonoBehaviour
 {
-    public Gender previewingCharSex;
+    public List<GameObject> roomItems;
 
-    public GameMode previewingGameMode;
+    public RoomConfig currentRoomConf;
 
-    private SkinnedMeshRenderer previewingBodyPart;
+    public FURNITURE furniturePreviewing;
 
-    public ClothesConfig previewingClothesConfig;
+    public SaveManager saveManager;
 
-    public ClothesConfig defaultConfig;
-
-    public ItemConfig itemPreviewing;
+    public ShopManager shopManager;
 
     public ItemVariant activeVariant;
 
-    private ShopManager shopManager;
+    public RoomItemConfig itemPreviewing;
 
     private void Awake()
     {
+        saveManager = SaveManager.Instance;
         shopManager = ShopManager.Instance;
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
-        Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
-        Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
 
-        LoadConf();
     }
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        Messenger.Broadcast(GameEvents.GENDER_CHANGED, previewingCharSex); // TODO MAKE GENDER(character) MANAGER?
+
     }
 
-    private void OnGameModeChanged(GameMode gameMode)
+    void LoadRoomConfig()
     {
-        previewingGameMode = gameMode;
-        LoadConf();
+        currentRoomConf = saveManager.LoadRoomSet();
+    }
+    void SaveRoomConfig()
+    {
+        saveManager.SaveRoomSet(currentRoomConf);
     }
 
-    void LoadConf()
+    void Initialize()
     {
+        foreach (string name in Enum.GetNames(typeof(FURNITURE)))
+        {
+            roomItems.Add(GameObject.Find(name));
+        }
 
-        string key = previewingCharSex.ToString() + previewingGameMode.ToString();
-        previewingClothesConfig = SaveManager.Instance.LoadClothesSet(key);
+        LoadRoomConfig();
     }
 
     private void OnItemVariantChanged(ItemVariant variant)
     {
-        previewingBodyPart.material.color = variant.color;
+       /* previewingBodyPart.material.color = variant.color;*/
         activeVariant = variant;
     }
 
@@ -64,10 +67,10 @@ public class PreviewManager : MonoBehaviour
         if (shopManager.CheckIfItemIsBought(itemPreviewing, activeVariant))
         {
             //add item and active variant to config
-            previewingClothesConfig.AddItemToConfig(itemPreviewing, activeVariant);
+            currentRoomConf.AddItemToConfig(itemPreviewing, activeVariant);
 
             //and save it
-            SavePreviewingConfig();
+            SaveRoomConfig();
 
             Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
         }
@@ -78,26 +81,20 @@ public class PreviewManager : MonoBehaviour
         }
     }
 
-    void SavePreviewingConfig()
-    {
-        string key = previewingCharSex.ToString() + previewingGameMode.ToString();
-        SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig); 
-    }
-    
     //show item at model(preview)
     private void OnItemPressed(GameObject item)
     {
-    
-        var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
-        activeVariant = previewingClothesConfig?.GetActiveVariant(itemCFG);
-    
-        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
+
+        var itemCFG = item.GetComponent<RoomItemDisplay>().itemConfig;
+        activeVariant = currentRoomConf?.GetActiveVariant(itemCFG);
+
+/*        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
         previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
         previewingBodyPart.sharedMesh = itemCFG.mesh;
-    
-    previewingBodyPart.material.color = previewingClothesConfig.ItemIsInConfig(itemCFG) == true ?
-    previewingClothesConfig.GetActiveVariant(itemCFG).color : /*Color.white*/ itemCFG.variants[0].color;
-    
+
+        previewingBodyPart.material.color = currentRoomConf.ItemIsInConfig(itemCFG) == true ?
+        currentRoomConf.GetActiveVariant(itemCFG).color : *//*Color.white*//* itemCFG.variants[0].color;*/
+
         itemPreviewing = itemCFG;
     }
 
@@ -108,19 +105,18 @@ public class PreviewManager : MonoBehaviour
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
             OnItemPicked();
-            Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
+            Messenger.Broadcast(GameEvents.ROOM_ITEM_BOUGHT, itemPreviewing, activeVariant);
         }
         else
         {
             Debug.Log("nope...ADD MONEY FIRST!");
         }
     }
-    
+
     private void OnDestroy()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.RemoveListener(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
     }
-
 }

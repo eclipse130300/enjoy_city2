@@ -30,7 +30,9 @@ public static class GameEvents
 
 
     public const string CLOTHES_CONFIG_LOADED = "CLOTHES_CONFIG_LOADED";
+    public const string ROOM_CONFIG_LOADED = "ROOM_CONFIG_LOADED";
 
     public const string ITEM_BOUGHT = "ITEM_BOUGHT";
+    public const string ROOM_ITEM_BOUGHT = "ROOM_ITEM_BOUGHT";
 
 }

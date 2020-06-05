@@ -42,7 +42,7 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
         }
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
-        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnItemBought);
     }
 
     private void OnItemBought(RoomItemConfig cfg, ItemVariant var) // TODO var is unnecessary
@@ -90,6 +90,6 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
     public void OnDestroy()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
-        Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnItemBought);
     }
 }

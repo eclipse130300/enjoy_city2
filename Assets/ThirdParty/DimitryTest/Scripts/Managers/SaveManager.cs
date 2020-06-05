@@ -67,9 +67,26 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public ClothesConfig LoadClothesSet(string key)
     {
         LoadChangableConfig();
-        return changableDataConfig?.GetClothesConfig(key);
+        var clothes = changableDataConfig?.GetClothesConfig(key);
+        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes);
+        return clothes;
+
     }
 
+    public void SaveRoomSet(RoomConfig roomCFG)
+    {
+        changableDataConfig.roomConfig = roomCFG;
+        SaveChangableConfig();
+    }
+
+    public RoomConfig LoadRoomSet()
+    {
+        LoadChangableConfig();
+        var roomCFG = changableDataConfig.roomConfig;
+        Messenger.Broadcast(GameEvents.ROOM_CONFIG_LOADED, roomCFG);
+        return roomCFG;
+
+    }
     public int GetLvl()
     {
         LoadImportantConfig();
@@ -99,25 +116,12 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public void Add3DItemToShopList(ItemConfig conf, ItemVariant activeVar)
     {
         var list = shopDataConfig.bought3DModelItems;
-/*        if (list.IsNullOrEmpty())
-        {
-            list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
-        }
-        else
-        {
-            foreach (string str in list)
-            {
-                var pair = str.Split('+');
-                if (pair[0].Contains(conf.ConfigId))
-                {
-                    if (!pair[1].Contains(activeVar.ConfigId))
-                    {
-                        list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
-                        break;
-                    }
-                }
-            }
-        }*/
+        list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
+    }
+
+    public void AddRoomItemToShopList(RoomItemConfig conf, ItemVariant activeVar)
+    {
+        var list = shopDataConfig.boughtRoomItems;
         list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
     }
 

@@ -10,5 +10,6 @@ public class InventoryFurnitureChanger : MonoBehaviour , IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         Messenger.Broadcast(GameEvents.FURNITURE_CHANGED, furniture);
+        Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
     }
 }
