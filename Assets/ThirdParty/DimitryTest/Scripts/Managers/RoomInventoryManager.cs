@@ -1,68 +1,40 @@
 ﻿using CMS.Config;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-public class RoomInventoryManager : MonoBehaviour
+public class RoomInventoryManager : BaseInventoryManager
 {
 
     public List<RoomItemConfig> inventory; //
-    [SerializeField] private int columnsCount;
-    [SerializeField] private int inventoryMinSize;
-    [SerializeField] private GameObject ItemPrefab;
-    [SerializeField] private GameObject EmptySlot;
-    [SerializeField] private Transform contentObject;
+    public ScriptableList<RoomItemConfig> SLinstance;
 
-    ScriptableList<RoomItemConfig> SLinstance;
-    /*private IInventoryDisplayer<BaseScriptableDrowableItem> itemCFG;*/
-    /*private IInventoryDisplayer<RoomItemConfig> CFG;*/
-
-    private ShopManager shopManager;
 
     public FURNITURE furniture_type;
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        shopManager = ShopManager.Instance;
-        SLinstance = ScriptableList<RoomItemConfig>.instance;
+        base.Awake();
 
-        Messenger.AddListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
+        SLinstance = ScriptableList<RoomItemConfig>.instance;
+        Messenger.AddListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, InitializeInventory);
     }
 
 
     private void Start()
     {
-        OnFurnitureChanged(FURNITURE.SOFA);
+        InitializeInventory(FURNITURE.SOFA);
     }
 
 
-    public void OnFurnitureChanged(FURNITURE furniture)
+    public void InitializeInventory(FURNITURE furniture)
     {
         furniture_type = furniture;
 
         RefreshInventory();
     }
 
-
-    private void RefreshInventory()
-    {
-        ClearInventory();
-        GetItems();
-        DisplayAppropriateItems();
-    }
-
-    private void ClearInventory()
-    {
-        var children = contentObject.GetComponentsInChildren<Transform>();
-        foreach (Transform child in children)
-        {
-            if (child != this.transform) Destroy(child.gameObject);
-        }
-    }
-
-    private void DisplayAppropriateItems() //here is a diff
+    protected override void DisplayAppropriateItems() //here is a diff
     {
         foreach (RoomItemConfig cfg in inventory) //insantiate in inv
         {
@@ -95,13 +67,7 @@ public class RoomInventoryManager : MonoBehaviour
         }
     }
 
-    private void InstantiateEmptyItem()
-    {
-        var emptyItem = Instantiate(EmptySlot);
-        emptyItem.transform.SetParent(contentObject);
-    }
-
-    private void GetItems() //here is a diff
+    protected override void GetItems() //here is a diff
     {
         //sort for room items
         inventory = SLinstance.list.
@@ -109,11 +75,9 @@ public class RoomInventoryManager : MonoBehaviour
 
     }
 
-
-
     private void OnDestroy()
     {
-        Messenger.RemoveListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
+        Messenger.RemoveListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, InitializeInventory);
     }
 }
 

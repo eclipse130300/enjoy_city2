@@ -22,8 +22,8 @@ namespace CMS.Config
         public Sprite Inventory_image;
         public Color Inventory_frameColor;
         public FURNITURE furnitureType;
+        public Material material;
         public List<ItemVariant> variants = new List<ItemVariant>();
-
 
 #if UNITY_EDITOR
         public override void Draw()
@@ -32,6 +32,7 @@ namespace CMS.Config
            
             prefab = ScriptableGUIUtils.DrawObjectField("PREFAB", prefab);
             color = ScriptableGUIUtils.DrawField("Color", color);
+            material = ScriptableGUIUtils.DrawObjectField("material", material);
 
             furnitureType = (FURNITURE)ScriptableGUIUtils.DrawField("furnitureType", furnitureType);
             Inventory_frameColor = ScriptableGUIUtils.DrawField("Inventory_FrameColor", Inventory_frameColor);

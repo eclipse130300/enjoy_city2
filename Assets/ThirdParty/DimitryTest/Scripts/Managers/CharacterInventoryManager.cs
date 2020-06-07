@@ -1,38 +1,23 @@
 ﻿using CMS.Config;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UI;
 
-public class CharacterInventoryManager : MonoBehaviour
+public class CharacterInventoryManager : BaseInventoryManager
 {
 
     List<ItemConfig> inventory; //
-    [SerializeField] private int columnsCount;
-    [SerializeField] private int inventoryMinSize;
-    [SerializeField] private GameObject ItemPrefab;
-    [SerializeField] private GameObject EmptySlot;
-    [SerializeField] private Transform contentObject;
-
-    /*private IInventoryDisplayer<BaseScriptableDrowableItem> itemCFG;*/
-    /*private IInventoryDisplayer<RoomItemConfig> CFG;*/
-    
-    private ShopManager shopManager;
-    private ScriptableList<ItemConfig> SLinstance;
+    public ScriptableList<ItemConfig> SLinstance;
 
     public GameMode currentMode;
     public BODY_PART currentbodyPart;
     public Gender characterGender;
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        shopManager = ShopManager.Instance;
-        SLinstance = ScriptableList<ItemConfig>.instance;
+        base.Awake();
 
+        SLinstance = ScriptableList<ItemConfig>.instance;
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
         Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
@@ -45,11 +30,11 @@ public class CharacterInventoryManager : MonoBehaviour
 
     private void Start()
     {
-        OnInventoryChanged(GameMode.SandBox, BODY_PART.HAIR);
+        InitializeInventory(GameMode.SandBox, BODY_PART.HAIR);
     }
 
 
-    public void OnInventoryChanged(GameMode mode, BODY_PART part)
+    private void InitializeInventory(GameMode mode, BODY_PART part)
     {
         currentMode = mode;
         currentbodyPart = part;
@@ -69,23 +54,7 @@ public class CharacterInventoryManager : MonoBehaviour
         RefreshInventory();
     }
 
-    private void RefreshInventory()
-    {
-        ClearInventory();
-        GetItems(); 
-        DisplayAppropriateItems();
-    }
-
-    private void ClearInventory()
-    {
-        var children = contentObject.GetComponentsInChildren<Transform>();
-        foreach (Transform child in children)
-        {
-            if (child != this.transform) Destroy(child.gameObject);
-        }
-    }
-
-    private void DisplayAppropriateItems() //here is a diff
+    protected override void DisplayAppropriateItems() //here is a diff
     {
         foreach (ItemConfig cfg in  inventory) //insantiate in inv
         {
@@ -118,25 +87,17 @@ public class CharacterInventoryManager : MonoBehaviour
         }
     }
 
-    private void InstantiateEmptyItem()
+    protected override void GetItems() //here is a diff
     {
-        var emptyItem = Instantiate(EmptySlot);
-        emptyItem.transform.SetParent(contentObject);
+        //sort for 3d char items
+        inventory = SLinstance.list.
+        Where(t => t.bodyPart == currentbodyPart).
+        Where(t => t.gameMode == currentMode).
+        Where(t => t.gender == characterGender).
+        Where(t => !t.ToString().Contains("default")).
+        ToList();
     }
-
-    private void GetItems() //here is a diff
-    {
-                //sort for 3d char items
-                inventory = SLinstance.list.
-                Where(t => t.bodyPart == currentbodyPart).
-                Where(t => t.gameMode == currentMode).
-                Where(t => t.gender == characterGender).
-                Where(t => !t.ToString().Contains("default")).
-                ToList(); 
-        }
         
-    
-
     private void OnDestroy()
     {
         Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);

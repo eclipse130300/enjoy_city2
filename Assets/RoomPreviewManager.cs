@@ -97,6 +97,10 @@ public class RoomPreviewManager : MonoBehaviour
             if (it.name == itemCFG.furnitureType.ToString())
             {
                 camMov.target = it.transform;
+                var itemRenderer = it.GetComponent<MeshRenderer>();
+                 itemRenderer.material = itemCFG.material;
+                itemRenderer.material.color = currentRoomConf.ItemIsInConfig(itemCFG) == true ?
+        currentRoomConf.GetActiveVariant(itemCFG).color :  itemCFG.variants[0].color;
             }
         }
 
