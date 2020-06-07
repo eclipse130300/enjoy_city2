@@ -20,10 +20,13 @@ public class RoomPreviewManager : MonoBehaviour
 
     public RoomItemConfig itemPreviewing;
 
+    public RoomCameraMover camMov;
+
     private void Awake()
     {
         saveManager = SaveManager.Instance;
         shopManager = ShopManager.Instance;
+        camMov = GetComponent<RoomCameraMover>();
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
@@ -34,7 +37,7 @@ public class RoomPreviewManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        Initialize();
     }
 
     void LoadRoomConfig()
@@ -50,7 +53,8 @@ public class RoomPreviewManager : MonoBehaviour
     {
         foreach (string name in Enum.GetNames(typeof(FURNITURE)))
         {
-            roomItems.Add(GameObject.Find(name));
+            var changableGO = GameObject.Find(name);
+            if(changableGO != null)  roomItems.Add(changableGO);
         }
 
         LoadRoomConfig();
@@ -87,6 +91,14 @@ public class RoomPreviewManager : MonoBehaviour
 
         var itemCFG = item.GetComponent<RoomItemDisplay>().itemConfig;
         activeVariant = currentRoomConf?.GetActiveVariant(itemCFG);
+
+        foreach(GameObject it in roomItems)
+        {
+            if (it.name == itemCFG.furnitureType.ToString())
+            {
+                camMov.target = it.transform;
+            }
+        }
 
 /*        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
         previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();

@@ -33,8 +33,6 @@ public class CharacterInventoryManager : MonoBehaviour
         shopManager = ShopManager.Instance;
         SLinstance = ScriptableList<ItemConfig>.instance;
 
-        /*itemCFG = GetComponent<IInventoryDisplayer<BaseScriptableDrowableItem>>();*/
-
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
         Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
