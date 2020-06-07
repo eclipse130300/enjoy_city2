@@ -97,9 +97,7 @@ public class SkinsManager : MonoBehaviour //TODO MAKE UPDATE DEPENDING ON THE GE
     void LoadConf()
     {
         string key = _characterSex.ToString() + _gameMode.ToString();
-        currentConfig = SaveManager.Instance.LoadClothesSet(key);
-
-        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, currentConfig); //!!
+        currentConfig = SaveManager.Instance.LoadClothesSet(key); //!!
     }
 
 }
