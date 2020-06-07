@@ -8,15 +8,17 @@ using System.Linq;
 public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
 {
 
-    public List<ClothesConfig> allConfigs = new List<ClothesConfig>();
-    public List<string> configNames = new List<string>();
+    public List<ClothesConfig> allClothesConfigs = new List<ClothesConfig>();
+    public List<string> clothesConfigNames = new List<string>();
+
+    public RoomConfig roomConfig;
 
 
     string nickName;
     Gender gender;
 
     public Dictionary<string, ClothesConfig> pickedClothesConfigs = new Dictionary<string, ClothesConfig>(); //нужна тольк во время выполнения программы
-                                                                                                        //для связи шмотки и айди активного варианта
+                                                                                                             //для связи шмотки и айди активного варианта
 
     public void AddClothesConfig(string name, ClothesConfig clothesConf)
     {
@@ -30,16 +32,16 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
 
     public void OnBeforeSerialize()
     {
-        configNames?.Clear();
-        allConfigs?.Clear();
+        clothesConfigNames?.Clear();
+        allClothesConfigs?.Clear();
 
-        configNames = pickedClothesConfigs.Keys.ToList();
-        allConfigs = pickedClothesConfigs.Values.ToList();
+        clothesConfigNames = pickedClothesConfigs.Keys.ToList();
+        allClothesConfigs = pickedClothesConfigs.Values.ToList();
     }
 
     public void OnAfterDeserialize()
     {
-        pickedClothesConfigs = configNames.Zip(allConfigs, (k, v) => new { Key = k, Value = v })
+        pickedClothesConfigs = clothesConfigNames.Zip(allClothesConfigs, (k, v) => new { Key = k, Value = v })
               .ToDictionary(x => x.Key, x => x.Value);
 
         /* Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, this);*/
@@ -53,6 +55,8 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
         }
         return new ClothesConfig();
     }
+
+
 
     public void SetNickName(string nick)
     {

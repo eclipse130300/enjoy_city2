@@ -15,7 +15,16 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
-        Messenger.AddListener<ItemConfig,ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.AddListener<RoomItemConfig,ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
+        Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+    }
+
+    private void OnRoomItemBought(RoomItemConfig cfg, ItemVariant var)
+    {
+        if (variant == var)
+        {
+            lockIMG.gameObject.SetActive(false);
+        }
     }
 
     private void OnItemBought(ItemConfig cfg, ItemVariant var)
@@ -35,6 +44,7 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     private void OnDestroy()
     {
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
     }
 }
 

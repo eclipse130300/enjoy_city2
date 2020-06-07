@@ -50,6 +50,24 @@ public class ShopManager : Singleton<ShopManager>
         saveManager.Add3DItemToShopList(cfg, varitant);
     }
 
+    public void Buy(RoomItemConfig cfg, ItemVariant varitant, int cost, CurrencyType type)
+    {
+        switch (type)
+        {
+            case CurrencyType.SOFT:
+                var Scurrency = saveManager.GetSoftCurrency();
+                Scurrency -= cost;
+                saveManager.SetSoftCurrency(Scurrency);
+                break;
+            case CurrencyType.HARD:
+                var Hcurrency = saveManager.GetHardCurrency();
+                Hcurrency -= cost;
+                saveManager.SetHardCurrency(Hcurrency);
+                break;
+        }
+        saveManager.AddRoomItemToShopList(cfg, varitant);
+    }
+
     public bool CheckIfItemIsBought(ItemConfig cfg, ItemVariant variant) //check if bought item+concrete var
     {
         var list = saveManager.Get3DItemList();
@@ -65,9 +83,39 @@ public class ShopManager : Singleton<ShopManager>
         return false;
     }
 
+    public bool CheckIfItemIsBought(RoomItemConfig cfg, ItemVariant variant) //check if bought item+concrete var
+    {
+        var list = saveManager.GetRoomItemList();
+
+        foreach (string str in list)
+        {
+            var pair = str.Split('+');
+            if (pair[0].Contains(cfg.ConfigId) && pair[1].Contains(variant.ConfigId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool CheckIfItemIsBought(ItemConfig cfg) // overload check if bought item only
     {
-        var list = saveManager.Get3DItemList();
+        var list = saveManager.GetRoomItemList();
+
+        foreach (string str in list)
+        {
+            var pair = str.Split('+');
+            if (pair[0].Contains(cfg.ConfigId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool CheckIfItemIsBought(RoomItemConfig cfg) // overload check if bought item only
+    {
+        var list = saveManager.GetRoomItemList();
 
         foreach (string str in list)
         {

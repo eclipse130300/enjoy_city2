@@ -20,17 +20,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] string playerID;
 
     private TouchScreenKeyboard keyboard;
-
+    private RectTransform canvas;
     // Start is called before the first frame update
     void Start()
     {
         chatClient = new ChatClient(this);
         chatClient.Connect(ChatSettings.Load().AppId, "0.1", new AuthenticationValues(playerID));
+
+        canvas = fullChatOverlay.parent.GetComponent<RectTransform>();
+
     }
 
     // Update is called once per frame
     void Update()
-    {
+    { 
+
         chatClient.Service();
 
         if (keyboard != null)
@@ -42,9 +46,40 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 keyboard.text = "";
             }
         }
-        Debug.Log(fullChatOverlay.anchorMax);
-        Debug.Log(fullChatOverlay.anchorMin);
+
+        if (keyboard?.status == TouchScreenKeyboard.Status.Visible)
+        {
+            //make chat text area fix keyboard size
+
+
+            fullChatOverlay.pivot = new Vector2(1, 1);
+            fullChatOverlay.anchorMin = new Vector2(0, 0);
+            fullChatOverlay.anchorMax = new Vector2(1, 1);
+
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
+
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
+
+#if !UNITY_EDITOR
+
+            float KBrelativeTOscreen = MobileUtilities.GetKeyboardHeight(true);
+            float screenToCanvasRatio = Screen.height / canvas.rect.height;
+
+            float KBrelativeToCanvas = KBrelativeTOscreen / screenToCanvasRatio;
+
+             fullChatOverlay.anchoredPosition = new Vector2(0f, KBrelativeToCanvas);
+
+
+#else
+            fullChatOverlay.anchoredPosition = new Vector2(0, 0);
+#endif
+        }
+        else
+        {
+            fullChatOverlay.anchoredPosition = new Vector2(0, 0);
+        }
     }
+
 
     public void OnSendButtonClick()
     {
@@ -149,16 +184,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
 
-        //make chat text area fix keyboard size
-        var kbarea = TouchScreenKeyboard.area;
-        RectTransform canvas = fullChatOverlay.parent.GetComponent<RectTransform>();
-        fullChatOverlay.pivot = new Vector2(1, 1);
-        /*fullChatOverlay.anchorMin = new Vector2(0, kbarea.height).normalized;*/
-        fullChatOverlay.anchorMax = new Vector2(canvas.rect.width, canvas.rect.height).normalized;
-        fullChatOverlay.sizeDelta = new Vector2(canvas.rect.width, canvas.rect.height - kbarea.height);
-
-        /*fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height - kbarea.height);*/
-        fullChatOverlay.anchoredPosition = Vector2.zero;
     }
 
     public void ShowPreviewChat()

@@ -48,7 +48,6 @@ public class PreviewManager : MonoBehaviour
 
     void LoadConf()
     {
-        /*PlayerPrefs.DeleteAll();*/
 
         string key = previewingCharSex.ToString() + previewingGameMode.ToString();
         previewingClothesConfig = SaveManager.Instance.LoadClothesSet(key);
@@ -84,19 +83,10 @@ public class PreviewManager : MonoBehaviour
         string key = previewingCharSex.ToString() + previewingGameMode.ToString();
         SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig); 
     }
-
-/*        //clears items from model
-    private void OnItemAbort()
-    {
-        Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
-        itemPreviewing = null;
-        activeVariant = null;
-    }*/
     
     //show item at model(preview)
     private void OnItemPressed(GameObject item)
     {
-/*        OnItemAbort();*/
     
         var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
         activeVariant = previewingClothesConfig?.GetActiveVariant(itemCFG);

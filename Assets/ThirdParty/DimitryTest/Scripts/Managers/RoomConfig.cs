@@ -6,21 +6,21 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ClothesConfig
+public class RoomConfig
 {
     public List<string> pickedItemsAndVariants = new List<string>();
 
-    public void AddItemToConfig(ItemConfig item, ItemVariant variant)
+    public void AddItemToConfig(RoomItemConfig item, ItemVariant variant)
     {
 
         string itemID = item.ConfigId;
         string variantID = variant.ConfigId;
 
-        foreach(string pair in pickedItemsAndVariants.ToList())
+        foreach (string pair in pickedItemsAndVariants.ToList())
         {
             string[] strs = pair.Split('+');
-            var it = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
-            if(it.bodyPart == item.bodyPart)
+            var it = ScriptableList<RoomItemConfig>.instance.GetItemByID(strs[0]);
+            if (it.furnitureType == item.furnitureType)
             {
                 pickedItemsAndVariants.Remove(pair);
             }
@@ -29,7 +29,7 @@ public class ClothesConfig
         pickedItemsAndVariants.Add(string.Concat(itemID, "+", variantID));
     }
 
-    public void AddItemToConfig(ItemConfig item)
+    public void AddItemToConfig(RoomItemConfig item)
     {
         ItemVariant var = new ItemVariant();
 
@@ -39,7 +39,7 @@ public class ClothesConfig
         pickedItemsAndVariants.Add(itemID + "+" + variantID);
     }
 
-    public ItemVariant GetActiveVariant(ItemConfig item)
+    public ItemVariant GetActiveVariant(RoomItemConfig item)
     {
         if (pickedItemsAndVariants != null)
         {
@@ -59,10 +59,11 @@ public class ClothesConfig
             }
             return item.variants[0];
         }
-            return null;
+        return null;
     }
 
-    public bool ItemIsInConfig(ItemConfig item)
+
+    public bool ItemIsInConfig(RoomItemConfig item)
     {
         foreach (string dirtyPair in pickedItemsAndVariants)
         {
@@ -72,6 +73,7 @@ public class ClothesConfig
                 return true;
             }
         }
-            return false;
+        return false;
     }
 }
+
