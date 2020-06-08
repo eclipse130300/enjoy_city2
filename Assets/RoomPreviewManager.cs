@@ -8,6 +8,8 @@ public class RoomPreviewManager : MonoBehaviour
 {
     public List<GameObject> roomItems;
 
+    public GameObject GOpreviewing;
+
     public RoomConfig currentRoomConf;
 
     public FURNITURE furniturePreviewing;
@@ -20,13 +22,15 @@ public class RoomPreviewManager : MonoBehaviour
 
     public RoomItemConfig itemPreviewing;
 
-    public RoomCameraMover camMov;
+    public Camera previewCamera;
+
+    private RoomCameraMover camMov;
 
     private void Awake()
     {
         saveManager = SaveManager.Instance;
         shopManager = ShopManager.Instance;
-        camMov = GetComponent<RoomCameraMover>();
+        camMov = previewCamera.GetComponent<RoomCameraMover>();
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
@@ -43,6 +47,8 @@ public class RoomPreviewManager : MonoBehaviour
     void LoadRoomConfig()
     {
         currentRoomConf = saveManager.LoadRoomSet();
+        if (currentRoomConf == null)
+            currentRoomConf = new RoomConfig();
     }
     void SaveRoomConfig()
     {
@@ -53,8 +59,11 @@ public class RoomPreviewManager : MonoBehaviour
     {
         foreach (string name in Enum.GetNames(typeof(FURNITURE)))
         {
-            var changableGO = GameObject.Find(name);
-            if(changableGO != null)  roomItems.Add(changableGO);
+            var privewingItems = FindObjectsOfType<IPreviewable>(); //just tag previewing gameobjects with this
+            foreach (var item in privewingItems)
+            {
+                if (item.gameObject.name == name) roomItems.Add(item.gameObject);
+            }
         }
 
         LoadRoomConfig();
@@ -62,7 +71,9 @@ public class RoomPreviewManager : MonoBehaviour
 
     private void OnItemVariantChanged(ItemVariant variant)
     {
-       /* previewingBodyPart.material.color = variant.color;*/
+        /* previewingBodyPart.material.color = variant.color;*/
+        //HERE WE APPLY VARIANT ON THE MODEL!
+        GOpreviewing.GetComponent<MeshRenderer>().material.color = variant.color;
         activeVariant = variant;
     }
 
@@ -75,8 +86,8 @@ public class RoomPreviewManager : MonoBehaviour
 
             //and save it
             SaveRoomConfig();
-
-            Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
+/*
+            Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);*/
         }
         else
         {
@@ -97,20 +108,20 @@ public class RoomPreviewManager : MonoBehaviour
             if (it.name == itemCFG.furnitureType.ToString())
             {
                 camMov.target = it.transform;
-                var itemRenderer = it.GetComponent<MeshRenderer>();
+                GOpreviewing = it;
+/*                var itemRenderer = it.GetComponent<MeshRenderer>();
                  itemRenderer.material = itemCFG.material;
-                itemRenderer.material.color = currentRoomConf.ItemIsInConfig(itemCFG) == true ?
-        currentRoomConf.GetActiveVariant(itemCFG).color :  itemCFG.variants[0].color;
+                itemRenderer.material.color = currentRoomConf?.ItemIsInConfig(itemCFG) == true ?
+        currentRoomConf.GetActiveVariant(itemCFG).color :  itemCFG.variants[0].color;*/
             }
         }
 
-/*        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
-        previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
-        previewingBodyPart.sharedMesh = itemCFG.mesh;
+        /*        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
+                previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
+                previewingBodyPart.sharedMesh = itemCFG.mesh;
 
-        previewingBodyPart.material.color = currentRoomConf.ItemIsInConfig(itemCFG) == true ?
-        currentRoomConf.GetActiveVariant(itemCFG).color : *//*Color.white*//* itemCFG.variants[0].color;*/
-
+                previewingBodyPart.material.color = currentRoomConf.ItemIsInConfig(itemCFG) == true ?
+                currentRoomConf.GetActiveVariant(itemCFG).color : *//*Color.white*//* itemCFG.variants[0].color;*/
         itemPreviewing = itemCFG;
     }
 
@@ -121,7 +132,9 @@ public class RoomPreviewManager : MonoBehaviour
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
             OnItemPicked();
-            Messenger.Broadcast(GameEvents.ROOM_ITEM_BOUGHT, itemPreviewing, activeVariant);
+          /*  Messenger.Broadcast(GameEvents.ROOM_ITEM_BOUGHT, itemPreviewing, activeVariant);*/
+            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+
         }
         else
         {

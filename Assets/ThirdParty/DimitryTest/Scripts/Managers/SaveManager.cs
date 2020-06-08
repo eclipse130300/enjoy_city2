@@ -70,7 +70,6 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         var clothes = changableDataConfig?.GetClothesConfig(key);
         Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes);
         return clothes;
-
     }
 
     public void SaveRoomSet(RoomConfig roomCFG)

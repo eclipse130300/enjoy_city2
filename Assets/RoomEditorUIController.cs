@@ -37,7 +37,7 @@ public class RoomEditorUIController : MonoBehaviour
         rightPanel.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-        Messenger.AddListener<RoomConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
+        Messenger.AddListener<RoomConfig>(GameEvents.ROOM_CONFIG_LOADED, SetCurrentClothesConfig);
         Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
 
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
@@ -45,6 +45,7 @@ public class RoomEditorUIController : MonoBehaviour
 
     private void ManipulateDisplayingInfo(ItemVariant var)
     {
+        
         if (shopManager.CheckIfItemIsBought(itemCFG, var))
         {
             buyButton.SetActive(false);
@@ -86,12 +87,14 @@ public class RoomEditorUIController : MonoBehaviour
 
     private void HideItemInfo()
     {
-        Destroy(itemDisplaying);
+/*        Destroy(itemDisplaying);*/
         rightPanel.SetActive(false);
     }
 
     private void DisplayItem(GameObject itemGO)
     {
+        if (currentRoomConfig == null) currentRoomConfig = new RoomConfig();
+
         //display item description
         itemCFG = itemGO.GetComponent<RoomItemDisplay>().itemConfig;
         rightPanel.SetActive(true);
@@ -129,20 +132,20 @@ public class RoomEditorUIController : MonoBehaviour
             varTab.variant = V;
             varTab.group.Subscribe(varTab);
             varTab.tabBackground.color = V.color;
-            bool val;
+            bool hasActiveVar;
             if (currentRoomConfig.ItemIsInConfig(itemCFG))
             {
-                val = currentRoomConfig.GetActiveVariant(itemCFG) == V ? true : false;
-                /*                Debug.Log("Item: " + itemCFG + ", active variant :" + currentClothesConfig.GetActiveVariant(itemCFG));*/
+                hasActiveVar = currentRoomConfig.GetActiveVariant(itemCFG) == V ? true : false;
+                Debug.Log("Item: " + itemCFG + ", active variant :" + currentRoomConfig.GetActiveVariant(itemCFG));
             }
             else
             {
-                val = V == itemCFG.variants[0] ? true : false;
+                hasActiveVar = V == itemCFG.variants[0] ? true : false;
             }
-            varTab.activeIMG.gameObject.SetActive(val);
+            varTab.activeIMG.gameObject.SetActive(hasActiveVar);
 
-            bool value = shopManager.CheckIfItemIsBought(itemCFG, V) == true ? false : true;
-            varTab.lockIMG.gameObject.SetActive(value);
+            bool isBought = shopManager.CheckIfItemIsBought(itemCFG, V) == true ? false : true;
+            varTab.lockIMG.gameObject.SetActive(isBought);
         }
 
 
@@ -160,9 +163,10 @@ public class RoomEditorUIController : MonoBehaviour
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
 
-        Messenger.RemoveListener<RoomConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
+        Messenger.RemoveListener<RoomConfig>(GameEvents.ROOM_CONFIG_LOADED, SetCurrentClothesConfig);
         Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
 
+        Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
     }
 
 

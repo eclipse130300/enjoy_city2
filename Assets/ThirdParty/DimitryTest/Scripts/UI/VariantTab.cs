@@ -23,7 +23,7 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     {
         if (variant == var)
         {
-            lockIMG.gameObject.SetActive(false);
+            lockIMG?.gameObject.SetActive(false);
         }
     }
 
@@ -44,7 +44,7 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     private void OnDestroy()
     {
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
-        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
+        Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
     }
 }
 
