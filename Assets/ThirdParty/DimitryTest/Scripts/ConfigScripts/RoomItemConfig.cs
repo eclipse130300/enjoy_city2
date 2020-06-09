@@ -17,8 +17,8 @@ namespace CMS.Config
     public class RoomItemConfig : BaseScriptableDrowableItem
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
-        public GameObject prefab;
-        public Color color;
+        public Mesh mesh;
+/*        public Color color;*/
         public Sprite Inventory_image;
         public Color Inventory_frameColor;
         public FURNITURE furnitureType;
@@ -30,8 +30,8 @@ namespace CMS.Config
         {
             base.Draw();
            
-            prefab = ScriptableGUIUtils.DrawObjectField("PREFAB", prefab);
-            color = ScriptableGUIUtils.DrawField("Color", color);
+            mesh = ScriptableGUIUtils.DrawObjectField("Mesh", mesh);
+/*            color = ScriptableGUIUtils.DrawField("Color", color);*/
             material = ScriptableGUIUtils.DrawObjectField("material", material);
 
             furnitureType = (FURNITURE)ScriptableGUIUtils.DrawField("furnitureType", furnitureType);

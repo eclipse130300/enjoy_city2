@@ -11,7 +11,6 @@ public abstract class BaseInventoryManager : MonoBehaviour
     public GameObject EmptySlot;
     public Transform contentObject;
 
-
     protected virtual void Awake()
     {
         shopManager = ShopManager.Instance;

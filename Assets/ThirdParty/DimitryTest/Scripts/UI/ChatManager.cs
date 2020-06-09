@@ -15,6 +15,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public GameObject previewChat;
     public GameObject closedChat;
     public GameObject fullSceenChat;
+    public GameObject closeFullChatButton;
+
     public RectTransform fullChatOverlay;
 
     [SerializeField] string playerID;
@@ -110,7 +112,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnDisconnected()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Disconnected");
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
@@ -121,7 +123,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             {
 
                 msgs = string.Format("{0}{1}: {2} ", msgs, senders[i], messages[i]);
-                if (msgs.Contains("notification: "))
+                if (msgs.Contains("notification :"))
                 {
                     msgs = (string)messages[i];
                 }
@@ -174,16 +176,19 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnCloseFullChat()
     {
         fullSceenChat.SetActive(false);
+        closeFullChatButton.SetActive(false);
+
         closedChat.SetActive(true);
     }
 
     public void OnOpenFullChat()
     {
-        closedChat.SetActive(false);
         fullSceenChat.SetActive(true);
+        closeFullChatButton.SetActive(true);
+
+        closedChat.SetActive(false);
 
         keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
-
     }
 
     public void ShowPreviewChat()

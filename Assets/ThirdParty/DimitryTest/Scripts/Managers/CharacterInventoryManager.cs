@@ -1,10 +1,11 @@
 ﻿using CMS.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public class CharacterInventoryManager : BaseInventoryManager
 {
-
+    List<ItemConfig> currentConfig;
     List<ItemConfig> inventory; //
     public ScriptableList<ItemConfig> SLinstance;
 
@@ -18,6 +19,7 @@ public class CharacterInventoryManager : BaseInventoryManager
         base.Awake();
 
         SLinstance = ScriptableList<ItemConfig>.instance;
+
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
         Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
@@ -64,7 +66,7 @@ public class CharacterInventoryManager : BaseInventoryManager
 
 
             itemScript.itemConfig = cfg; //initialize
-            itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor);
+            itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor, CheckIfItemIsActive(cfg));
             bool lockVal = shopManager.CheckIfItemIsBought(cfg) == true ? false : true;
             itemScript.lockIcon.gameObject.SetActive(lockVal);
         }
@@ -84,6 +86,19 @@ public class CharacterInventoryManager : BaseInventoryManager
             {
                 InstantiateEmptyItem();
             }
+        }
+    }
+
+    private bool CheckIfItemIsActive(ItemConfig cfg)
+    {
+        ClothesConfig activeClothes = SaveManager.Instance.LoadClothesSet(characterGender.ToString() + currentMode.ToString());
+        if(activeClothes.ItemIsInConfig(cfg))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

@@ -109,6 +109,7 @@ public class PreviewManager : MonoBehaviour
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
             OnItemPicked();
             Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
+            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
         }
         else
         {

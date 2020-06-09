@@ -32,10 +32,22 @@ public class RoomPreviewManager : MonoBehaviour
         shopManager = ShopManager.Instance;
         camMov = previewCamera.GetComponent<RoomCameraMover>();
 
+        Messenger.AddListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
 
+    }
+
+    void OnFurnitureChanged(FURNITURE funit)
+    {
+        foreach (GameObject it in roomItems)
+        {
+            if (it.name == funit.ToString())
+            {
+                camMov.target = it.transform;
+            }
+        }
     }
 
     // Start is called before the first frame update
@@ -109,10 +121,11 @@ public class RoomPreviewManager : MonoBehaviour
             {
                 camMov.target = it.transform;
                 GOpreviewing = it;
-/*                var itemRenderer = it.GetComponent<MeshRenderer>();
-                 itemRenderer.material = itemCFG.material;
+                it.GetComponent<MeshFilter>().mesh = itemCFG.mesh;
+                var itemRenderer = it.GetComponent<MeshRenderer>();
+                itemRenderer.material = itemCFG.material;
                 itemRenderer.material.color = currentRoomConf?.ItemIsInConfig(itemCFG) == true ?
-        currentRoomConf.GetActiveVariant(itemCFG).color :  itemCFG.variants[0].color;*/
+        currentRoomConf.GetActiveVariant(itemCFG).color : itemCFG.variants[0].color;
             }
         }
 
@@ -132,7 +145,7 @@ public class RoomPreviewManager : MonoBehaviour
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
             OnItemPicked();
-          /*  Messenger.Broadcast(GameEvents.ROOM_ITEM_BOUGHT, itemPreviewing, activeVariant);*/
+            Messenger.Broadcast(GameEvents.ROOM_ITEM_BOUGHT, itemPreviewing, activeVariant);
             Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
 
         }
@@ -144,6 +157,7 @@ public class RoomPreviewManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        Messenger.RemoveListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.RemoveListener(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);

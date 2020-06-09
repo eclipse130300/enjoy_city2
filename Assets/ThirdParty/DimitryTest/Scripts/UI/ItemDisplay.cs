@@ -19,6 +19,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
     private bool isPreviewing;
 
     public Image lockIcon;
+    public GameObject activeItemTick;
 
     public bool IsPreviewing
     {
@@ -41,6 +42,11 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
             {
                 lockIcon = img;
             }
+
+            else if (img.gameObject.CompareTag("activeItemTick"))
+            {
+                activeItemTick = img.gameObject;
+            }
         }
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
@@ -55,15 +61,9 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
             {
                 lockIcon.gameObject?.SetActive(false);
             }
+            ShowActiveTick();
         }
     }
-
-    /*    public void SetLockImgAlfa(float alpha)
-        {
-            Color col = lockIcon.material.color;
-            col.a = alpha;
-            lockIcon.material.color = col;
-        }*/
 
     private void ClearIfOtherItem(GameObject item)
     {
@@ -72,17 +72,16 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         isPreviewing = false;
     }
 
-    public void SetItem(Sprite inventoryIMG, Color frameCol)
+    public void SetItem(Sprite inventoryIMG, Color frameCol, bool isActiveItem)
     {
         inventoryImage.sprite = inventoryIMG;
         startFrameColor = frameCol;
         frameIMG.color = frameCol;
-
+        activeItemTick.SetActive(isActiveItem);
     }
 
     public void ItemPicked()
     {
-
         isPreviewing = false;
         frameIMG.color = startFrameColor;
         Messenger.Broadcast(GameEvents.ITEM_PICKED);
@@ -94,6 +93,16 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         isPreviewing = true;
         Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
         frameIMG.color = previewFrameColor;
+    }
+
+    public void ShowActiveTick()
+    {
+        activeItemTick.SetActive(true);
+    }
+
+    public void HideActiveTick()
+    {
+        activeItemTick.SetActive(false);
     }
 
     public void OnDestroy()
