@@ -27,6 +27,48 @@ ModelImporter:
     100042: wall_B_artdeco
     100044: wall_C_artdeco
     100046: wall_D_artdeco
+    100048: A_artdeco_ceramic
+    100050: A_artdeco_chrome
+    100052: A_artdeco_mat2
+    100054: A_artdeco_mat3
+    100056: armchair_artdeco_cloth
+    100058: armchair_artdeco_metal
+    100060: B_artdeco_chrome
+    100062: B_artdeco_heat
+    100064: B_artdeco_mat3
+    100066: B_artdeco_metal
+    100068: bigsofa_artdeco_cloth
+    100070: bigsofa_artdeco_wood
+    100072: C_artdeco_mat2
+    100074: C_artdeco_mat3
+    100076: ceilinglamp_artdeco_glass
+    100078: ceilinglamp_artdeco_metal
+    100080: chair_artdeco_cloth
+    100082: chair_artdeco_metal
+    100084: D_artdeco_mat2
+    100086: D_artdeco_mat3
+    100088: E_artdeco_chrome
+    100090: E_artdeco_mat2
+    100092: E_artdeco_metal
+    100094: F_artdeco_mat3
+    100096: fridge_artdeco_chrome
+    100098: fridge_artdeco_metal
+    100100: fridge_artdeco_seams
+    100102: plantpot_artdeco_bush
+    100104: plantpot_artdeco_concrete
+    100106: plantpot_artdeco_ground
+    100108: plantpot_artdeco_metal
+    100110: sofa_artdeco_cloth
+    100112: sofa_artdeco_wood
+    100114: TV_artdeco_speakers
+    100116: TV_artdeco_wood1
+    100118: TV_artdeco_wood2
+    100120: TV_screen
+    100122: wall_A_artdeco_bottom
+    100124: wall_B_artdeco_bottom
+    100126: wall_C_artdeco_bottom
+    100128: wall_C_windows
+    100130: wall_D_artdeco_bottom
     400000: A_artdeco
     400002: B_artdeco
     400004: bigsofa_artdeco
@@ -51,7 +93,51 @@ ModelImporter:
     400042: wall_B_artdeco
     400044: wall_C_artdeco
     400046: wall_D_artdeco
+    400048: A_artdeco_ceramic
+    400050: A_artdeco_chrome
+    400052: A_artdeco_mat2
+    400054: A_artdeco_mat3
+    400056: armchair_artdeco_cloth
+    400058: armchair_artdeco_metal
+    400060: B_artdeco_chrome
+    400062: B_artdeco_heat
+    400064: B_artdeco_mat3
+    400066: B_artdeco_metal
+    400068: bigsofa_artdeco_cloth
+    400070: bigsofa_artdeco_wood
+    400072: C_artdeco_mat2
+    400074: C_artdeco_mat3
+    400076: ceilinglamp_artdeco_glass
+    400078: ceilinglamp_artdeco_metal
+    400080: chair_artdeco_cloth
+    400082: chair_artdeco_metal
+    400084: D_artdeco_mat2
+    400086: D_artdeco_mat3
+    400088: E_artdeco_chrome
+    400090: E_artdeco_mat2
+    400092: E_artdeco_metal
+    400094: F_artdeco_mat3
+    400096: fridge_artdeco_chrome
+    400098: fridge_artdeco_metal
+    400100: fridge_artdeco_seams
+    400102: plantpot_artdeco_bush
+    400104: plantpot_artdeco_concrete
+    400106: plantpot_artdeco_ground
+    400108: plantpot_artdeco_metal
+    400110: sofa_artdeco_cloth
+    400112: sofa_artdeco_wood
+    400114: TV_artdeco_speakers
+    400116: TV_artdeco_wood1
+    400118: TV_artdeco_wood2
+    400120: TV_screen
+    400122: wall_A_artdeco_bottom
+    400124: wall_B_artdeco_bottom
+    400126: wall_C_artdeco_bottom
+    400128: wall_C_windows
+    400130: wall_D_artdeco_bottom
     2100000: No Name
+    2100002: interior_atlas
+    2100004: Material
     2300000: A_artdeco
     2300002: B_artdeco
     2300004: bigsofa_artdeco
@@ -75,6 +161,48 @@ ModelImporter:
     2300040: wall_B_artdeco
     2300042: wall_C_artdeco
     2300044: wall_D_artdeco
+    2300046: A_artdeco_ceramic
+    2300048: A_artdeco_chrome
+    2300050: A_artdeco_mat2
+    2300052: A_artdeco_mat3
+    2300054: armchair_artdeco_cloth
+    2300056: armchair_artdeco_metal
+    2300058: B_artdeco_chrome
+    2300060: B_artdeco_heat
+    2300062: B_artdeco_mat3
+    2300064: B_artdeco_metal
+    2300066: bigsofa_artdeco_cloth
+    2300068: bigsofa_artdeco_wood
+    2300070: C_artdeco_mat2
+    2300072: C_artdeco_mat3
+    2300074: ceilinglamp_artdeco_glass
+    2300076: ceilinglamp_artdeco_metal
+    2300078: chair_artdeco_cloth
+    2300080: chair_artdeco_metal
+    2300082: D_artdeco_mat2
+    2300084: D_artdeco_mat3
+    2300086: E_artdeco_chrome
+    2300088: E_artdeco_mat2
+    2300090: E_artdeco_metal
+    2300092: F_artdeco_mat3
+    2300094: fridge_artdeco_chrome
+    2300096: fridge_artdeco_metal
+    2300098: fridge_artdeco_seams
+    2300100: plantpot_artdeco_bush
+    2300102: plantpot_artdeco_concrete
+    2300104: plantpot_artdeco_ground
+    2300106: plantpot_artdeco_metal
+    2300108: sofa_artdeco_cloth
+    2300110: sofa_artdeco_wood
+    2300112: TV_artdeco_speakers
+    2300114: TV_artdeco_wood1
+    2300116: TV_artdeco_wood2
+    2300118: TV_screen
+    2300120: wall_A_artdeco_bottom
+    2300122: wall_B_artdeco_bottom
+    2300124: wall_C_artdeco_bottom
+    2300126: wall_C_windows
+    2300128: wall_D_artdeco_bottom
     3300000: A_artdeco
     3300002: B_artdeco
     3300004: bigsofa_artdeco
@@ -98,6 +226,48 @@ ModelImporter:
     3300040: wall_B_artdeco
     3300042: wall_C_artdeco
     3300044: wall_D_artdeco
+    3300046: A_artdeco_ceramic
+    3300048: A_artdeco_chrome
+    3300050: A_artdeco_mat2
+    3300052: A_artdeco_mat3
+    3300054: armchair_artdeco_cloth
+    3300056: armchair_artdeco_metal
+    3300058: B_artdeco_chrome
+    3300060: B_artdeco_heat
+    3300062: B_artdeco_mat3
+    3300064: B_artdeco_metal
+    3300066: bigsofa_artdeco_cloth
+    3300068: bigsofa_artdeco_wood
+    3300070: C_artdeco_mat2
+    3300072: C_artdeco_mat3
+    3300074: ceilinglamp_artdeco_glass
+    3300076: ceilinglamp_artdeco_metal
+    3300078: chair_artdeco_cloth
+    3300080: chair_artdeco_metal
+    3300082: D_artdeco_mat2
+    3300084: D_artdeco_mat3
+    3300086: E_artdeco_chrome
+    3300088: E_artdeco_mat2
+    3300090: E_artdeco_metal
+    3300092: F_artdeco_mat3
+    3300094: fridge_artdeco_chrome
+    3300096: fridge_artdeco_metal
+    3300098: fridge_artdeco_seams
+    3300100: plantpot_artdeco_bush
+    3300102: plantpot_artdeco_concrete
+    3300104: plantpot_artdeco_ground
+    3300106: plantpot_artdeco_metal
+    3300108: sofa_artdeco_cloth
+    3300110: sofa_artdeco_wood
+    3300112: TV_artdeco_speakers
+    3300114: TV_artdeco_wood1
+    3300116: TV_artdeco_wood2
+    3300118: TV_screen
+    3300120: wall_A_artdeco_bottom
+    3300122: wall_B_artdeco_bottom
+    3300124: wall_C_artdeco_bottom
+    3300126: wall_C_windows
+    3300128: wall_D_artdeco_bottom
     4300000: B_artdeco
     4300002: D_artdeco
     4300004: C_artdeco
@@ -121,9 +291,51 @@ ModelImporter:
     4300040: wall_D_artdeco
     4300042: Object001
     4300044: ceilinglamp_artdeco
+    4300046: B_artdeco_metal
+    4300048: B_artdeco_mat3
+    4300050: B_artdeco_heat
+    4300052: B_artdeco_chrome
+    4300054: D_artdeco_mat3
+    4300056: D_artdeco_mat2
+    4300058: C_artdeco_mat2
+    4300060: C_artdeco_mat3
+    4300062: A_artdeco_ceramic
+    4300064: A_artdeco_chrome
+    4300066: A_artdeco_mat2
+    4300068: A_artdeco_mat3
+    4300070: E_artdeco_metal
+    4300072: E_artdeco_chrome
+    4300074: E_artdeco_mat2
+    4300076: F_artdeco_mat3
+    4300078: fridge_artdeco_metal
+    4300080: fridge_artdeco_chrome
+    4300082: fridge_artdeco_seams
+    4300084: chair_artdeco_metal
+    4300086: chair_artdeco_cloth
+    4300088: sofa_artdeco_cloth
+    4300090: sofa_artdeco_wood
+    4300092: bigsofa_artdeco_cloth
+    4300094: bigsofa_artdeco_wood
+    4300096: TV_screen
+    4300098: TV_artdeco_wood1
+    4300100: TV_artdeco_wood2
+    4300102: TV_artdeco_speakers
+    4300104: plantpot_artdeco_concrete
+    4300106: plantpot_artdeco_bush
+    4300108: plantpot_artdeco_ground
+    4300110: plantpot_artdeco_metal
+    4300112: wall_A_artdeco_bottom
+    4300114: wall_B_artdeco_bottom
+    4300116: wall_C_windows
+    4300118: wall_C_artdeco_bottom
+    4300120: wall_D_artdeco_bottom
+    4300122: ceilinglamp_artdeco_metal
+    4300124: ceilinglamp_artdeco_glass
+    4300126: armchair_artdeco_metal
+    4300128: armchair_artdeco_cloth
   externalObjects: {}
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -165,7 +377,7 @@ ModelImporter:
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 1
+    weldVertices: 0
     preserveHierarchy: 0
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -183,7 +395,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

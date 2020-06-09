@@ -9,28 +9,43 @@ ModelImporter:
     100006: polka
     100008: wallpicture_1_album
     100010: wallpicture_1_portrait
+    100012: books1
+    100014: floor
+    100016: wallpicture_1_album_frame
     400000: carpet_1
     400002: //RootNode
     400004: player_room_dimensions
     400006: polka
     400008: wallpicture_1_album
     400010: wallpicture_1_portrait
+    400012: books1
+    400014: floor
+    400016: wallpicture_1_album_frame
     2100000: No Name
     2300000: carpet_1
     2300002: player_room_dimensions
     2300004: polka
     2300006: wallpicture_1_album
     2300008: wallpicture_1_portrait
+    2300010: books1
+    2300012: floor
+    2300014: wallpicture_1_album_frame
     3300000: carpet_1
     3300002: player_room_dimensions
     3300004: polka
     3300006: wallpicture_1_album
     3300008: wallpicture_1_portrait
+    3300010: books1
+    3300012: floor
+    3300014: wallpicture_1_album_frame
     4300000: player_room_dimensions
     4300002: polka
     4300004: wallpicture_1_portrait
     4300006: wallpicture_1_album
     4300008: carpet_1
+    4300010: books1
+    4300012: floor
+    4300014: wallpicture_1_album_frame
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -75,7 +90,7 @@ ModelImporter:
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 1
+    weldVertices: 0
     preserveHierarchy: 0
     indexFormat: 0
     secondaryUVAngleDistortion: 8
