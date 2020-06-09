@@ -100,7 +100,7 @@ public class ShopManager : Singleton<ShopManager>
 
     public bool CheckIfItemIsBought(ItemConfig cfg) // overload check if bought item only
     {
-        var list = saveManager.GetRoomItemList();
+        var list = saveManager.Get3DItemList();
 
         foreach (string str in list)
         {

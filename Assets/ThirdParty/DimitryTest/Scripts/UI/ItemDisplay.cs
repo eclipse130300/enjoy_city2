@@ -29,7 +29,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     private void Awake()
     {
-        Image[] allImages = GetComponentsInChildren<Image>();  
+        Image[] allImages = GetComponentsInChildren<Image>(); 
 
         foreach (Image img in allImages)
         {
@@ -49,8 +49,21 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
             }
         }
 
-        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
+        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
+    }
+
+    private void OnItemPicked(ItemDisplay itemDisplay)
+    {
+        if (this == itemDisplay)
+        {
+            activeItemTick.SetActive(true);
+        }
+        else
+        {
+            activeItemTick.SetActive(false);
+        }
     }
 
     private void OnItemBought(ItemConfig cfg, ItemVariant var) // TODO var is unnecessary
@@ -59,13 +72,19 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         {
             if (lockIcon != null)
             {
-                lockIcon.gameObject?.SetActive(false);
+                lockIcon.gameObject.SetActive(false);
+                activeItemTick.SetActive(true);
+                frameIMG.color = startFrameColor;
+                isPreviewing = false;
             }
-            ShowActiveTick();
+        }
+        else
+        {
+            activeItemTick.SetActive(false);
         }
     }
 
-    private void ClearIfOtherItem(GameObject item)
+    private void OnItemPressed(GameObject item)
     {
         if (this == item.GetComponent<ItemDisplay>()) return;
         frameIMG.color = startFrameColor;
@@ -84,7 +103,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
     {
         isPreviewing = false;
         frameIMG.color = startFrameColor;
-        Messenger.Broadcast(GameEvents.ITEM_PICKED);
+        Messenger.Broadcast(GameEvents.ITEM_PICKED, this);
         Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
     }
 
@@ -95,20 +114,11 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         frameIMG.color = previewFrameColor;
     }
 
-    public void ShowActiveTick()
-    {
-        activeItemTick.SetActive(true);
-    }
-
-    public void HideActiveTick()
-    {
-        activeItemTick.SetActive(false);
-    }
-
     public void OnDestroy()
     {
-        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
+        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
     }
 }
 
