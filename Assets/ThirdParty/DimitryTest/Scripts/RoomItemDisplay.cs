@@ -68,8 +68,15 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
         {
             if (lockIcon != null)
             {
-                lockIcon.gameObject?.SetActive(false);
+                lockIcon.gameObject.SetActive(false);
+                activeItemTick.SetActive(true);
+                frameIMG.color = startFrameColor;
+                isPreviewing = false;
             }
+        }
+        else
+        {
+            activeItemTick.SetActive(false);
         }
     }
 
