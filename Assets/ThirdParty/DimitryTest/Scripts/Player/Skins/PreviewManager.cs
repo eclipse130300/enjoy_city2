@@ -28,7 +28,7 @@ public class PreviewManager : MonoBehaviour
         shopManager = ShopManager.Instance;
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.AddListener(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
 
@@ -59,7 +59,7 @@ public class PreviewManager : MonoBehaviour
         activeVariant = variant;
     }
 
-    private void OnItemPicked()
+    private void OnItemPicked(ItemDisplay iDisplay)
     {
         if (shopManager.CheckIfItemIsBought(itemPreviewing, activeVariant))
         {
@@ -107,7 +107,7 @@ public class PreviewManager : MonoBehaviour
         {
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
-            OnItemPicked();
+            OnItemPicked(new ItemDisplay());
             Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
             Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
         }
@@ -120,7 +120,7 @@ public class PreviewManager : MonoBehaviour
     private void OnDestroy()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.RemoveListener(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
     }
 

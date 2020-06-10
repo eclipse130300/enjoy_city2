@@ -67,8 +67,7 @@ public class CharacterInventoryManager : BaseInventoryManager
 
             itemScript.itemConfig = cfg; //initialize
             itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor, CheckIfItemIsActive(cfg));
-            bool lockVal = shopManager.CheckIfItemIsBought(cfg) == true ? false : true;
-            itemScript.lockIcon.gameObject.SetActive(lockVal);
+            itemScript.lockIcon.gameObject.SetActive(!shopManager.CheckIfItemIsBought(cfg));
         }
         if (inventory?.Count < inventoryMinSize)
         {
