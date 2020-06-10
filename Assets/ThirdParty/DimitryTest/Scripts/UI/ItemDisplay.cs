@@ -20,6 +20,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     public Image lockIcon;
     public GameObject activeItemTick;
+    private ShopManager shopManager;
 
     public bool IsPreviewing
     {
@@ -49,6 +50,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
             }
         }
 
+        shopManager = ShopManager.Instance;
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
         Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
@@ -56,7 +58,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     private void OnItemPicked(ItemDisplay itemDisplay)
     {
-        if (this == itemDisplay)
+        if (this == itemDisplay && shopManager.CheckIfItemIsBought(itemDisplay.itemConfig))
         {
             activeItemTick.SetActive(true);
         }
@@ -101,10 +103,13 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     public void ItemPicked()
     {
-        isPreviewing = false;
-        frameIMG.color = startFrameColor;
-        Messenger.Broadcast(GameEvents.ITEM_PICKED, this);
-        Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+            isPreviewing = false;
+            frameIMG.color = startFrameColor;
+            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+        if (shopManager.CheckIfItemIsBought(this.itemConfig))
+        {
+            Messenger.Broadcast(GameEvents.ITEM_PICKED, this);
+        }
     }
 
     public void ItemPressed()

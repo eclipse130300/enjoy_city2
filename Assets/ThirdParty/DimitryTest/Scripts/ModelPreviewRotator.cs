@@ -16,7 +16,7 @@ public class ModelPreviewRotator : MonoBehaviour
     {
         if(touchField.Pressed)
         {
-            transform.Rotate(Vector3.up * touchField.TouchDist.x * rotationSpeed);
+            transform.Rotate(Vector3.up * -touchField.TouchDist.x * rotationSpeed);
         }
     }
 }

@@ -44,7 +44,7 @@ public class RoomInventoryManager : BaseInventoryManager
 
 
             itemScript.itemConfig = cfg; //initialize
-            itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor);
+            itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor, CheckIfItemIsActive(cfg));
             bool lockVal = shopManager.CheckIfItemIsBought(cfg) == true ? false : true;
             itemScript.lockIcon.gameObject.SetActive(lockVal);
         }
@@ -67,6 +67,21 @@ public class RoomInventoryManager : BaseInventoryManager
         }
     }
 
+    private bool CheckIfItemIsActive(RoomItemConfig cfg)
+    {
+        RoomConfig activeClothes = SaveManager.Instance.LoadRoomSet();
+        if (activeClothes == null) return false;
+
+        if (activeClothes.ItemIsInConfig(cfg))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     protected override void GetItems() //here is a diff
     {
         //sort for room items
@@ -85,5 +100,7 @@ public enum FURNITURE
 {
     SOFA,
     PLANT,
-    TABLE
+    WALL,
+    FLOOR,
+    PICTURE
 }

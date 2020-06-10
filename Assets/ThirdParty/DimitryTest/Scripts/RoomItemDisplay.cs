@@ -17,6 +17,9 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
     private bool isPreviewing;
 
     public Image lockIcon;
+    public GameObject activeItemTick;
+
+    private ShopManager shopManager;
 
     public bool IsPreviewing
     {
@@ -41,8 +44,22 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
             }
         }
 
+        shopManager = ShopManager.Instance;
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
         Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnItemBought);
+        Messenger.AddListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);
+    }
+
+    private void OnItemPicked(RoomItemDisplay itemDisplay)
+    {
+        if (this == itemDisplay && shopManager.CheckIfItemIsBought(itemDisplay.itemConfig))
+        {
+            activeItemTick.SetActive(true);
+        }
+        else
+        {
+            activeItemTick.SetActive(false);
+        }
     }
 
     private void OnItemBought(RoomItemConfig cfg, ItemVariant var) // TODO var is unnecessary
@@ -63,21 +80,24 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
         isPreviewing = false;
     }
 
-    public void SetItem(Sprite inventoryIMG, Color frameCol)
+    public void SetItem(Sprite inventoryIMG, Color frameCol, bool isActiveItem)
     {
         inventoryImage.sprite = inventoryIMG;
         startFrameColor = frameCol;
         frameIMG.color = frameCol;
-
+        activeItemTick.SetActive(isActiveItem);
     }
 
     public void ItemPicked()
     {
-
         isPreviewing = false;
         frameIMG.color = startFrameColor;
-        Messenger.Broadcast(GameEvents.ITEM_PICKED);
         Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+
+        if (shopManager.CheckIfItemIsBought(this.itemConfig))
+        {
+            Messenger.Broadcast(GameEvents.ROOM_ITEM_PICKED, this);
+        }
     }
 
     public void ItemPressed()
@@ -91,5 +111,6 @@ public class RoomItemDisplay : MonoBehaviour, IItemHandler
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
         Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnItemBought);
+        Messenger.RemoveListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);
     }
 }
