@@ -5,11 +5,11 @@ using UnityEngine;
 public class Rotator : MonoBehaviour
 {
     public Vector3 speed;
-    [SerializeField] float sinAmpitude = 0.007f;
+    [SerializeField] float sinAmpitude = 10f;
     // Update is called once per frame
     void Update()
     {
         transform.Rotate(speed);
-        transform.Translate(Vector3.forward * Mathf.Sin(Mathf.PI * Time.time) * sinAmpitude);
+        transform.position = transform.position+(Vector3.up *( Mathf.PingPong(Time.time, 1) -0.5f)* sinAmpitude)*Time.deltaTime;
     }
 }

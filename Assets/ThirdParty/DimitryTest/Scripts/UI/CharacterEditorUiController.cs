@@ -164,6 +164,8 @@ public class CharacterEditorUiController : MonoBehaviour
         Messenger.RemoveListener<ClothesConfig>(GameEvents.CLOTHES_CONFIG_LOADED, SetCurrentClothesConfig);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
 
+        Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
+
     }
 
 

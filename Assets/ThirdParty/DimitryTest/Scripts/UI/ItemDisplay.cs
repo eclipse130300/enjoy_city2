@@ -19,6 +19,8 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
     private bool isPreviewing;
 
     public Image lockIcon;
+    public GameObject activeItemTick;
+    private ShopManager shopManager;
 
     public bool IsPreviewing
     {
@@ -28,7 +30,7 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     private void Awake()
     {
-        Image[] allImages = GetComponentsInChildren<Image>();  
+        Image[] allImages = GetComponentsInChildren<Image>(); 
 
         foreach (Image img in allImages)
         {
@@ -41,10 +43,29 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
             {
                 lockIcon = img;
             }
+
+            else if (img.gameObject.CompareTag("activeItemTick"))
+            {
+                activeItemTick = img.gameObject;
+            }
         }
 
-        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
+        shopManager = ShopManager.Instance;
+        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
+    }
+
+    private void OnItemPicked(ItemDisplay itemDisplay)
+    {
+        if (this == itemDisplay && shopManager.CheckIfItemIsBought(itemDisplay.itemConfig))
+        {
+            activeItemTick.SetActive(true);
+        }
+        else
+        {
+            activeItemTick.SetActive(false);
+        }
     }
 
     private void OnItemBought(ItemConfig cfg, ItemVariant var) // TODO var is unnecessary
@@ -53,40 +74,42 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         {
             if (lockIcon != null)
             {
-                lockIcon.gameObject?.SetActive(false);
+                lockIcon.gameObject.SetActive(false);
+                activeItemTick.SetActive(true);
+                frameIMG.color = startFrameColor;
+                isPreviewing = false;
             }
+        }
+        else
+        {
+            activeItemTick.SetActive(false);
         }
     }
 
-    /*    public void SetLockImgAlfa(float alpha)
-        {
-            Color col = lockIcon.material.color;
-            col.a = alpha;
-            lockIcon.material.color = col;
-        }*/
-
-    private void ClearIfOtherItem(GameObject item)
+    private void OnItemPressed(GameObject item)
     {
         if (this == item.GetComponent<ItemDisplay>()) return;
         frameIMG.color = startFrameColor;
         isPreviewing = false;
     }
 
-    public void SetItem(Sprite inventoryIMG, Color frameCol)
+    public void SetItem(Sprite inventoryIMG, Color frameCol, bool isActiveItem)
     {
         inventoryImage.sprite = inventoryIMG;
         startFrameColor = frameCol;
         frameIMG.color = frameCol;
-
+        activeItemTick.SetActive(isActiveItem);
     }
 
     public void ItemPicked()
     {
-
-        isPreviewing = false;
-        frameIMG.color = startFrameColor;
-        Messenger.Broadcast(GameEvents.ITEM_PICKED);
-        Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+            isPreviewing = false;
+            frameIMG.color = startFrameColor;
+            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+        if (shopManager.CheckIfItemIsBought(this.itemConfig))
+        {
+            Messenger.Broadcast(GameEvents.ITEM_PICKED, this);
+        }
     }
 
     public void ItemPressed()
@@ -98,8 +121,9 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     public void OnDestroy()
     {
-        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
+        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
     }
 }
 

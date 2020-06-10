@@ -34,5 +34,6 @@ public static class GameEvents
 
     public const string ITEM_BOUGHT = "ITEM_BOUGHT";
     public const string ROOM_ITEM_BOUGHT = "ROOM_ITEM_BOUGHT";
+    public const string ROOM_ITEM_PICKED = "ROOM_ITEM_PICKED";
 
 }

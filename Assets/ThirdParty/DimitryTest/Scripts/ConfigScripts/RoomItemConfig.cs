@@ -17,21 +17,22 @@ namespace CMS.Config
     public class RoomItemConfig : BaseScriptableDrowableItem
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
-        public GameObject prefab;
-        public Color color;
+        public Mesh mesh;
+/*        public Color color;*/
         public Sprite Inventory_image;
         public Color Inventory_frameColor;
         public FURNITURE furnitureType;
+        public Material material;
         public List<ItemVariant> variants = new List<ItemVariant>();
-
 
 #if UNITY_EDITOR
         public override void Draw()
         {
             base.Draw();
            
-            prefab = ScriptableGUIUtils.DrawObjectField("PREFAB", prefab);
-            color = ScriptableGUIUtils.DrawField("Color", color);
+            mesh = ScriptableGUIUtils.DrawObjectField("Mesh", mesh);
+/*            color = ScriptableGUIUtils.DrawField("Color", color);*/
+            material = ScriptableGUIUtils.DrawObjectField("material", material);
 
             furnitureType = (FURNITURE)ScriptableGUIUtils.DrawField("furnitureType", furnitureType);
             Inventory_frameColor = ScriptableGUIUtils.DrawField("Inventory_FrameColor", Inventory_frameColor);

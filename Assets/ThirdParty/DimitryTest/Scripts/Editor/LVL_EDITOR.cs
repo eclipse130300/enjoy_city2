@@ -11,6 +11,10 @@ public class LVL_EDITOR : Editor
     {
         base.OnInspectorGUI();
 
+        GUILayout.Label("Each level adds _add exp per lvl_ to _experience to the next lvl_.");
+
+        GUILayout.Label("        if(level % lvlDifficultyDenominator == 0)  addExpPerLvl *= difficultyMultiplier ");
+
         PlayerLevel plvl = (PlayerLevel)target;
 
         if (GUILayout.Button("ADD 15 exp"))

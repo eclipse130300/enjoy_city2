@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class ImportantDataConfig : IDataConfig
 {
-   public int softCurrency = 0;
-   public int hardCurrency = 0;
+   public int softCurrency = 100;
+   public int hardCurrency = 100;
    public int exp = 0;
    public int expToNextLvl = 100;
    public int lvl = 1;

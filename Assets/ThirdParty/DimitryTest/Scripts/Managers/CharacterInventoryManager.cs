@@ -1,39 +1,24 @@
 ﻿using CMS.Config;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UI;
 
-public class CharacterInventoryManager : MonoBehaviour
+public class CharacterInventoryManager : BaseInventoryManager
 {
-
+    List<ItemConfig> currentConfig;
     List<ItemConfig> inventory; //
-    [SerializeField] private int columnsCount;
-    [SerializeField] private int inventoryMinSize;
-    [SerializeField] private GameObject ItemPrefab;
-    [SerializeField] private GameObject EmptySlot;
-    [SerializeField] private Transform contentObject;
-
-    /*private IInventoryDisplayer<BaseScriptableDrowableItem> itemCFG;*/
-    /*private IInventoryDisplayer<RoomItemConfig> CFG;*/
-    
-    private ShopManager shopManager;
-    private ScriptableList<ItemConfig> SLinstance;
+    public ScriptableList<ItemConfig> SLinstance;
 
     public GameMode currentMode;
     public BODY_PART currentbodyPart;
     public Gender characterGender;
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        shopManager = ShopManager.Instance;
-        SLinstance = ScriptableList<ItemConfig>.instance;
+        base.Awake();
 
-        /*itemCFG = GetComponent<IInventoryDisplayer<BaseScriptableDrowableItem>>();*/
+        SLinstance = ScriptableList<ItemConfig>.instance;
 
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
@@ -47,11 +32,11 @@ public class CharacterInventoryManager : MonoBehaviour
 
     private void Start()
     {
-        OnInventoryChanged(GameMode.SandBox, BODY_PART.HAIR);
+        InitializeInventory(GameMode.SandBox, BODY_PART.HAIR);
     }
 
 
-    public void OnInventoryChanged(GameMode mode, BODY_PART part)
+    private void InitializeInventory(GameMode mode, BODY_PART part)
     {
         currentMode = mode;
         currentbodyPart = part;
@@ -71,23 +56,7 @@ public class CharacterInventoryManager : MonoBehaviour
         RefreshInventory();
     }
 
-    private void RefreshInventory()
-    {
-        ClearInventory();
-        GetItems(); 
-        DisplayAppropriateItems();
-    }
-
-    private void ClearInventory()
-    {
-        var children = contentObject.GetComponentsInChildren<Transform>();
-        foreach (Transform child in children)
-        {
-            if (child != this.transform) Destroy(child.gameObject);
-        }
-    }
-
-    private void DisplayAppropriateItems() //here is a diff
+    protected override void DisplayAppropriateItems() //here is a diff
     {
         foreach (ItemConfig cfg in  inventory) //insantiate in inv
         {
@@ -97,9 +66,8 @@ public class CharacterInventoryManager : MonoBehaviour
 
 
             itemScript.itemConfig = cfg; //initialize
-            itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor);
-            bool lockVal = shopManager.CheckIfItemIsBought(cfg) == true ? false : true;
-            itemScript.lockIcon.gameObject.SetActive(lockVal);
+            itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor, CheckIfItemIsActive(cfg));
+            itemScript.lockIcon.gameObject.SetActive(!shopManager.CheckIfItemIsBought(cfg));
         }
         if (inventory?.Count < inventoryMinSize)
         {
@@ -120,25 +88,30 @@ public class CharacterInventoryManager : MonoBehaviour
         }
     }
 
-    private void InstantiateEmptyItem()
+    private bool CheckIfItemIsActive(ItemConfig cfg)
     {
-        var emptyItem = Instantiate(EmptySlot);
-        emptyItem.transform.SetParent(contentObject);
+        ClothesConfig activeClothes = SaveManager.Instance.LoadClothesSet(characterGender.ToString() + currentMode.ToString());
+        if(activeClothes.ItemIsInConfig(cfg))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    private void GetItems() //here is a diff
+    protected override void GetItems() //here is a diff
     {
-                //sort for 3d char items
-                inventory = SLinstance.list.
-                Where(t => t.bodyPart == currentbodyPart).
-                Where(t => t.gameMode == currentMode).
-                Where(t => t.gender == characterGender).
-                Where(t => !t.ToString().Contains("default")).
-                ToList(); 
-        }
+        //sort for 3d char items
+        inventory = SLinstance.list.
+        Where(t => t.bodyPart == currentbodyPart).
+        Where(t => t.gameMode == currentMode).
+        Where(t => t.gender == characterGender).
+        Where(t => !t.ToString().Contains("default")).
+        ToList();
+    }
         
-    
-
     private void OnDestroy()
     {
         Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
