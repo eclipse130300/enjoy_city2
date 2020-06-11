@@ -14,6 +14,7 @@ public class RoomEditorUIController : MonoBehaviour
     [SerializeField] GameObject variantPrefab;
     [SerializeField] GameObject buyButton;
     [SerializeField] GameObject itemBoughtTab;
+    [SerializeField] GameObject doneButton;
     [SerializeField] TextMeshProUGUI variantCostText;
     [SerializeField] Image variantCurrencyIMG;
     [SerializeField] TextMeshProUGUI variantNameIDtext;
@@ -37,7 +38,6 @@ public class RoomEditorUIController : MonoBehaviour
         rightPanel.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-        Messenger.AddListener<RoomConfig>(GameEvents.ROOM_CONFIG_LOADED, SetCurrentClothesConfig);
         Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
 
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
@@ -45,17 +45,33 @@ public class RoomEditorUIController : MonoBehaviour
 
     private void ManipulateDisplayingInfo(ItemVariant var)
     {
-        
+
         if (shopManager.CheckIfItemIsBought(itemCFG, var))
         {
             buyButton.SetActive(false);
             itemBoughtTab.SetActive(true);
+            // donebutton on
+            doneButton.SetActive(true);
+            Debug.Log("SHOW DONE BUTTON!!!!");
+
         }
-        else
+        else 
         {
             buyButton.SetActive(true);
             itemBoughtTab.SetActive(false);
+            //donebutton off
+            doneButton.SetActive(false);
         }
+        if (SaveManager.Instance.LoadRoomSet().ItemAndVarIsInConfig(itemCFG, var))
+        {
+            doneButton.SetActive(false);
+        }
+
+        //if var is active var
+        /*        if(currentRoomConfig.GetActiveVariant(itemCFG) == var)
+                {
+                    doneButton.SetActive(false);
+                }*/
 
         variantCostText.text = var.cost.ToString();
 
@@ -155,6 +171,13 @@ public class RoomEditorUIController : MonoBehaviour
 
     public void OnDoneButtonTap()
     {
+        // add item and variant to config
+        previewManager.OnItemPicked();
+        //hide right panel?
+    }
+
+    public void OnBackButtonTap()
+    {
         Loader.Instance.LoadGameScene(playerRoom);
     }
 
@@ -162,8 +185,6 @@ public class RoomEditorUIController : MonoBehaviour
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-
-        Messenger.RemoveListener<RoomConfig>(GameEvents.ROOM_CONFIG_LOADED, SetCurrentClothesConfig);
         Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
 
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);

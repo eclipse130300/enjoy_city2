@@ -4,12 +4,5 @@ using UnityEngine;
 
 public interface IItemHandler
 {
-    bool IsPreviewing
-    {
-        get;
-        set;
-    }
-
  void ItemPressed();
- void  ItemPicked();
 }

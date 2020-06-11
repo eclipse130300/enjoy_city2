@@ -16,17 +16,10 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     private Image frameIMG;
     private Color startFrameColor;
-    private bool isPreviewing;
 
     public Image lockIcon;
     public GameObject activeItemTick;
     private ShopManager shopManager;
-
-    public bool IsPreviewing
-    {
-        get => isPreviewing;
-        set => isPreviewing = value;
-    }
 
     private void Awake()
     {
@@ -77,7 +70,6 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
                 lockIcon.gameObject.SetActive(false);
                 activeItemTick.SetActive(true);
                 frameIMG.color = startFrameColor;
-                isPreviewing = false;
             }
         }
         else
@@ -90,7 +82,6 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
     {
         if (this == item.GetComponent<ItemDisplay>()) return;
         frameIMG.color = startFrameColor;
-        isPreviewing = false;
     }
 
     public void SetItem(Sprite inventoryIMG, Color frameCol, bool isActiveItem)
@@ -103,7 +94,6 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     public void ItemPicked()
     {
-            isPreviewing = false;
             frameIMG.color = startFrameColor;
             Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
         if (shopManager.CheckIfItemIsBought(this.itemConfig))
@@ -114,7 +104,6 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     public void ItemPressed()
     {
-        isPreviewing = true;
         Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
         frameIMG.color = previewFrameColor;
     }

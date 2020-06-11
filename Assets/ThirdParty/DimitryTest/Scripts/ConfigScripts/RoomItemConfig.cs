@@ -39,8 +39,10 @@ namespace CMS.Config
             Inventory_image = ScriptableGUIUtils.DrawObjectField("Inventory_icon", Inventory_image);
             ScriptableGUIUtils.DrawList("ItemVariants", variants);
 
-
-
+        }
+        public int GetVariantsCount()
+        {
+            return variants.Count;
         }
 #endif
     }

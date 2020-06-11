@@ -82,7 +82,6 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     {
         LoadChangableConfig();
         var roomCFG = changableDataConfig.roomConfig;
-        Messenger.Broadcast(GameEvents.ROOM_CONFIG_LOADED, roomCFG);
         return roomCFG;
 
     }

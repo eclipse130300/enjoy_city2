@@ -18,7 +18,7 @@ namespace CMS.Config
     public class ItemVariant : IGUIDrawable
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
-        public string ConfigId;
+        public string ConfigId = GUID.Generate().ToString();
         public Color color;
         public Texture texture;
         public int cost;

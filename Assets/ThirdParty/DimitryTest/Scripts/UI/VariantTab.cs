@@ -9,6 +9,7 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     public Image activeIMG;
     public Image tabBackground;
     public Image lockIMG;
+    public GameObject activeTick;
 
     public VariantGroup group;
     public ItemVariant variant;

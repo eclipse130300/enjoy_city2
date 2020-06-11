@@ -14,13 +14,8 @@ public class ItemClick : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!item.IsPreviewing)
-        {
-            item.ItemPressed();
-        }
-        else
-        {
-            item.ItemPicked();
-        }
+
+        item.ItemPressed();
+
     }
 }
