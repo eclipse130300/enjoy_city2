@@ -77,13 +77,17 @@ public class RoomSkinManager : MonoBehaviour
                     furnitureTransform.GetComponent<MeshRenderer>().material.color = conf.GetActiveVariant(item).color;
                 }*/
 
-                var privewingItems = FindObjectsOfType<IPreviewable>(); //just tag previewing gameobjects with this
+
+                var privewingItems = FindObjectsOfType<IChangable>(); //just tag previewing gameobjects with this
                 foreach (var it in privewingItems)
                 {
                     if (it.gameObject.name == item.furnitureType.ToString())
                     {
                         var rotation = it.gameObject.transform.rotation; //save starting rotation
-                        it.gameObject.GetComponent<MeshFilter>().mesh = item.mesh;
+                        if (item.mesh != null)
+                        {
+                            it.gameObject.GetComponent<MeshFilter>().mesh = item.mesh;
+                        }
                         it.gameObject.GetComponent<MeshRenderer>().material = item.material;
                         it.gameObject.GetComponent<MeshRenderer>().material.color = conf.GetActiveVariant(item).color;
                         it.transform.rotation = rotation;

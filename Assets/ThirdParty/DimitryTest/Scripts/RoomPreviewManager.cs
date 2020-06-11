@@ -8,7 +8,7 @@ public class RoomPreviewManager : MonoBehaviour
 {
     public List<GameObject> roomItems;
 
-    public GameObject GOpreviewing;
+    public List<GameObject> ObjectsPreviewing;
 
     public RoomConfig currentRoomConf;
 
@@ -36,7 +36,7 @@ public class RoomPreviewManager : MonoBehaviour
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
         Messenger.AddListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
-
+        
     }
 
     void OnFurnitureChanged(FURNITURE funit)
@@ -83,9 +83,11 @@ public class RoomPreviewManager : MonoBehaviour
 
     private void OnItemVariantChanged(ItemVariant variant)
     {
-        /* previewingBodyPart.material.color = variant.color;*/
-        //HERE WE APPLY VARIANT ON THE MODEL!
-        GOpreviewing.GetComponent<MeshRenderer>().material.color = variant.color;
+        foreach (var Gobject in ObjectsPreviewing)
+        {
+            //HERE WE APPLY VARIANT ON THE MODEL!
+            Gobject.GetComponent<MeshRenderer>().material.color = variant.color;
+        }
         activeVariant = variant;
     }
 
@@ -111,7 +113,7 @@ public class RoomPreviewManager : MonoBehaviour
     //show item at model(preview)
     private void OnItemPressed(GameObject item)
     {
-
+        ObjectsPreviewing.Clear();
         var itemCFG = item.GetComponent<RoomItemDisplay>().itemConfig;
         activeVariant = currentRoomConf?.GetActiveVariant(itemCFG);
 
@@ -120,21 +122,18 @@ public class RoomPreviewManager : MonoBehaviour
             if (it.name == itemCFG.furnitureType.ToString())
             {
                 camMov.target = it.transform;
-                GOpreviewing = it;
-                it.GetComponent<MeshFilter>().mesh = itemCFG.mesh;
+                ObjectsPreviewing.Add(it);
+                if (itemCFG.mesh != null)
+                {
+                    it.GetComponent<MeshFilter>().mesh = itemCFG.mesh;
+                }
+
                 var itemRenderer = it.GetComponent<MeshRenderer>();
                 itemRenderer.material = itemCFG.material;
                 itemRenderer.material.color = currentRoomConf?.ItemIsInConfig(itemCFG) == true ?
         currentRoomConf.GetActiveVariant(itemCFG).color : itemCFG.variants[0].color;
             }
         }
-
-        /*        var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
-                previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
-                previewingBodyPart.sharedMesh = itemCFG.mesh;
-
-                previewingBodyPart.material.color = currentRoomConf.ItemIsInConfig(itemCFG) == true ?
-                currentRoomConf.GetActiveVariant(itemCFG).color : *//*Color.white*//* itemCFG.variants[0].color;*/
         itemPreviewing = itemCFG;
     }
 
