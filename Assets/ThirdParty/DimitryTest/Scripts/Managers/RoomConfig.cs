@@ -75,5 +75,18 @@ public class RoomConfig
         }
         return false;
     }
+
+    public bool ItemAndVarIsInConfig(RoomItemConfig item, ItemVariant var)
+    {
+        foreach (string dirtyPair in pickedItemsAndVariants)
+        {
+            string[] strs = dirtyPair.Split('+');
+            if (strs.Contains(item.ConfigId) && strs.Contains(var.ConfigId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 

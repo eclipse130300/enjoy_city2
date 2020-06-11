@@ -34,7 +34,7 @@ public class RoomPreviewManager : MonoBehaviour
 
         Messenger.AddListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.AddListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);
+/*        Messenger.AddListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);*/
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
         
     }
@@ -91,7 +91,7 @@ public class RoomPreviewManager : MonoBehaviour
         activeVariant = variant;
     }
 
-    private void OnItemPicked(RoomItemDisplay itemDisplay)
+/*    public void OnItemPicked(RoomItemDisplay itemDisplay)
     {
         if (shopManager.CheckIfItemIsBought(itemPreviewing, activeVariant))
         {
@@ -100,8 +100,30 @@ public class RoomPreviewManager : MonoBehaviour
 
             //and save it
             SaveRoomConfig();
-/*
-            Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);*/
+
+*//*            Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);*//*
+        }
+        else
+        {
+            // make a window - BUY ITEM, BRO
+            Debug.Log("BUY THIS ITEM FIRST!");
+        }
+    }*/
+
+    public void OnItemPicked()
+    {
+        if (shopManager.CheckIfItemIsBought(itemPreviewing, activeVariant))
+        {
+            //add item and active variant to config
+            currentRoomConf.AddItemToConfig(itemPreviewing, activeVariant);
+
+            //and save it
+            SaveRoomConfig();
+
+            /*            Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);*/
+
+            Messenger.Broadcast(GameEvents.ROOM_ITEM_PICKED, itemPreviewing);
+            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
         }
         else
         {
@@ -142,11 +164,8 @@ public class RoomPreviewManager : MonoBehaviour
         if (shopManager.CheckIsEnoughMoney(activeVariant.currencyType, activeVariant.cost))
         {
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
-            Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
-            OnItemPicked(new RoomItemDisplay());
+            OnItemPicked();
             Messenger.Broadcast(GameEvents.ROOM_ITEM_BOUGHT, itemPreviewing, activeVariant);
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
-
         }
         else
         {
@@ -154,11 +173,13 @@ public class RoomPreviewManager : MonoBehaviour
         }
     }
 
+
+
     private void OnDestroy()
     {
         Messenger.RemoveListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.RemoveListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);
+/*        Messenger.RemoveListener<RoomItemDisplay>(GameEvents.ROOM_ITEM_PICKED, OnItemPicked);*/
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
     }
 }

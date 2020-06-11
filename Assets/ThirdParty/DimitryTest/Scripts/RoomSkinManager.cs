@@ -14,8 +14,8 @@ public class RoomSkinManager : MonoBehaviour
     private void Awake()
     {
         Messenger.AddListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
-        Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, InitializeSkins);
-        Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+/*        Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, InitializeSkins);*/
+/*        Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);*/
         SetDefaultConfig();
     }
 
@@ -58,6 +58,8 @@ public class RoomSkinManager : MonoBehaviour
         ApplyConfig(defaultConfig);
         //PUT ON CLOTHES FROM CONFIG
         ApplyConfig(currentConfig);
+
+        Debug.Log("PUT ON CLOTHES FROM CONFIG");
     }
 
     private void ApplyConfig(RoomConfig conf)
@@ -70,14 +72,6 @@ public class RoomSkinManager : MonoBehaviour
             var item = ScriptableList<RoomItemConfig>.instance.GetItemByID(strs[0]);
             if (item != null)
             {
-/*                var furnitureTransform = transform.Find(item.furnitureType.ToString());
-                if (furnitureTransform != null)
-                {
-                    furnitureTransform.GetComponent<MeshRenderer>().material = item.material;
-                    furnitureTransform.GetComponent<MeshRenderer>().material.color = conf.GetActiveVariant(item).color;
-                }*/
-
-
                 var privewingItems = FindObjectsOfType<IChangable>(); //just tag previewing gameobjects with this
                 foreach (var it in privewingItems)
                 {
@@ -99,9 +93,9 @@ public class RoomSkinManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, InitializeSkins);
+/*        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, InitializeSkins);*/
         Messenger.RemoveListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
-        Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+/*        Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);*/
     }
 
     void LoadConf()
