@@ -307,7 +307,8 @@ namespace Photon.Chat
     /// <summary>Class for constants. Codes for parameters of Operations and Events.</summary>
     public class ParameterCode
     {
-        /// <summary>(224) Your application's ID: a name on your own Photon or a GUID on the Photon Cloud</summary>
+        /// <summary>(224) Your application's ID: a name on your own Photon or a 
+        /// on the Photon Cloud</summary>
         public const byte ApplicationId = 224;
         /// <summary>(221) Internally used to establish encryption</summary>
         public const byte Secret = 221;

@@ -23,8 +23,8 @@ namespace CMS.Config
         public string SceneName = "";
         public string InterfaceSceneName = "";
         public string ManagersSceneName = "";
-   
-   
+
+        public AudioClip backGruondMusic;
    
 
         /*
@@ -47,6 +47,8 @@ namespace CMS.Config
             ManagersScene = ScriptableGUIUtils.DrawObjectField("Managers Scene", ManagersScene);
 
 
+            backGruondMusic = ScriptableGUIUtils.DrawObjectField("BackGroundMusic", backGruondMusic);
+
             if (Scene)
                 SceneName = Scene.name;
             else
@@ -60,6 +62,8 @@ namespace CMS.Config
             else
                 ManagersSceneName = "";
         }
+
+
 #endif
     }
 }

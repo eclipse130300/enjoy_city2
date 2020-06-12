@@ -16,6 +16,7 @@ public class RoomEditorUIController : MonoBehaviour
     [SerializeField] GameObject itemBoughtTab;
     [SerializeField] GameObject doneButton;
     [SerializeField] GameObject variantSlider;
+    [SerializeField] GameObject giftButton;
     [SerializeField] TextMeshProUGUI variantCostText;
     [SerializeField] Image variantCurrencyIMG;
     [SerializeField] TextMeshProUGUI variantNameIDtext;
@@ -44,15 +45,10 @@ public class RoomEditorUIController : MonoBehaviour
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
     }
 
-    private void Start()
-    {
-        currentRoomConfig = SaveManager.Instance.LoadRoomSet();
-    }
-
     private void ManipulateDisplayingInfo(ItemVariant var)
     {
 
-        if (shopManager.CheckIfItemIsBought(itemCFG, var))
+        if (shopManager.CheckIfItemIsBought(itemCFG, var)/* || var.cost == 0*/)
         {
             buyButton.SetActive(false);
             itemBoughtTab.SetActive(true);
@@ -61,23 +57,24 @@ public class RoomEditorUIController : MonoBehaviour
             Debug.Log("SHOW DONE BUTTON!!!!");
 
         }
-        else 
+        else
         {
+
             buyButton.SetActive(true);
             itemBoughtTab.SetActive(false);
             //donebutton off
             doneButton.SetActive(false);
         }
+            
+        
+
+
+
         if (SaveManager.Instance.LoadRoomSet().ItemAndVarIsInConfig(itemCFG, var))
         {
             doneButton.SetActive(false);
         }
 
-        //if var is active var
-        /*        if(currentRoomConfig.GetActiveVariant(itemCFG) == var)
-                {
-                    doneButton.SetActive(false);
-                }*/
 
         variantCostText.text = var.cost.ToString();
 
@@ -110,7 +107,7 @@ public class RoomEditorUIController : MonoBehaviour
 
     private void DisplayItem(GameObject itemGO)
     {
-        if (currentRoomConfig == null) currentRoomConfig = new RoomConfig();
+        currentRoomConfig = SaveManager.Instance.LoadRoomSet();
         variantSlider.SetActive(true); //activate it just in case
 
 
@@ -164,7 +161,7 @@ public class RoomEditorUIController : MonoBehaviour
                 }
                 varTab.activeIMG.gameObject.SetActive(hasActiveVar);
 
-                bool isBought = shopManager.CheckIfItemIsBought(itemCFG, V) == true ? false : true;
+                bool isBought = shopManager.CheckIfItemIsBought(itemCFG, V)/* || V.cost == 0*/ == true ? false : true;
                 varTab.lockIMG.gameObject.SetActive(isBought);
             }
             ManipulateDisplayingInfo(currentRoomConfig.GetActiveVariant(itemCFG));

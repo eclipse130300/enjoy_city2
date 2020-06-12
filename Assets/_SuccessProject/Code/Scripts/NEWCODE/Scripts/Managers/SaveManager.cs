@@ -48,6 +48,16 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     #endregion
 #endif
 
+    public ItemVariant GetActiveVariant(RoomItemConfig cfg)
+    {
+        return LoadRoomSet().GetActiveVariant(cfg);
+    }
+
+    public void GetActiveVariant(ItemConfig cfg)
+    {
+        //todo think about this shit
+    }
+
     public List<string> Get3DItemList()
     {
         return shopDataConfig.bought3DModelItems;

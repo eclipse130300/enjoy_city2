@@ -45,7 +45,7 @@ public class RoomInventoryManager : BaseInventoryManager
 
             itemScript.itemConfig = cfg; //initialize
             itemScript.SetItem(cfg.Inventory_image, cfg.Inventory_frameColor, CheckIfItemIsActive(cfg));
-            bool lockVal = shopManager.CheckIfItemIsBought(cfg) == true ? false : true;
+            bool lockVal = shopManager.CheckIfItemIsBought(cfg)/* || SaveManager.Instance.GetActiveVariant(cfg).cost == 0 */== true ? false : true; //wtf!!!221
             itemScript.lockIcon.gameObject.SetActive(lockVal);
         }
         if (inventory?.Count < inventoryMinSize)

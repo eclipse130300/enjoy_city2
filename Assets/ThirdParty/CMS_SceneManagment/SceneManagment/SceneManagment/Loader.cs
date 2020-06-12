@@ -90,7 +90,7 @@ public class Loader : BaseLoader
             }
         }
     }
-   // public MapConfig mapConfig;
+    public MapConfig mapConfig;
     protected override void Init() {
         base.Init();
 
@@ -128,7 +128,7 @@ public class Loader : BaseLoader
 
     public void LoadGameScene(MapConfig config)
     {
-       // mapConfig = config;
+        mapConfig = config;
         this.SceneName = config.SceneName;
         this.ControllersSceneName = config.ManagersSceneName;
         this.InterfaceSceneName = config.InterfaceSceneName;
