@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SocialGTA {
 
-    public class GameCanvasController : BoltSingletonPrefab<GameCanvasController> {
+    public class GameCanvasController :MonoBehaviour{
 
         #region Variables
 
@@ -12,7 +12,6 @@ namespace SocialGTA {
         [SerializeField] string _hideClip;
         [SerializeField] Joystick _joystick;
         [SerializeField] CustomAnimator _pauseAnim;
-        [SerializeField] SceneLoaderManager _loaderManager;
         [SerializeField] TouchPlaneController touchPlane;
 
         [SerializeField] GameObject interactionButton;
@@ -34,7 +33,7 @@ namespace SocialGTA {
         #region Standart Functions
 
         private void Awake() {
-            DontDestroyOnLoad(this);
+           // DontDestroyOnLoad(this);
         }
 
         #endregion
@@ -63,7 +62,7 @@ namespace SocialGTA {
         }
 
         public void OnClickLoadMainMenu() {
-            _loaderManager.DiscconnectFromServer();
+          //  _loaderManager.DiscconnectFromServer();
         }
 
         #endregion

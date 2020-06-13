@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace SocialGTA.Network {
-
+    /*
     public class PlayerSkinsManager : Bolt.EntityEventListener<IPlayerState> {
 
         [SerializeField] CharacterSkinModel[] _models;
@@ -36,5 +36,5 @@ namespace SocialGTA.Network {
                 Debug.Log("Skin ID: " + skinID);
             }
         }
-    }
+    }*/
 }

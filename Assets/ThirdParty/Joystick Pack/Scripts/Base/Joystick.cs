@@ -85,6 +85,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         }
         else
             input = Vector2.zero;
+   
     }
 
     private void FormatInput()

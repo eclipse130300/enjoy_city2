@@ -12,13 +12,27 @@ public class MiniMapBorderClumper : MonoBehaviour
 
     private void Awake()
     {
-        minimapCam = GameObject.FindGameObjectWithTag("MinimapCamera").GetComponent<Camera>();
+       
         clumpedIcons = FindObjectsOfType<ClumpedIcon>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (minimapCam == null) {
+
+            var cam =transform.Find("MinimapCamera");
+            if (cam != null)
+            {
+                minimapCam = cam.GetComponent<Camera>();
+            }
+            else {
+                return;
+            
+            }
+               
+        }
+
         Vector3 cameraXZ = new Vector3(minimapCam.transform.position.x, 0, minimapCam.transform.position.z);
 
         foreach (ClumpedIcon icon in clumpedIcons)

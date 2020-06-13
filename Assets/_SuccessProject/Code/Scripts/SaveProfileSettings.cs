@@ -17,7 +17,9 @@ namespace SocialGTA {
             }
             set{
                 PlayerPrefs.SetString(SAVEPROFILE_KEY, JsonUtility.ToJson(value));
+                PlayerPrefs.Save();
             }
         }
+
     }
 }

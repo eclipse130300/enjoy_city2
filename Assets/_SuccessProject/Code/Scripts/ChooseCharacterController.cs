@@ -11,7 +11,7 @@ namespace SocialGTA {
         [Header("Settings")]
         [SerializeField] int _mMenuSceneID;
         [SerializeField] CharactersData _charactersData;
-        [SerializeField] SceneLoaderManager _loaderManager;
+       // [SerializeField] SceneLoaderManager _loaderManager;
         [SerializeField] GameObject[] _characterModels;
 
         [Space(10), Header("UI Components")]
@@ -75,7 +75,7 @@ namespace SocialGTA {
         }
 
         public void OnClickLoadMainMenu () {
-            _loaderManager.LoadAsyncScene(_mMenuSceneID);
+          //  _loaderManager.LoadAsyncScene(_mMenuSceneID);
         }
 
         #endregion

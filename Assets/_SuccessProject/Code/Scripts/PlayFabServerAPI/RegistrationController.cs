@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using CMS.Config;
 
 namespace SocialGTA {
 
@@ -15,8 +16,8 @@ namespace SocialGTA {
         [SerializeField] Button regBttn;
 
         [Space(5), Header("Other Componenst")]
-        [SerializeField] int cCharacterSceneID;
-        [SerializeField] SceneLoaderManager loaderManager;
+        [SerializeField] MapConfig createCharacter;
+      //  [SerializeField] SceneLoaderManager loaderManager;
 
         string errorMessage;
         string playFabErrorMessage;
@@ -34,6 +35,13 @@ namespace SocialGTA {
         #region Custom Functions
 
         public void OnClickRegistration () {
+            Loader.Instance.LoadGameScene(createCharacter);
+            SaveProfileSettings.Profile = new ProfileModel
+            {
+                UserName = userNameIF.text,
+                Email = emailIF.text,
+                Passworld = passworldIF.text
+            };
             ServerAPIManager.Registrate(userNameIF.text, emailIF.text, passworldIF.text, result => {
                 SaveProfileSettings.Profile = new ProfileModel
                 {
@@ -41,8 +49,8 @@ namespace SocialGTA {
                     Email = emailIF.text,
                     Passworld = passworldIF.text
                 };
-
-                loaderManager.LoadAsyncScene(cCharacterSceneID);
+              
+                // loaderManager.LoadAsyncScene(cCharacterSceneID);
 
             }, error => {
                 playFabErrorMessage = error.ErrorMessage;

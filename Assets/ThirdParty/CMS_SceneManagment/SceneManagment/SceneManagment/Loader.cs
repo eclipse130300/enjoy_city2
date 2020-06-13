@@ -30,6 +30,8 @@ public class Loader : BaseLoader
     }
 
     public MapConfig deafaultScene;
+    public MapConfig priveousScene;
+    public MapConfig curentScene;
     [SerializeField]
     private string sceneName ="";
     public string SceneName {
@@ -90,7 +92,7 @@ public class Loader : BaseLoader
             }
         }
     }
-    public MapConfig mapConfig;
+   // public MapConfig mapConfig;
     protected override void Init() {
         base.Init();
 
@@ -128,10 +130,17 @@ public class Loader : BaseLoader
 
     public void LoadGameScene(MapConfig config)
     {
-        mapConfig = config;
-        this.SceneName = config.SceneName;
-        this.ControllersSceneName = config.ManagersSceneName;
-        this.InterfaceSceneName = config.InterfaceSceneName;
+        Debug.Log("LoadGameScene " + config.ConfigId);
+        if(curentScene != config)
+        {
+            priveousScene = curentScene;
+            curentScene = config;
+
+            this.SceneName = config.SceneName;
+            this.ControllersSceneName = config.ManagersSceneName;
+            this.InterfaceSceneName = config.InterfaceSceneName;
+        }
+       
 
     }
     public void LoadGameScene(string SceneName, string InterfaceSceneName, string ControllersSceneName)

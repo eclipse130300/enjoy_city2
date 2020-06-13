@@ -2,36 +2,32 @@
 
 namespace SocialGTA {
 
-    public class AutorizationController : MonoBehaviour {
+    public class AutorizationController {
 
         #region Variables
-
-        [Header("Componenst")]
-        [SerializeField] int regSceneID;
-        [SerializeField] int mMenuSceneID;
-        [SerializeField] int cCharacterSceneID;
-        [SerializeField] SceneLoaderManager loaderManager;
+        ProfileModel profile;
 
         #endregion
 
-        #region Standart Functions
+        public AutorizationController() {
+           
 
-        private void Awake () {
-            if(SaveProfileSettings.Profile == null) {
-                // Loading registration menu
-                loaderManager.LoadAsyncScene(regSceneID);
-            } else {
-                if (SaveProfileSettings.Profile.isChooseCharacter) {
-                    // Loading main menu
-                    loaderManager.LoadAsyncScene(mMenuSceneID);
-                } else {
-                    // Choose Character
-                    loaderManager.LoadAsyncScene(cCharacterSceneID);
-                }
-            }
+
         }
-
-        #endregion
+        public void Login() {
+            profile = SaveProfileSettings.Profile;
+          
+        }
+        public void LogOut()
+        {
+            SaveProfileSettings.Profile = new ProfileModel();
+        }
+        public bool isAutorized {
+            get {
+                return profile!= null && profile.Email != "" && profile.Passworld != "" && profile.UserName != "";
+            }
+        
+        }
 
     }
 }
