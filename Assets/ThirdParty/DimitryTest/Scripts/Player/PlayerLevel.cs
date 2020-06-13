@@ -23,7 +23,12 @@ public class PlayerLevel : MonoBehaviour
         loader.AllSceneLoaded += Initialize;
         loader.AllSceneUnloaded += Save;
     }
+    private void OnDestroy()
+    {
 
+        loader.AllSceneLoaded -= Initialize;
+        loader.AllSceneUnloaded -= Save;
+    }
     private void Start()
     {
         Initialize();

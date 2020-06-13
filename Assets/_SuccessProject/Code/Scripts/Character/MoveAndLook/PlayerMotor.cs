@@ -94,7 +94,7 @@ namespace SocialGTA.Network {
         void Move(Vector3 velocity) {
             bool isGrounded = false;
 
-            isGrounded = isGrounded || _cc.Move(velocity * BoltNetwork.FrameDeltaTime) == CollisionFlags.Below;
+            isGrounded = isGrounded || _cc.Move(velocity * Time.fixedDeltaTime) == CollisionFlags.Below;
             isGrounded = isGrounded || _cc.isGrounded;
             isGrounded = isGrounded || Physics.CheckSphere(sphere, _cc.radius, layerMask);
 
@@ -134,7 +134,7 @@ namespace SocialGTA.Network {
                     Move(movingDir * movingSpeed);
                 }
             } else {
-                _state.velocity.y += gravityForce * BoltNetwork.FrameDeltaTime;
+                _state.velocity.y += gravityForce * Time.fixedDeltaTime;
             }
 
             if (_state.jumpFrames > 0) {
@@ -179,9 +179,9 @@ namespace SocialGTA.Network {
 
         float ApplyDrag(float value, float drag) {
             if (value < 0) {
-                return Mathf.Min(value + (drag * BoltNetwork.FrameDeltaTime), 0f);
+                return Mathf.Min(value + (drag * Time.fixedDeltaTime), 0f);
             } else if (value > 0) {
-                return Mathf.Max(value - (drag * BoltNetwork.FrameDeltaTime), 0f);
+                return Mathf.Max(value - (drag * Time.fixedDeltaTime), 0f);
             }
 
             return value;

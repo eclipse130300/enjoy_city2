@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,13 @@ public class EntryPointManager : MonoBehaviour
     private Queue<EntryPoint> allEntryPoints = new Queue<EntryPoint>();
 
 
-
+    private void Start()
+    {
+        if (!PhotonView.Get(this).IsMine && PhotonNetwork.IsConnectedAndReady) {
+            this.enabled = false;
+        
+        }
+    }
     // Start is called before the first frame update
 
     private void OnEnable()

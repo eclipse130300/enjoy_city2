@@ -13,9 +13,9 @@ public class EntryPoint : MonoBehaviour
     private bool isListeningUI;
     private bool isActivePoint;
 
-    [SerializeField] private MapConfig mapCFG;
-    [SerializeField] private Sprite interactionIcon;
-    [SerializeField] private Sprite miniMapIcon;
+    [SerializeField] public MapConfig mapCFG;
+    [SerializeField] public Sprite interactionIcon;
+    [SerializeField] public Sprite miniMapIcon;
 
 
     public void Interact()

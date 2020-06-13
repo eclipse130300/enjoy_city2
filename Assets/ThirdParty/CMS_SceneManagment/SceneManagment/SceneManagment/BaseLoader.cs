@@ -18,7 +18,7 @@ public class BaseLoader : Singleton<BaseLoader>
             if(sceneLoading != null)
                 curentSceneLoading = sceneLoading.progress;
 
-            return  1 - (sceneToLoad.Count -1) / (loadedScenes.Count + curentSceneLoading);
+            return  1 - (sceneToLoad.Count -1) / (loadedScenes.Count + curentSceneLoading) - ((afterLoading != null)?0.2f:0);
         }
 
     }
@@ -52,7 +52,7 @@ public class BaseLoader : Singleton<BaseLoader>
     protected Coroutine loadAllScenesCoroutine;
     protected Coroutine unloadAllScenesCoroutine;
 
-
+    public IEnumerator afterLoading;
     void Start()
     {
 
@@ -153,6 +153,11 @@ public class BaseLoader : Singleton<BaseLoader>
         {
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(activeScene));
         }
+        yield return null;
+        yield return afterLoading;
+        afterLoading = null;
+       
+     
         curentLoadingScene = "";
         loadAllScenesCoroutine = null;
         sceneLoading = null;

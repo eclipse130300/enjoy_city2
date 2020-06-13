@@ -1,4 +1,5 @@
-﻿using Bolt;
+﻿
+using Photon.Pun;
 using UnityEngine;
 
 namespace SocialGTA.Network {
@@ -9,7 +10,8 @@ namespace SocialGTA.Network {
         Joystick = 2
     }
 
-    public class PlayerBase : EntityEventListener<IPlayerState> {
+    public class PlayerBase : PhotonView
+    {
 
         #region Variables
 
@@ -48,7 +50,7 @@ namespace SocialGTA.Network {
         #endregion
 
         #region Bolt Functions
-
+        /*
         public override void Attached() {
             _gameCanvas = GameCanvasController.instance;
             state.SetTransforms(state.PlayerTransform, transform);
@@ -90,7 +92,7 @@ namespace SocialGTA.Network {
                     AnimatePlayer(cmd);
             }
         }
-
+        */
         #endregion
 
         #region Custom Functions
@@ -134,7 +136,7 @@ namespace SocialGTA.Network {
                break;
             }
         }
-
+        /*
         private void AnimatePlayer(PlayerInputCommand cmd) {
             //float moveZ = cmd.Input.Forward + cmd.Input.Backward;
             //float moveX = cmd.Input.Left + cmd.Input.Right;
@@ -160,7 +162,7 @@ namespace SocialGTA.Network {
             if (_motor.jumpStartedThisFrame)
                 state.Jump();
         }
-
+        */
         #endregion
     }
 }

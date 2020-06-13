@@ -12,13 +12,13 @@ using UnityEditor;
 #endif
 namespace CMS.Config
 {
-    [JsonObject(MemberSerialization.OptIn)]
+    //[JsonObject(MemberSerialization.OptIn)]
     [Serializable]
 
     public class ItemVariant : IGUIDrawable
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
-        public string ConfigId = GUID.Generate().ToString();
+        public string ConfigId = "";
         public Color color;
         public Texture texture;
         public int cost;
@@ -26,8 +26,14 @@ namespace CMS.Config
         public CurrencyType currencyType;
 
 #if UNITY_EDITOR
+       
+        
         public  void Draw()
         {
+            if (ConfigId == "") {
+                ConfigId = GUID.Generate().ToString();
+
+            }
             ConfigId = ScriptableGUIUtils.DrawField("ConfigID", ConfigId);
             color = ScriptableGUIUtils.DrawField("Color", color);
             currencyType = (CurrencyType)ScriptableGUIUtils.DrawField("Currency", currencyType);

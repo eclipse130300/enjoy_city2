@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace SocialGTA.Network {
-
+    /*
     public class PlayerObject {
 
         public BoltEntity character;
@@ -28,5 +28,5 @@ namespace SocialGTA.Network {
 
             character.transform.position = pos;
         }
-    }
+    }*/
 }
