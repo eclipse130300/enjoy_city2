@@ -14,7 +14,7 @@ public class SoundManager : Singleton<SoundManager>
 
     private void PlayBackgoundMusic()
     {
-        var currentConfig = loader.mapConfig;
+        var currentConfig = loader.curentScene;
         audioSource.clip = currentConfig.backGruondMusic;
         audioSource.Play();
 
