@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RoomPreviewManager : MonoBehaviour
@@ -78,7 +79,20 @@ public class RoomPreviewManager : MonoBehaviour
             }
         }
 
+        TryAddDefaultItems();
         LoadRoomConfig();
+    }
+
+    private void TryAddDefaultItems() //first add default items - they should be opened instantly
+    {
+        var allDefaultItems = ScriptableList<RoomItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+
+        foreach(RoomItemConfig defaultItem in allDefaultItems)
+        {
+            currentRoomConf.AddItemToConfig(defaultItem, defaultItem.variants?[0]);
+            shopManager.Buy(defaultItem, defaultItem.variants?[0], 0, CurrencyType.SOFT);
+        }
+        SaveRoomConfig();
     }
 
     private void OnItemVariantChanged(ItemVariant variant)
