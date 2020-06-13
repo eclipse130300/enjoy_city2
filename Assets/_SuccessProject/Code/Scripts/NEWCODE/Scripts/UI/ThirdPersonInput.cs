@@ -84,7 +84,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     private void FixedUpdate()
     {
        
-        if (hasReferencies && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        if (LeftJoystick != null && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             
 

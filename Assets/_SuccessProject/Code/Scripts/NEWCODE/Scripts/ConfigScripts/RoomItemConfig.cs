@@ -24,6 +24,7 @@ namespace CMS.Config
         public FURNITURE furnitureType;
         public Material material;
         public List<ItemVariant> variants = new List<ItemVariant>();
+        public bool isDefault;
 
 #if UNITY_EDITOR
         public override void Draw()
@@ -37,6 +38,7 @@ namespace CMS.Config
             furnitureType = (FURNITURE)ScriptableGUIUtils.DrawField("furnitureType", furnitureType);
             Inventory_frameColor = ScriptableGUIUtils.DrawField("Inventory_FrameColor", Inventory_frameColor);
             Inventory_image = ScriptableGUIUtils.DrawObjectField("Inventory_icon", Inventory_image);
+            isDefault = ScriptableGUIUtils.DrawField("isDefault?", isDefault);
             ScriptableGUIUtils.DrawList("ItemVariants", variants);
 
         }
