@@ -17,7 +17,7 @@ public class EntryPointManager : MonoBehaviour
 
     private void Start()
     {
-        if (!PhotonView.Get(this).IsMine && PhotonNetwork.IsConnectedAndReady) {
+        if (PhotonView.Get(this) != null && !PhotonView.Get(this).IsMine && PhotonNetwork.IsConnectedAndReady) {
             this.enabled = false;
         
         }
