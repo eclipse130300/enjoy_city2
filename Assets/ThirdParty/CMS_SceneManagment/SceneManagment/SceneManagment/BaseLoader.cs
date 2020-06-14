@@ -137,7 +137,6 @@ public class BaseLoader : Singleton<BaseLoader>
 
     private IEnumerator LoadAllScenes()
     {
-        Debug.LogError(" LoadAllScenes");
         StartSceneLoading.Invoke();
         while (sceneToLoad.Count != 0)
         {

@@ -1,9 +1,5 @@
 ﻿
-using JetBrains.Annotations;
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
@@ -81,22 +77,57 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         // get the third person character ( this should never be null due to require component )
 
     }
-
+    Vector3 pos;
+    Quaternion rotation;
+    Vector3 newCameraRotation;
+    float nHinput;
+    float nVinput;
     private void FixedUpdate()
     {
-       
+
+
+
+
+
         if (LeftJoystick != null && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
-            
 
-            Hinput = Mathf.Clamp( LeftJoystick.input.x + Input.GetAxis("Horizontal"),-1,1);
-            Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"),-1,1);
+
+            Hinput = Mathf.Clamp(LeftJoystick.input.x + Input.GetAxis("Horizontal"), -1, 1);
+            Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"), -1, 1);
             m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
-            
+
             camera.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
 
-            cameraRotation = new Vector3((transform.forward*5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward*5).y, (transform.forward*5 + transform.position).z) + Vector3.up;
+            cameraRotation = new Vector3((transform.forward * 5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward * 5).y, (transform.forward * 5 + transform.position).z) + Vector3.up;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + Vector3.up * TouchField.TouchDist.x * rotateSpeed * Time.fixedDeltaTime);
+
+        }
+        else {
+            if(!photonView.IsMine)
+            {
+                Hinput = nHinput;
+                Vinput = nVinput;
+
+                if(cameraRotation == Vector3.zero)
+                    cameraRotation = newCameraRotation;
+
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.fixedDeltaTime * 5);
+                if (Vector3.Distance(transform.position, pos) > 0.2f)
+                {
+                    transform.position = Vector3.Lerp(transform.position, pos, Time.fixedDeltaTime*5);
+                    
+                    cameraRotation = Vector3.Lerp(cameraRotation, newCameraRotation, Time.fixedDeltaTime*5);
+                }
+                else {
+                   
+                    cameraRotation = Vector3.Lerp(cameraRotation, newCameraRotation, Time.fixedDeltaTime*3);
+                }
+                    
+                
+
+                
+            }
            
         }
         if (_characterController.isGrounded)
@@ -129,9 +160,18 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     
     private void LateUpdate()
     {
-        //return;
-        Vector3 rotation = Quaternion.LookRotation(cameraRotation - hips.transform.position , Vector3.up).eulerAngles;
-        
+       
+
+      //  if (angle > 1 || angle < -1)
+        //    return;
+
+        Vector3 rotation = Quaternion.LookRotation(cameraRotation - hips.transform.position, Vector3.up).eulerAngles;
+
+
+        float angle = Vector3.Angle(transform.forward, (cameraRotation - hips.transform.position).normalized);
+
+        if (angle > 30 || angle < -30)
+            return;
         for (int i = 0; i < skinsManager.skinHolder.childCount; i++)
         {
             Transform[] newTransform = skinsManager.skinHolder.GetChild(i).GetComponentsInChildren<Transform>();
@@ -201,6 +241,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         }
     }
 
+    
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
     
@@ -217,12 +258,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         }
         else
         {
-          //  Debug.Log("OnPhotonSerializeView IsReading");
-            transform.localPosition = (Vector3)stream.ReceiveNext();
-            transform.localRotation =  Quaternion.Euler((Vector3)stream.ReceiveNext());
-            cameraRotation = (Vector3)stream.ReceiveNext();
-            Hinput = (float)stream.ReceiveNext();
-            Vinput = (float)stream.ReceiveNext();
+            pos = (Vector3)stream.ReceiveNext();
+            rotation = Quaternion.Euler((Vector3)stream.ReceiveNext());
+            newCameraRotation = (Vector3)stream.ReceiveNext();
+            nHinput = (float)stream.ReceiveNext();
+            nVinput = (float)stream.ReceiveNext();
             m_Jump = (bool)stream.ReceiveNext();
         }
     }
