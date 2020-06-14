@@ -182,22 +182,23 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     private void Jump()
     {
-        m_Move.y = targetJump;
-
-        targetJump -= Time.fixedDeltaTime * JumpForce;
-
-        if (_characterController.isGrounded && m_Jump)
         {
-            targetJump = jumpHeight;
-            inertionMovement = new Vector3(m_Move.x, targetJump, m_Move.z);
+            m_Move.y = targetJump;
 
+            targetJump -= Time.fixedDeltaTime * JumpForce;
+
+            if (_characterController.isGrounded && m_Jump)
+            {
+                targetJump = jumpHeight;
+                inertionMovement = new Vector3(m_Move.x, targetJump, m_Move.z);
+
+            }
+
+            if (!_characterController.isGrounded)
+            {
+                _characterController.Move(inertionMovement * Time.fixedDeltaTime);
+            }
         }
-
-        if (!_characterController.isGrounded)
-        {
-            _characterController.Move(inertionMovement * Time.fixedDeltaTime);
-        }
-
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

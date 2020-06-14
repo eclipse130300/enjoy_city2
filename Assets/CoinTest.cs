@@ -12,6 +12,7 @@ public class CoinTest : MonoBehaviour
         {
             var playerLvl = other.gameObject.GetComponent<PlayerLevel>();
             playerLvl.AddExperience(expAmount);
+            Destroy(gameObject);
         }
     }
 }
