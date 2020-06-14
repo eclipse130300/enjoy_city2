@@ -18,6 +18,7 @@ namespace CMS.Config
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
         public Mesh mesh;
+        public GameObject itemObject;
         public Color Inventory_frameColor;
         public Sprite Inventory_image;
         public Gender gender;
@@ -33,6 +34,7 @@ namespace CMS.Config
             base.Draw();
 
             mesh = ScriptableGUIUtils.DrawObjectField("Mesh", mesh);
+            itemObject = EditorGUILayout.ObjectField(itemObject, typeof(GameObject), false) as GameObject;
             gender = (Gender)ScriptableGUIUtils.DrawField("GENDER", gender);
             bodyPart = (BODY_PART)ScriptableGUIUtils.DrawField("BODYPART", bodyPart);
             gameMode = (GameMode)ScriptableGUIUtils.DrawField("GameMode", gameMode);
@@ -41,6 +43,9 @@ namespace CMS.Config
             gender = (Gender)ScriptableGUIUtils.DrawField("GENDER", gender);
             ScriptableGUIUtils.DrawList("ItemVariants", variants);
             isDefault = ScriptableGUIUtils.DrawField("isDefault?", isDefault);
+
+
+            
         }
 #endif
     }

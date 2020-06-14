@@ -24,6 +24,8 @@ namespace CMS.Config
         public string InterfaceSceneName = "";
         public string ManagersSceneName = "";
 
+      
+
         public AudioClip backGruondMusic;
 
         public GameMode gameMode;

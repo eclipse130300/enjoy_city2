@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
@@ -23,7 +24,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     public float cameraYSpeed = 5f;
     protected ThirdPersonUserControl Control;
 
-  
+    [SerializeField] SkinsManager skinsManager;
 
     protected bool isCrouching = false;
     protected CapsuleCollider CapCollider;
@@ -128,10 +129,24 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     
     private void LateUpdate()
     {
+        //return;
         Vector3 rotation = Quaternion.LookRotation(cameraRotation - hips.transform.position , Vector3.up).eulerAngles;
-        //hips.transform.LookAt(cameraRotation,Vector3.up);
-      
-        hips.transform.rotation = Quaternion.Euler(rotation/*new Vector3(rotation.x, hips.transform.rotation.y, hips.transform.rotation.z)*/);
+        
+        for (int i = 0; i < skinsManager.skinHolder.childCount; i++)
+        {
+            Transform[] newTransform = skinsManager.skinHolder.GetChild(i).GetComponentsInChildren<Transform>();
+            foreach (var child in newTransform) { 
+                if(hips.name == child.name)
+                {
+                    child.rotation = Quaternion.Euler(rotation);
+                    break;
+                }
+                   
+            }
+
+
+        }
+        hips.rotation = Quaternion.Euler(rotation);
     }
 
     void SubscibeToUI()

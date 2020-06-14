@@ -78,6 +78,8 @@ public class RoomSkinManager : MonoBehaviour
                     if (it.gameObject.name == item.furnitureType.ToString())
                     {
                         var rotation = it.gameObject.transform.rotation; //save starting rotation
+
+
                         if (item.mesh != null)
                         {
                             it.gameObject.GetComponent<MeshFilter>().mesh = item.mesh;

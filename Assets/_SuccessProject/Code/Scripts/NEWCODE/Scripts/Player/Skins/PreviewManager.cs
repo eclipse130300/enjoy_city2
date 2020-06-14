@@ -80,7 +80,9 @@ public class PreviewManager : MonoBehaviour
 
     private void OnItemVariantChanged(ItemVariant variant)
     {
-        previewingBodyPart.material.color = variant.color;
+
+        GetComponent<SkinsManager>().PutOnItem(itemPreviewing, variant);
+        //previewingBodyPart.material.color = variant.color;
         activeVariant = variant;
     }
 
@@ -115,16 +117,21 @@ public class PreviewManager : MonoBehaviour
     private void OnItemPressed(GameObject item)
     {
     
+
+
         var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
         activeVariant = previewingClothesConfig?.GetActiveVariant(itemCFG);
-    
+
+        GetComponent<SkinsManager>().PutOnItem(itemCFG, activeVariant);
+
+        /*
         var bodyPart = transform.Find(itemCFG.bodyPart.ToString());
         previewingBodyPart = bodyPart.GetComponent<SkinnedMeshRenderer>();
         previewingBodyPart.sharedMesh = itemCFG.mesh;
     
-    previewingBodyPart.material.color = previewingClothesConfig.ItemIsInConfig(itemCFG) == true ?
-    previewingClothesConfig.GetActiveVariant(itemCFG).color : /*Color.white*/ itemCFG.variants[0].color;
-    
+        previewingBodyPart.material.color = previewingClothesConfig.ItemIsInConfig(itemCFG) == true ?
+        previewingClothesConfig.GetActiveVariant(itemCFG).color :  itemCFG.variants[0].color;
+    */
         itemPreviewing = itemCFG;
     }
 

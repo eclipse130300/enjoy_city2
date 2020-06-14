@@ -20,7 +20,7 @@ namespace CMS.Config
         [Draw(DrawAttributeTypes.NotForDraw, "")]
         public string ConfigId;
         public Color color;
-        public Texture texture;
+        public Sprite texture;
         public int cost;
         public string description;
         public CurrencyType currencyType;
@@ -30,7 +30,10 @@ namespace CMS.Config
         {
             ConfigId = ScriptableGUIUtils.DrawField("ConfigID", ConfigId);
             color = ScriptableGUIUtils.DrawField("Color", color);
-            currencyType = (CurrencyType)ScriptableGUIUtils.DrawField("Currency", currencyType);
+            texture = EditorGUILayout.ObjectField(texture, typeof(Sprite), false) as Sprite;
+
+
+                currencyType = (CurrencyType)ScriptableGUIUtils.DrawField("Currency", currencyType);
             cost = ScriptableGUIUtils.DrawField("Cost", cost);
             description = ScriptableGUIUtils.DrawField("Description", description);
         }
