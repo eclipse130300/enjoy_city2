@@ -25,14 +25,16 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void Awake()
     {
         photon =  PhotonView.Get(this);
-        if (GetComponent<PreviewManager>() == null && (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if we are in character editor
-        {
+        /*        if (GetComponent<PreviewManager>() == null && (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if we are in character editor
+                {*/
+
+        if (GetComponent<PreviewManager>() != null)
+            {
             Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
-            SetDefaultConfig();
-
-          //  photon.RPC("PutOnClothes", RpcTarget.Others, JsonConvert.SerializeObject(currentConfig));
         }
+            SetDefaultConfig();
+          //  photon.RPC("PutOnClothes", RpcTarget.Others, JsonConvert.SerializeObject(currentConfig));
 
     }
 
@@ -141,8 +143,11 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
     private void OnDestroy()
     {
-    
-        if (GetComponent<PreviewManager>() != null && (photon!= null &&  photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if this manager is prewiew skin manager
+
+        /*        if (GetComponent<PreviewManager>() != null && (photon!= null &&  photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if this manager is prewiew skin manager
+                {*/
+
+        if (GetComponent<PreviewManager>() != null)
         {
             Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);

@@ -5,14 +5,13 @@ using UnityEngine;
 public class MiniMapBorderClumper : MonoBehaviour
 {
     private Camera minimapCam;
-    private ClumpedIcon[] clumpedIcons;
+    public ClumpedIcon[] clumpedIcons;
     public float iconsOffset = 15f; //resize offset from player to clumped icon
 
 
 
     private void Awake()
     {
-       
         clumpedIcons = FindObjectsOfType<ClumpedIcon>();
     }
 
