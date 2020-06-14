@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MiniMapBorderClumper : MonoBehaviour
 {
-    private Camera minimapCam;
+    public Camera minimapCam;
     public ClumpedIcon[] clumpedIcons;
     public float iconsOffset = 15f; //resize offset from player to clumped icon
 
@@ -20,7 +20,7 @@ public class MiniMapBorderClumper : MonoBehaviour
     {
         if (minimapCam == null) {
 
-            var cam =transform.Find("MinimapCamera");
+            var cam = transform.Find("Minimap_cam");
             if (cam != null)
             {
                 minimapCam = cam.GetComponent<Camera>();

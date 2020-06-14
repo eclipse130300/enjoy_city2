@@ -109,7 +109,7 @@ public class Loader : BaseLoader
                 if (ControllersSceneName != mapConfig.ManagersSceneName)
                     this.ControllersSceneName = mapConfig.ManagersSceneName;
             }*/
-
+            Debug.LogError(" AllSceneLoaded.Invoke();");
             AllSceneLoaded.Invoke();
         }
         if(SceneManager.sceneCount == 1 && Application.isPlaying && deafaultScene != null)

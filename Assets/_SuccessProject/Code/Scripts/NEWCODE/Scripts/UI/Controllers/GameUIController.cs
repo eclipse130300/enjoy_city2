@@ -34,6 +34,7 @@ public class GameUIController : MonoBehaviour
 
     private void OnEntryPointEntered(Sprite newSprite)
     {
+        Debug.Log("OnEntryPointEntered");
         interactionButton.SetActive(true);
         interactionButtonIMG.sprite = newSprite;
     }

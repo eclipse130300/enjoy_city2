@@ -5,7 +5,7 @@ namespace SocialGTA {
     public class AutorizationController {
 
         #region Variables
-        ProfileModel profile;
+        public ProfileModel profile;
 
         #endregion
 

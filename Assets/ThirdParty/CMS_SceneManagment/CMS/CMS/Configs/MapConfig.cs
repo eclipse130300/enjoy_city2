@@ -25,8 +25,8 @@ namespace CMS.Config
         public string ManagersSceneName = "";
 
         public AudioClip backGruondMusic;
-   
 
+        public GameMode gameMode;
         /*
                 public GameMod ForGameMod;*/
 #if UNITY_EDITOR
@@ -39,7 +39,7 @@ namespace CMS.Config
         public override void Draw()
         {
             base.Draw();
-
+            gameMode = (GameMode)ScriptableGUIUtils.DrawField("gameMode", gameMode);
             mapIcon = ScriptableGUIUtils.DrawObjectField("MapIcon",mapIcon);
      
             Scene = ScriptableGUIUtils.DrawObjectField("Game Scene", Scene);

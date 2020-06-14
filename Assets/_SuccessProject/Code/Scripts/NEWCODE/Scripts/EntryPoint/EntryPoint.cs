@@ -32,14 +32,13 @@ public class EntryPoint : MonoBehaviour
 
     public void ShowUI()
     {
-        Messenger.Broadcast(GameEvents.ENTRY_POINT_ENTERED, interactionIcon);
-        Debug.Log("ENTRY_POINT_ENTERED");
-        /*        Debug.Log("I SHOW ENTRY POINT UI");*/
+            Messenger.Broadcast(GameEvents.ENTRY_POINT_ENTERED, interactionIcon);
+/*        Debug.Log("I SHOW ENTRY POINT UI");*/
     }
 
     public void HideUI()
     {
-        Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
+            Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
     }
 
     public void ListenInteractionButton()
@@ -49,7 +48,7 @@ public class EntryPoint : MonoBehaviour
             Messenger.AddListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
             isListeningUI = true;
         }
-
+      
     }
 
     public void UnlistenInteractionButton()
@@ -60,13 +59,12 @@ public class EntryPoint : MonoBehaviour
             Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
             isListeningUI = false;
         }
+      
     }
 
-
-        private void OnDestroy()
-        {
-            if (isListeningUI) Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
-            Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
-        }
-    
+    private void OnDestroy()
+    {
+        if(isListeningUI) Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+        Messenger.Broadcast(GameEvents.ENTRY_POINT_EXIT);
+    }
 }
