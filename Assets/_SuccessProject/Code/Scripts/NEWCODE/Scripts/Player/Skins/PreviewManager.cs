@@ -37,13 +37,16 @@ public class PreviewManager : MonoBehaviour
 /*        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        LoadConf();
+
         TryAddDefaultItems();
 
-        LoadConf();
     }
 
     private void TryAddDefaultItems() //first add default items - they should be opened instantly
     {
+        if (previewingClothesConfig.pickedItemsAndVariants.Count != 0) return;
+
         var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).ToList();
 
         foreach (ItemConfig defaultItem in allDefaultItems)
@@ -52,6 +55,10 @@ public class PreviewManager : MonoBehaviour
             shopManager.Buy(defaultItem, defaultItem.variants?[0], 0, CurrencyType.SOFT);
         }
         SavePreviewingConfig();
+
+        Debug.Log("Default items added!");
+
+        LoadConf();
     }
 
     private void Start()
@@ -67,7 +74,6 @@ public class PreviewManager : MonoBehaviour
 
     void LoadConf()
     {
-
         string key = previewingCharSex.ToString() + previewingGameMode.ToString();
         previewingClothesConfig = SaveManager.Instance.LoadClothesSet(key);
     }
@@ -143,6 +149,7 @@ public class PreviewManager : MonoBehaviour
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
 /*        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
+        Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
     }
 
 }

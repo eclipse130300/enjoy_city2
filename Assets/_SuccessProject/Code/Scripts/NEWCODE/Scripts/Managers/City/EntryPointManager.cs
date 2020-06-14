@@ -32,6 +32,7 @@ public class EntryPointManager : MonoBehaviour
     private void OnDisable()
     {
         if(Loader.Instance != null)   Loader.Instance.AllSceneLoaded -= Initialize;
+        if (activePoint != null) activePoint.UnlistenInteractionButton();
     }
 
     private void Initialize()
@@ -44,27 +45,37 @@ public class EntryPointManager : MonoBehaviour
             allEntryPoints.Enqueue(pt);
         }
 
-        StartCheck();
+        if (!StartCheck())
+            StartCoroutine(ContinuousCheck());
 
-        StartCoroutine(ContinuousCheck());
     }
 
     EntryPoint ActivePointCheck(EntryPoint point)
     {
         float distance = Vector3.Distance(player.transform.position, point.transform.position);
-        if (distance <= distanceToTrigger && LvlCheck(player.level, point.fromLevelAvailable)) return point;
-        else return null;
+        if (distance <= distanceToTrigger && LvlCheck(player.level, point.fromLevelAvailable))
+        {
+            return point;
+        }
+        else
+        {
+            return null;
+        }
     }
 
-    void StartCheck()
+    private bool StartCheck()
     {
         foreach( EntryPoint point in allEntryPoints)
         {
-            if (ActivePointCheck(point) != null)
+            if (ActivePointCheck(point))
             {
                 point.ShowUI();
+                point.ListenInteractionButton();
+/*                Debug.Log("POINT" + point.name + "SHOWN AFTER START CHECK");*/
+                return true;
             }
         }
+        return false;
     }
 
     IEnumerator ContinuousCheck()
@@ -111,7 +122,7 @@ public class EntryPointManager : MonoBehaviour
         Vector3 dir = player.position - point.position;
         Ray ray = new Ray(point.position, dir);
 
-        Debug.DrawRay(point.position, dir);
+/*        Debug.DrawRay(point.position, dir);*/
 
         if(Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -120,4 +131,5 @@ public class EntryPointManager : MonoBehaviour
         }
         return false;
     }
+
 }

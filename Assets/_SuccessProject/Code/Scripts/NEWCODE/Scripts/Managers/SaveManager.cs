@@ -124,13 +124,19 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public void Add3DItemToShopList(ItemConfig conf, ItemVariant activeVar)
     {
         var list = shopDataConfig.bought3DModelItems;
-        list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
+        var pair = string.Concat(conf.ConfigId, '+', activeVar.ConfigId);
+
+        if(list.Contains(pair)) { return; }
+        list.Add(pair);
     }
 
     public void AddRoomItemToShopList(RoomItemConfig conf, ItemVariant activeVar)
     {
         var list = shopDataConfig.boughtRoomItems;
-        list.Add(string.Concat(conf.ConfigId, '+', activeVar.ConfigId));
+        var pair = string.Concat(conf.ConfigId, '+', activeVar.ConfigId);
+
+        if (list.Contains(pair)) { return; }
+        list.Add(pair);
     }
 
     public int GetExp()

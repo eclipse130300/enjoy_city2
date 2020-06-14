@@ -39,6 +39,7 @@ public class CharacterEditorUiController : MonoBehaviour
         shopManager = ShopManager.Instance;
         previewManager = FindObjectOfType<PreviewManager>();
         rightPanel.SetActive(false);
+        doneButton.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
         Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);

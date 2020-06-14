@@ -60,7 +60,6 @@ public class RoomSkinManager : MonoBehaviour
         //PUT ON CLOTHES FROM CONFIG
         ApplyConfig(currentConfig);
 
-        Debug.Log("PUT ON CLOTHES FROM CONFIG");
     }
 
     private void ApplyConfig(RoomConfig conf)

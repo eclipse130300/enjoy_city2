@@ -33,6 +33,7 @@ public class EntryPoint : MonoBehaviour
     public void ShowUI()
     {
             Messenger.Broadcast(GameEvents.ENTRY_POINT_ENTERED, interactionIcon);
+/*        Debug.Log("I SHOW ENTRY POINT UI");*/
     }
 
     public void HideUI()

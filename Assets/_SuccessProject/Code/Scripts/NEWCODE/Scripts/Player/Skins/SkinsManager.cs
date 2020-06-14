@@ -40,14 +40,15 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     {
         var cfg = new ClothesConfig();
 
-        foreach (string name in Enum.GetNames(typeof(BODY_PART)))
+        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+
+        foreach (ItemConfig defaultItem in allDefaultItems)
         {
-            if (ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name) != null)
+            if (defaultItem != null)
             {
-                cfg.AddItemToConfig(ScriptableList<ItemConfig>.instance.GetItemByID("default" + _characterSex.ToString() + name));
+                cfg.AddItemToConfig(defaultItem, defaultItem.variants[0]);
             }
         }
-
         defaultConfig = cfg;
     }
 
@@ -121,9 +122,8 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
                 var item = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
                 if (item != null)
                 {
-                    Debug.Log("dirtyPair " + dirtyPair);
+/*                    Debug.Log("dirtyPair " + dirtyPair);*/
                     var bodyTransform = skinHolder.Find(item.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
-                    Debug.Log("bodyTransform " + bodyTransform.name);
                     bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = item.mesh;
 
                     bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = config.GetActiveVariant(item).color;
