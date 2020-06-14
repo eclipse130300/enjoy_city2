@@ -1,6 +1,7 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using SocialGTA;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,20 +69,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     private void CreatePlayer()
     {
-        Debug.Log("CreatePlayer");
         EntryPoint[] points = FindObjectsOfType<EntryPoint>();
-        Debug.Log("CreatePlayer "+ points.Length);
         EntryPoint point = points.FirstOrDefault((x)=>{ 
-            Debug.Log("x.mapCFG.ConfigId " + x.mapCFG.ConfigId + " priveousScene " + Loader.Instance.priveousScene.ConfigId); 
             return x.mapCFG.ConfigId == Loader.Instance.priveousScene.ConfigId;  
             });
-        
+        AutorizationController autorization = new AutorizationController();
+        autorization.Login();
+        PhotonNetwork.LocalPlayer.NickName = autorization.profile.UserName;
         PhotonNetwork.Instantiate(playerOrigin, point.transform.position, point.transform.rotation);
         _connectAndReady = true;
-
-      //  TypedLobby lobbyType = new TypedLobby(lobbyName, LobbyType.Default);
-      // PhotonNetwork.JoinLobby(lobbyType);
-
     }
     public override void OnJoinedLobby()
     {

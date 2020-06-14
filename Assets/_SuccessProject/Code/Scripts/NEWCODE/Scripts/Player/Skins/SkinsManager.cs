@@ -24,14 +24,18 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     //public static Player =
     private void Awake()
     {
+        _gameMode = Loader.Instance.curentScene.gameMode;
+
         photon =  PhotonView.Get(this);
-        if (GetComponent<PreviewManager>() == null && (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if we are in character editor
+        if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
         {
+           
             Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+      
+        }
+        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) {
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             SetDefaultConfig();
-
-          //  photon.RPC("PutOnClothes", RpcTarget.Others, JsonConvert.SerializeObject(currentConfig));
         }
 
     }
@@ -55,7 +59,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void OnGameModeChanged(GameMode gameMode)
     {
         _gameMode = gameMode;
-        currentConfig = LoadConf();
+        currentConfig = LoadConf(_characterSex, _gameMode);
         PutOnClothes(currentConfig);
     }
 
@@ -75,7 +79,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         
             if (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)
             {
-                currentConfig = LoadConf();
+                currentConfig = LoadConf(_characterSex, _gameMode);
                 PutOnClothes(currentConfig);
                
             } else
@@ -142,16 +146,22 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void OnDestroy()
     {
     
-        if (GetComponent<PreviewManager>() != null && (photon!= null &&  photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if this manager is prewiew skin manager
+        if (GetComponent<PreviewManager>() != null) //ckeck if this manager is prewiew skin manager
         {
-            Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+           // Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        }
+
+        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        {
+            Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+            SetDefaultConfig();
         }
     }
 
-    ClothesConfig LoadConf()
+    ClothesConfig LoadConf(Gender gender, GameMode gameMode)
     {
-        string key = _characterSex.ToString() + _gameMode.ToString();
+        string key = gender.ToString() + gameMode.ToString();
         return SaveManager.Instance.LoadClothesSet(key); 
     }
 

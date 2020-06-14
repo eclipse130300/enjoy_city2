@@ -37,7 +37,7 @@ public class EntryPointManager : MonoBehaviour
 
     private void Initialize()
     {
-        player = FindObjectOfType<PlayerLevel>();
+        player = GetComponent<PlayerLevel>();
         var points = FindObjectsOfType<EntryPoint>();
 
         foreach (EntryPoint pt in points)
@@ -126,7 +126,7 @@ public class EntryPointManager : MonoBehaviour
 
         if(Physics.Raycast(ray, out RaycastHit hit))
         {
-            bool reuslt = hit.collider.transform.parent?.GetComponent<PlayerLevel>(); // collider parent! delete with new playermodel
+            bool reuslt = hit.collider.transform.parent?.GetComponent<PlayerLevel>() ; // collider parent! delete with new playermodel
             return reuslt;
         }
         return false;

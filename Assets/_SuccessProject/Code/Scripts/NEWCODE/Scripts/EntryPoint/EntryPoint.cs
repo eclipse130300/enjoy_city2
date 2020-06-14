@@ -43,15 +43,23 @@ public class EntryPoint : MonoBehaviour
 
     public void ListenInteractionButton()
     {
-        Messenger.AddListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
-        isListeningUI = true;
+        if (isListeningUI == false)
+        {
+            Messenger.AddListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
+            isListeningUI = true;
+        }
+      
     }
 
     public void UnlistenInteractionButton()
     {
 
+        if (isListeningUI == true)
+        {
             Messenger.RemoveListener(GameEvents.INTERACTION_BUTTON_TAP, Interact);
             isListeningUI = false;
+        }
+      
     }
 
     private void OnDestroy()

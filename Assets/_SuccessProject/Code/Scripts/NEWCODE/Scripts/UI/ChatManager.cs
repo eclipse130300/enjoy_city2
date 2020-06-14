@@ -1,5 +1,6 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Chat;
+using SocialGTA;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -26,6 +27,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Start is called before the first frame update
     void Start()
     {
+        AutorizationController autorization = new AutorizationController();
+        autorization.Login();
+        playerID = autorization.profile.UserName;
         chatClient = new ChatClient(this);
         chatClient.Connect(ChatSettings.Load().AppId, "0.1", new AuthenticationValues(playerID));
 
