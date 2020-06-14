@@ -45,8 +45,9 @@ public class EntryPointManager : MonoBehaviour
             allEntryPoints.Enqueue(pt);
         }
 
-        if (!StartCheck())
-            StartCoroutine(ContinuousCheck());
+        StartCheck();
+
+        StartCoroutine(ContinuousCheck());
 
     }
 
