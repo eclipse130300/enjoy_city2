@@ -24,6 +24,7 @@ namespace CMS.Config
         public BODY_PART bodyPart;
         public GameMode gameMode;
         public List<ItemVariant> variants = new List<ItemVariant>();
+        public bool isDefault;
 
 
 #if UNITY_EDITOR
@@ -37,7 +38,9 @@ namespace CMS.Config
             gameMode = (GameMode)ScriptableGUIUtils.DrawField("GameMode", gameMode);
             Inventory_frameColor = ScriptableGUIUtils.DrawField("Inventory_FrameColor", Inventory_frameColor);
             Inventory_image = ScriptableGUIUtils.DrawObjectField("Inventory_icon", Inventory_image);
+            gender = (Gender)ScriptableGUIUtils.DrawField("GENDER", gender);
             ScriptableGUIUtils.DrawList("ItemVariants", variants);
+            isDefault = ScriptableGUIUtils.DrawField("isDefault?", isDefault);
         }
 #endif
     }

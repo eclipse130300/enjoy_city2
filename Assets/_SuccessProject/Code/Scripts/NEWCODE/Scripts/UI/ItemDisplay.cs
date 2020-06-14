@@ -2,13 +2,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemDisplay : MonoBehaviour , IItemHandler
+public class ItemDisplay : MonoBehaviour, IItemHandler
 {
+
     [SerializeField] private Color previewFrameColor;
 
     public ItemConfig itemConfig;
@@ -19,11 +18,13 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
 
     public Image lockIcon;
     public GameObject activeItemTick;
+
     private ShopManager shopManager;
+    bool isPreviewing;
 
     private void Awake()
     {
-        Image[] allImages = GetComponentsInChildren<Image>(); 
+        Image[] allImages = GetComponentsInChildren<Image>();
 
         foreach (Image img in allImages)
         {
@@ -36,29 +37,35 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
             {
                 lockIcon = img;
             }
-
-            else if (img.gameObject.CompareTag("activeItemTick"))
-            {
-                activeItemTick = img.gameObject;
-            }
         }
 
         shopManager = ShopManager.Instance;
-        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
+        Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
-        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.AddListener<ItemConfig>(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, OnItemDone);
     }
 
-    private void OnItemPicked(ItemDisplay itemDisplay)
+    private void OnItemDone()
     {
-        if (this == itemDisplay && shopManager.CheckIfItemIsBought(itemDisplay.itemConfig))
+        frameIMG.color = startFrameColor;
+        isPreviewing = false;
+    }
+
+    private void OnItemPicked(ItemConfig itemConfig)
+    {
+        if (this.itemConfig == itemConfig && shopManager.CheckIfItemIsBought(itemConfig))
         {
+
             activeItemTick.SetActive(true);
         }
         else
         {
             activeItemTick.SetActive(false);
         }
+
+        frameIMG.color = startFrameColor;
+        isPreviewing = false;
     }
 
     private void OnItemBought(ItemConfig cfg, ItemVariant var) // TODO var is unnecessary
@@ -78,10 +85,11 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         }
     }
 
-    private void OnItemPressed(GameObject item)
+    private void ClearIfOtherItem(GameObject item)
     {
-        if (this == item.GetComponent<ItemDisplay>()) return;
+        if (this == item.GetComponent<RoomItemDisplay>()) return;
         frameIMG.color = startFrameColor;
+        isPreviewing = false;
     }
 
     public void SetItem(Sprite inventoryIMG, Color frameCol, bool isActiveItem)
@@ -92,27 +100,21 @@ public class ItemDisplay : MonoBehaviour , IItemHandler
         activeItemTick.SetActive(isActiveItem);
     }
 
-    public void ItemPicked()
-    {
-            frameIMG.color = startFrameColor;
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
-        if (shopManager.CheckIfItemIsBought(this.itemConfig))
-        {
-            Messenger.Broadcast(GameEvents.ITEM_PICKED, this);
-        }
-    }
-
     public void ItemPressed()
     {
-        Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
-        frameIMG.color = previewFrameColor;
+        if (!isPreviewing)
+        {
+            isPreviewing = true;
+            Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
+            frameIMG.color = previewFrameColor;
+        }
     }
 
     public void OnDestroy()
     {
-        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
+        Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, ClearIfOtherItem);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
-        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.RemoveListener<ItemConfig>(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, OnItemDone);
     }
 }
-

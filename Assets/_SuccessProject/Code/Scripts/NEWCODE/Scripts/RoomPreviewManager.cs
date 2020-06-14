@@ -9,11 +9,12 @@ public class RoomPreviewManager : MonoBehaviour
 {
     public List<GameObject> roomItems;
 
+    public FURNITURE furniturePreviewing;
+
     public List<GameObject> ObjectsPreviewing;
 
     public RoomConfig currentRoomConf;
 
-    public FURNITURE furniturePreviewing;
 
     public SaveManager saveManager;
 

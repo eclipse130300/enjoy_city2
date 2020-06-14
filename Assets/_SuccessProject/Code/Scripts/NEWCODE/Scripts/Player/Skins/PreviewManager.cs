@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utils;
 
@@ -23,16 +24,34 @@ public class PreviewManager : MonoBehaviour
 
     private ShopManager shopManager;
 
+    public string GetCurrentKey()
+    {
+        return previewingCharSex.ToString() + previewingGameMode.ToString();
+    }
+
     private void Awake()
     {
         shopManager = ShopManager.Instance;
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
+/*        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+        TryAddDefaultItems();
 
         LoadConf();
+    }
+
+    private void TryAddDefaultItems() //first add default items - they should be opened instantly
+    {
+        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+
+        foreach (ItemConfig defaultItem in allDefaultItems)
+        {
+            previewingClothesConfig.AddItemToConfig(defaultItem, defaultItem.variants?[0]);
+            shopManager.Buy(defaultItem, defaultItem.variants?[0], 0, CurrencyType.SOFT);
+        }
+        SavePreviewingConfig();
     }
 
     private void Start()
@@ -59,7 +78,7 @@ public class PreviewManager : MonoBehaviour
         activeVariant = variant;
     }
 
-    private void OnItemPicked(ItemDisplay iDisplay)
+    public void OnItemPicked()
     {
         if (shopManager.CheckIfItemIsBought(itemPreviewing, activeVariant))
         {
@@ -70,6 +89,8 @@ public class PreviewManager : MonoBehaviour
             SavePreviewingConfig();
 
             Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
+            Messenger.Broadcast(GameEvents.ITEM_PICKED, itemPreviewing);
+            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?
         }
         else
         {
@@ -107,7 +128,7 @@ public class PreviewManager : MonoBehaviour
         {
             shopManager.Buy(itemPreviewing, activeVariant, activeVariant.cost, activeVariant.currencyType);
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
-            OnItemPicked(new ItemDisplay());
+            OnItemPicked();
             Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
             Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
         }
@@ -120,7 +141,7 @@ public class PreviewManager : MonoBehaviour
     private void OnDestroy()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
-        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);
+/*        Messenger.RemoveListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged);
     }
 
