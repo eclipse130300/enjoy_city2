@@ -5,11 +5,19 @@ using UnityEngine;
 [System.Serializable]
 public class ImportantDataConfig : IDataConfig
 {
-   public int softCurrency = 100;
-   public int hardCurrency = 100;
+    public int softCurrency; /* = 100;*/
+    public int hardCurrency;  /* = 100;*/
    public int exp = 0;
    public int expToNextLvl = 100;
    public int lvl = 1;
+   
+    public ImportantDataConfig()
+    {
+        if (softCurrency == 0 || hardCurrency == 0)
+        {
+            softCurrency = hardCurrency = 100;
+        }
+    }
 
     public void SetHardCurrency(int hardC)
     {

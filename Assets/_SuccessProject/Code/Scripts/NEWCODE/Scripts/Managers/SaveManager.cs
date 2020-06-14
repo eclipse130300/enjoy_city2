@@ -10,9 +10,10 @@ using Utils;
 public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameManager -- 4 errors now!
 {
     public ShopDataConfig shopDataConfig = new ShopDataConfig();
-    public ImportantDataConfig importantDataConfig = new ImportantDataConfig();
-    public ChangableDataConfig changableDataConfig = new ChangableDataConfig();
+    public ImportantDataConfig importantDataConfig;
+    public ChangableDataConfig changableDataConfig;
     static string savePrefix = "save_";
+
     private void Awake()
     {
         LoadAllConfigs();
@@ -25,26 +26,26 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         PlayerPrefs.DeleteAll();
         Debug.Log("ALL! CONFIGS DELETED!");
     }
-/*    [MenuItem("DEBUG/DELETE BOUGHT ITEMS(ROOM, SKINS)")]
-    static void DeleteShopDataConfig()
-    {
-        PlayerPrefs.DeleteKey(savePrefix + shopDataConfig.ToString());
-        Debug.Log("BOUGHT ITEMS DELETED!");
-    }
+    /*    [MenuItem("DEBUG/DELETE BOUGHT ITEMS(ROOM, SKINS)")]
+        static void DeleteShopDataConfig()
+        {
+            PlayerPrefs.DeleteKey(savePrefix + shopDataConfig.ToString());
+            Debug.Log("BOUGHT ITEMS DELETED!");
+        }
 
-    [MenuItem("DEBUG/DELETE IMPORTANT DATA(EXP, LVL, MONEY)")]
-    static void DeleteImportantDataConfig()
-    {
-        PlayerPrefs.DeleteKey(savePrefix + importantDataConfig.ToString());
-        Debug.Log("IMPORTANT DATA DELETED!");
-    }
+        [MenuItem("DEBUG/DELETE IMPORTANT DATA(EXP, LVL, MONEY)")]
+        static void DeleteImportantDataConfig()
+        {
+            PlayerPrefs.DeleteKey(savePrefix + importantDataConfig.ToString());
+            Debug.Log("IMPORTANT DATA DELETED!");
+        }
 
-    [MenuItem("DEBUG/DELETE CHANGABLE DATA(NICK, CURRENT SKINS, GENDER)")]
-    static void DeleteChangableDataConfig()
-    {
-        PlayerPrefs.DeleteKey(savePrefix + changableDataConfig.ToString());
-        Debug.Log("CHANGABLE DATA DELETED!");
-    }*/
+        [MenuItem("DEBUG/DELETE CHANGABLE DATA(NICK, CURRENT SKINS, GENDER)")]
+        static void DeleteChangableDataConfig()
+        {
+            PlayerPrefs.DeleteKey(savePrefix + changableDataConfig.ToString());
+            Debug.Log("CHANGABLE DATA DELETED!");
+        }*/
     #endregion
 #endif
 

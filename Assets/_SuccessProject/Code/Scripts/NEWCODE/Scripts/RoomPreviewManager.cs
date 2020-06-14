@@ -61,8 +61,8 @@ public class RoomPreviewManager : MonoBehaviour
     void LoadRoomConfig()
     {
         currentRoomConf = saveManager.LoadRoomSet();
-        if (currentRoomConf == null)
-            currentRoomConf = new RoomConfig();
+/*        if (currentRoomConf == null)
+            currentRoomConf = new RoomConfig();*/
     }
     void SaveRoomConfig()
     {
@@ -86,6 +86,11 @@ public class RoomPreviewManager : MonoBehaviour
 
     private void TryAddDefaultItems() //first add default items - they should be opened instantly
     {
+        LoadRoomConfig();
+
+        if (currentRoomConf.pickedItemsAndVariants.Count != 0) return;
+
+
         var allDefaultItems = ScriptableList<RoomItemConfig>.instance.list.Where(t => t.isDefault).ToList();
 
         foreach(RoomItemConfig defaultItem in allDefaultItems)
