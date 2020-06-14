@@ -25,7 +25,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void Awake()
     {
         photon =  PhotonView.Get(this);
-        if (GetComponent<PreviewManager>() != null && (photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if we are in character editor
+        if (GetComponent<PreviewManager>() == null && (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if we are in character editor
         {
             Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
@@ -72,7 +72,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         private void PutOnClothes()
         {
         
-            if (photon.IsMine || !PhotonNetwork.IsConnectedAndReady)
+            if (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)
             {
                 currentConfig = LoadConf();
                 PutOnClothes(currentConfig);
@@ -130,7 +130,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
                 }
             }
         }
-        if (photon.IsMine)
+        if (photon!= null && photon.IsMine)
         {
             ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
             customProperties.Add("skin", JsonConvert.SerializeObject(config));
@@ -142,7 +142,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void OnDestroy()
     {
     
-        if (GetComponent<PreviewManager>() != null && (photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if this manager is prewiew skin manager
+        if (GetComponent<PreviewManager>() != null && (photon!= null &&  photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) //ckeck if this manager is prewiew skin manager
         {
             Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
