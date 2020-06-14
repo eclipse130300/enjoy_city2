@@ -105,7 +105,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     }
     private void PutOnClothes(ClothesConfig config)
     {
-        //PUT ON DEFAULT CLOTHES FIRST
+/*        //PUT ON DEFAULT CLOTHES FIRST
         foreach (string dirtyPair in defaultConfig.pickedItemsAndVariants)
         {
             string[] strs = dirtyPair.Split('+');
@@ -113,7 +113,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             var bodyTransform = skinHolder.Find(item.bodyPart.ToString());
             bodyTransform.GetComponent<SkinnedMeshRenderer>().sharedMesh = item.mesh;
             bodyTransform.GetComponent<SkinnedMeshRenderer>().material.color = Color.white;
-        }
+        }*/
         //PUT ON CLOTHES FROM CONFIG
         if (config != null)
         {
