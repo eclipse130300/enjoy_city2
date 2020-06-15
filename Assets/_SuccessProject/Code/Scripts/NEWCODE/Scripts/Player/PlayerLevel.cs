@@ -21,24 +21,25 @@ public class PlayerLevel : MonoBehaviour
         loader = Loader.Instance;
         saveManager = SaveManager.Instance;
         loader.AllSceneLoaded += Initialize;
-        loader.AllSceneUnloaded += Save;
+        loader.AllSceneUnloaded += SaveData;
     }
     private void OnDestroy()
     {
-
         loader.AllSceneLoaded -= Initialize;
-        loader.AllSceneUnloaded -= Save;
+        loader.AllSceneUnloaded -= SaveData;
     }
-    private void Start()
+/*    private void Start()
     {
         Initialize();
-    }
+    }*/
 
     private void Initialize()
     {
         level = saveManager.GetLvl();
         experience = saveManager.GetExp();
         expreienceToNextLevel = saveManager.GetExpToNextLevel();
+
+        Debug.Log("INITIALIZE WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);
     }
 
     public void AddExperience(int amount)
@@ -55,6 +56,8 @@ public class PlayerLevel : MonoBehaviour
         }
 
         Messenger.Broadcast(GameEvents.EXP_CHANGED, experience, expreienceToNextLevel);
+
+        SaveData();
     }
 
     private void AddExpToNextLvl()
@@ -66,17 +69,15 @@ public class PlayerLevel : MonoBehaviour
         }
     }
 
-    private void Save()
+    private void SaveData()
     {
-        saveManager.SaveExp(experience);
-        saveManager.SaveLvl(level);
-        saveManager.SaveExpToNextLvl(expreienceToNextLevel);
-        Debug.Log("SAVE CALL");
+        saveManager.SaveLevelData(experience, expreienceToNextLevel, level);
+        Debug.Log("SAVED WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);
     }
 
-    private void OnApplicationQuit()
+/*    private void OnApplicationQuit()
     {
-        Save();
-    }
+        SaveData();
+    }*/
 
 }

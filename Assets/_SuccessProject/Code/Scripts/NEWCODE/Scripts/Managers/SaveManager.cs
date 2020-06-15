@@ -151,21 +151,11 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         return importantDataConfig.expToNextLvl;
     }
 
-    public void SaveLvl(int Lvl)
-    {
-        importantDataConfig.lvl = Lvl;
-        SaveImportantConfig();
-    }
-
-    public void SaveExp(int exp)
+    public void SaveLevelData(int exp, int expTonextLvl, int Lvl)
     {
         importantDataConfig.exp = exp;
-        SaveImportantConfig();
-    }
-
-    public void SaveExpToNextLvl(int expToNLVL)
-    {
-        importantDataConfig.expToNextLvl = expToNLVL;
+        importantDataConfig.lvl = Lvl;
+        importantDataConfig.expToNextLvl = expTonextLvl;
         SaveImportantConfig();
     }
 
@@ -185,17 +175,17 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         var json = JsonUtility.ToJson(config);
         PlayerPrefs.SetString(key, json);
     }
-    private void SaveShopConfig()
+    public void SaveShopConfig()
     {
         SaveConfig(shopDataConfig);
     }
 
-    private void SaveImportantConfig()
+    public void SaveImportantConfig()
     {
         SaveConfig(importantDataConfig);
     }
 
-    private void SaveChangableConfig()
+    public void SaveChangableConfig()
     {
         SaveConfig(changableDataConfig);
     }
