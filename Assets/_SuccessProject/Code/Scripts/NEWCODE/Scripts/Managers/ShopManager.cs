@@ -50,20 +50,6 @@ public class ShopManager : Singleton<ShopManager>
         saveManager.Add3DItemToShopList(cfg, varitant);
     }
 
-    public void AddCurrency(int amount, CurrencyType type)
-    {
-        switch (type)
-        {
-            case CurrencyType.HARD:
-                SaveManager.Instance.importantDataConfig.hardCurrency += amount;
-                break;
-            case CurrencyType.SOFT:
-                SaveManager.Instance.importantDataConfig.softCurrency += amount;
-                break;
-        }
-        Messenger.Broadcast(GameEvents.UPDATE_SAND_BOX_UI);
-    }
-
     public void Buy(RoomItemConfig cfg, ItemVariant varitant, int cost, CurrencyType type)
     {
         switch (type)

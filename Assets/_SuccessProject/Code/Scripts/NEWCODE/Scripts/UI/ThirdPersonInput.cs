@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 

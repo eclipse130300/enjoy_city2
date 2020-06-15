@@ -5,9 +5,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-//TODO refactor this!
-
 public class TopPanelUiController : MonoBehaviour
 {
     [SerializeField] Image filledLine;
@@ -24,8 +21,6 @@ public class TopPanelUiController : MonoBehaviour
         Messenger.AddListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
         Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
-        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, UpdateCurr);
-        Messenger.AddListener(GameEvents.UPDATE_SAND_BOX_UI, UpdateUI);
     }
 
     private void Start()
@@ -49,19 +44,6 @@ public class TopPanelUiController : MonoBehaviour
         hardCurrency.text = saveManager.GetHardCurrency().ToString();
     }
 
-    private void UpdateCurr(RoomItemConfig rcgf, ItemVariant var) //это просто б копия функции сверху - ужасный костыль
-    {
-        softCurrency.text = saveManager.GetSoftCurrency().ToString();
-        hardCurrency.text = saveManager.GetHardCurrency().ToString();
-    }
-
-    private void UpdateUI() // слить два метода сверху в этот
-    {
-        softCurrency.text = saveManager.GetSoftCurrency().ToString();
-        hardCurrency.text = saveManager.GetHardCurrency().ToString();
-        // добавить в него остальные элементы панели
-    }
-
     private void OnLvlChanged(int lvl)
     {
         lvlText.text = lvl.ToString();
@@ -82,6 +64,5 @@ public class TopPanelUiController : MonoBehaviour
         Messenger.RemoveListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged);
         Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
-        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, UpdateCurr);
     }
 }

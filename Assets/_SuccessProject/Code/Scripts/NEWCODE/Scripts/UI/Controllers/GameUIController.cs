@@ -10,7 +10,6 @@ public class GameUIController : MonoBehaviour
 {
     public GameObject interactionButton;
     public Image interactionButtonIMG;
-    public GameObject jumpButton;
 
 
     private void Awake()
@@ -19,17 +18,7 @@ public class GameUIController : MonoBehaviour
         Messenger.AddListener(GameEvents.ENTRY_POINT_EXIT, OnEntryPointExit);
 
         interactionButton.SetActive(false);
-
-/*        Loader.Instance.AllSceneLoaded += CheckScene;*/
     }
-/*
-    private void CheckScene()
-    {
-        if (Loader.Instance.curentScene.SceneName == "PlayerRoom")  //check if we aren't in the room
-        {
-            jumpButton.SetActive(false);
-        }
-    }*/
 
     private void OnDestroy()
     {
@@ -37,8 +26,6 @@ public class GameUIController : MonoBehaviour
         Messenger.RemoveListener(GameEvents.ENTRY_POINT_EXIT, OnEntryPointExit);
 
         interactionButton.SetActive(false);
-
-/*        Loader.Instance.AllSceneLoaded += CheckScene;*/
     }
     private void OnEntryPointExit()
     {
