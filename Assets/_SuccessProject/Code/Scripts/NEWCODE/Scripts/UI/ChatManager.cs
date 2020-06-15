@@ -58,7 +58,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             //make chat text area fix keyboard size
 
 
-            fullChatOverlay.pivot = new Vector2(1, 1);
+/*            fullChatOverlay.pivot = new Vector2(1, 1);*/
             fullChatOverlay.anchorMin = new Vector2(0, 0);
             fullChatOverlay.anchorMax = new Vector2(1, 1);
 
@@ -73,16 +73,26 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
             float KBrelativeToCanvas = KBrelativeTOscreen / screenToCanvasRatio;
 
-             fullChatOverlay.anchoredPosition = new Vector2(0f, KBrelativeToCanvas);
+            /* fullChatOverlay.anchoredPosition = new Vector2(0f, KBrelativeToCanvas);*/
+
+            fullChatOverlay.offsetMin = new Vector2(fullChatOverlay.offsetMin.x, fullChatOverlay.offsetMin.y + KBrelativeToCanvas);
 
 
 #else
-            fullChatOverlay.anchoredPosition = new Vector2(0, 0);
+            /*fullChatOverlay.anchoredPosition = new Vector2(0, 0);*/
+            fullChatOverlay.offsetMin = new Vector2(0, 0);
 #endif
         }
         else
         {
-            fullChatOverlay.anchoredPosition = new Vector2(0, 0);
+            /*fullChatOverlay.anchoredPosition = new Vector2(0, 0);*/
+            fullChatOverlay.offsetMin = new Vector2(0,0);
+        }
+
+        float axisChange = Input.GetAxis("Horizontal");
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            fullChatOverlay.offsetMin = new Vector2(fullChatOverlay.offsetMin.x, fullChatOverlay.offsetMin.y + 228);
         }
     }
 

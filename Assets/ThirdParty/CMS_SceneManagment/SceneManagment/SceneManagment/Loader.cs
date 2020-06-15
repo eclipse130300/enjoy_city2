@@ -96,6 +96,9 @@ public class Loader : BaseLoader
     protected override void Init() {
         base.Init();
 
+
+        Screen.orientation = ScreenOrientation.Landscape;
+
         if (sceneToLoad.Count == 0 && SceneManager.sceneCount > 1)
         {
             /*

@@ -61,8 +61,8 @@ public class RoomPreviewManager : MonoBehaviour
     void LoadRoomConfig()
     {
         currentRoomConf = saveManager.LoadRoomSet();
-        if (currentRoomConf == null)
-            currentRoomConf = new RoomConfig();
+/*        if (currentRoomConf == null)
+            currentRoomConf = new RoomConfig();*/
     }
     void SaveRoomConfig()
     {
@@ -86,14 +86,20 @@ public class RoomPreviewManager : MonoBehaviour
 
     private void TryAddDefaultItems() //first add default items - they should be opened instantly
     {
-        var allDefaultItems = ScriptableList<RoomItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+        LoadRoomConfig();
 
-        foreach(RoomItemConfig defaultItem in allDefaultItems)
+        if (currentRoomConf.pickedItemsAndVariants.Count == 0)
         {
-            currentRoomConf.AddItemToConfig(defaultItem, defaultItem.variants?[0]);
-            shopManager.Buy(defaultItem, defaultItem.variants?[0], 0, CurrencyType.SOFT);
+
+            var allDefaultItems = ScriptableList<RoomItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+
+            foreach (RoomItemConfig defaultItem in allDefaultItems)
+            {
+                currentRoomConf.AddItemToConfig(defaultItem, defaultItem.variants?[0]);
+                shopManager.Buy(defaultItem, defaultItem.variants?[0], 0, CurrencyType.SOFT);
+            }
+            SaveRoomConfig();
         }
-        SaveRoomConfig();
     }
 
     private void OnItemVariantChanged(ItemVariant variant)

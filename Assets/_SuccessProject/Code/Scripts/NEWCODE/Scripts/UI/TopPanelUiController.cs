@@ -1,4 +1,5 @@
 ﻿using CMS.Config;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,14 +22,19 @@ public class TopPanelUiController : MonoBehaviour
         Messenger.AddListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
         Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
+        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, UpdateCur);
+        Messenger.AddListener(GameEvents.REFRESH_SANDBOX_UI, Refresh);
+
+        Refresh();
     }
 
-    private void Start()
+    private void UpdateCur(RoomItemConfig arg1, ItemVariant arg2)
     {
-        Initialize();
+        softCurrency.text = saveManager.GetSoftCurrency().ToString();
+        hardCurrency.text = saveManager.GetHardCurrency().ToString();
     }
 
-    private void Initialize()
+    private void Refresh()
     {
         var exp = saveManager.GetExp();
         var expToNextLvl = saveManager.GetExpToNextLevel();
@@ -64,5 +70,7 @@ public class TopPanelUiController : MonoBehaviour
         Messenger.RemoveListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged);
         Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
+        Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, UpdateCur);
+        Messenger.RemoveListener(GameEvents.REFRESH_SANDBOX_UI, Refresh);
     }
 }

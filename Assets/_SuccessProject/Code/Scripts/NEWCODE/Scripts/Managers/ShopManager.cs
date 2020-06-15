@@ -31,6 +31,22 @@ public class ShopManager : Singleton<ShopManager>
         }
         return false;
     }
+
+    public void AddCurrency(int amount, CurrencyType type)
+    {
+        switch(type)
+        {
+            case CurrencyType.HARD:
+                SaveManager.Instance.importantDataConfig.hardCurrency += amount;
+                break;
+
+            case CurrencyType.SOFT:
+                SaveManager.Instance.importantDataConfig.softCurrency += amount;
+                break;
+        }
+        SaveManager.Instance.SaveImportantConfig();
+    }
+
     //save manager buys?
     public void Buy(ItemConfig cfg, ItemVariant varitant, int cost, CurrencyType type)
     {
