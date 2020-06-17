@@ -9,7 +9,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     public PhotonView photonView;
 
-    public FixedJoystick LeftJoystick;
+/*    public FixedJoystick LeftJoystick;*/
+    public FloatingJoystick LeftJoystick;
 
     public FixedButton JumpButton;
     public FixedButton CrouchButton;
@@ -28,7 +29,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     private bool hasReferencies = false;
     private float targetJump;
 
-    [SerializeField] PlayerCamera camera;
+    [SerializeField] PlayerCamera camer;
     [SerializeField] private Transform m_Cam;
     private CharacterController _characterController; // A reference to the ThirdPersonCharacter on the object
                             // A reference to the main camera in the scenes transform
@@ -71,7 +72,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     {
 
         if (!photonView.IsMine && PhotonNetwork.IsConnectedAndReady) {
-            camera.gameObject.SetActive(false);
+            camer.gameObject.SetActive(false);
             m_Cam.gameObject.SetActive(false);
         }
         // get the third person character ( this should never be null due to require component )
@@ -84,11 +85,6 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     float nVinput;
     private void FixedUpdate()
     {
-
-
-
-
-
         if (LeftJoystick != null && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
 
@@ -97,9 +93,9 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"), -1, 1);
             m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
 
-            camera.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
+            camer.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
 
-            cameraRotation = new Vector3((transform.forward * 5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward * 5).y, (transform.forward * 5 + transform.position).z) + Vector3.up;
+            cameraRotation = new Vector3((transform.forward * 5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camer.transform.forward * 5).y, (transform.forward * 5 + transform.position).z) + Vector3.up;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + Vector3.up * TouchField.TouchDist.x * rotateSpeed * Time.fixedDeltaTime);
 
         }
@@ -122,11 +118,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
                 else {
                    
                     cameraRotation = Vector3.Lerp(cameraRotation, newCameraRotation, Time.fixedDeltaTime*3);
-                }
-                    
-                
-
-                
+                }                
             }
            
         }
@@ -180,11 +172,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
                 {
                     child.rotation = Quaternion.Euler(rotation);
                     break;
-                }
-                   
+                }              
             }
-
-
         }
         hips.rotation = Quaternion.Euler(rotation);
     }
@@ -194,7 +183,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         Debug.Log("IsMine " + photonView.IsMine);
         if ((photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
-            LeftJoystick = FindObjectOfType<FixedJoystick>();
+            /*            LeftJoystick = FindObjectOfType<FixedJoystick>();*/
+            LeftJoystick = FindObjectOfType<FloatingJoystick>();
             TouchField = FindObjectOfType<FixedTouchField>();
             JumpButton = FindObjectOfType<FixedButton>();
 
