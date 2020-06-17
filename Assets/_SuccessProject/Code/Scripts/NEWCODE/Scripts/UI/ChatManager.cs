@@ -58,42 +58,44 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             //make chat text area fix keyboard size
 
 
-/*            fullChatOverlay.pivot = new Vector2(1, 1);*/
-            fullChatOverlay.anchorMin = new Vector2(0, 0);
-            fullChatOverlay.anchorMax = new Vector2(1, 1);
+#if !UNITY_EDITOR
+            float KBratio = MobileUtilities.GetKeyboardHeightRatio(true);
+            float KBheight = canvas.rect.height * KBratio;
+            float chatSize = canvas.rect.height - KBheight;
 
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
-
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, chatSize);
             fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
 
-#if !UNITY_EDITOR
+            fullChatOverlay.anchoredPosition = new Vector2(0, 0);
 
-            float KBrelativeTOscreen = MobileUtilities.GetKeyboardHeight(true);
-            float screenToCanvasRatio = Screen.height / canvas.rect.height;
+            MobileDebug.Log("chatSize " + chatSize);
 
-            float KBrelativeToCanvas = KBrelativeTOscreen / screenToCanvasRatio;
+             MobileDebug.Log("KBheight " + KBheight);
 
-            /* fullChatOverlay.anchoredPosition = new Vector2(0f, KBrelativeToCanvas);*/
-
-            fullChatOverlay.offsetMin = new Vector2(fullChatOverlay.offsetMin.x, fullChatOverlay.offsetMin.y + KBrelativeToCanvas);
+             MobileDebug.Log("KBratio " + KBratio);
 
 
 #else
-            /*fullChatOverlay.anchoredPosition = new Vector2(0, 0);*/
-            fullChatOverlay.offsetMin = new Vector2(0, 0);
+
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
+
+            Debug.Log("I DO THIS");
 #endif
         }
         else
         {
-            /*fullChatOverlay.anchoredPosition = new Vector2(0, 0);*/
-            fullChatOverlay.offsetMin = new Vector2(0,0);
+
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
+            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
+
         }
 
-        float axisChange = Input.GetAxis("Horizontal");
-        if (Input.GetAxis("Horizontal") != 0)
-        {
-            fullChatOverlay.offsetMin = new Vector2(fullChatOverlay.offsetMin.x, fullChatOverlay.offsetMin.y + 228);
-        }
+
+    }
+
+    private void SetChatSize(RectTransform rect, float Vsize)
+    {
     }
 
 
