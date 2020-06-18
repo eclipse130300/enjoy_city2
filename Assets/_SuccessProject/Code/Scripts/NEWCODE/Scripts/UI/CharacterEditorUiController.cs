@@ -42,7 +42,7 @@ public class CharacterEditorUiController : MonoBehaviour
         doneButton.SetActive(false);
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
+        Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
 
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
     }
@@ -89,11 +89,12 @@ public class CharacterEditorUiController : MonoBehaviour
 
 
 
-    private void HideBuyButton(RoomItemConfig cfg, ItemVariant var)  //TODO cfg is unnecessary && var
+    private void HideBuyButton(ItemConfig cfg, ItemVariant var)  //TODO cfg is unnecessary && var
     {
         //MAY BE DO NOT HIDE?
         buyButton.SetActive(false);
         itemBoughtTab.SetActive(true);
+        Debug.Log("I do it!");
     }
 
     public void OnItemBuyTap()
@@ -193,7 +194,7 @@ public class CharacterEditorUiController : MonoBehaviour
     {
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
-        Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
+        Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
 
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
     }

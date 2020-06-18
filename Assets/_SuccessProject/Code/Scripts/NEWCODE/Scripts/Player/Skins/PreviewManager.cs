@@ -98,7 +98,7 @@ public class PreviewManager : MonoBehaviour
 
             Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
             Messenger.Broadcast(GameEvents.ITEM_PICKED, itemPreviewing);
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?
+/*            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?*/
         }
         else
         {
@@ -143,7 +143,7 @@ public class PreviewManager : MonoBehaviour
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
             OnItemPicked();
             Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+/*            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);*/
         }
         else
         {
