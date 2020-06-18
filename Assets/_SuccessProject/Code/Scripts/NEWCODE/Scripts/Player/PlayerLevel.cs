@@ -39,7 +39,7 @@ public class PlayerLevel : MonoBehaviour
         experience = saveManager.GetExp();
         expreienceToNextLevel = saveManager.GetExpToNextLevel();
 
-        Debug.Log("INITIALIZE WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);
+/*        Debug.Log("INITIALIZE WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);*/
     }
 
     public void AddExperience(int amount)
@@ -72,7 +72,7 @@ public class PlayerLevel : MonoBehaviour
     private void SaveData()
     {
         saveManager.SaveLevelData(experience, expreienceToNextLevel, level);
-        Debug.Log("SAVED WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);
+/*        Debug.Log("SAVED WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);*/
     }
 
 /*    private void OnApplicationQuit()

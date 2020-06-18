@@ -8,9 +8,9 @@ using Utils;
 
 public class PreviewManager : MonoBehaviour
 {
-    public Gender previewingCharSex;
+    public static Gender previewingCharSex;
 
-    public GameMode previewingGameMode;
+    public static GameMode previewingGameMode;
 
     private SkinnedMeshRenderer previewingBodyPart;
 
@@ -24,7 +24,7 @@ public class PreviewManager : MonoBehaviour
 
     private ShopManager shopManager;
 
-    public string GetCurrentKey()
+    public static string GetCurrentKey()
     {
         return previewingCharSex.ToString() + previewingGameMode.ToString();
     }

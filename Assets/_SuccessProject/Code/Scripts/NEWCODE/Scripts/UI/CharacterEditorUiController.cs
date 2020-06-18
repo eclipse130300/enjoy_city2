@@ -43,8 +43,13 @@ public class CharacterEditorUiController : MonoBehaviour
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
-
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
+        Messenger.AddListener<ItemConfig>(GameEvents.ITEM_PICKED, HideDoneButton);
+    }
+
+    private void HideDoneButton(ItemConfig arg1)
+    {
+        doneButton.SetActive(false);
     }
 
     private void ManipulateDisplayingInfo(ItemVariant var)
@@ -72,7 +77,7 @@ public class CharacterEditorUiController : MonoBehaviour
 
 
 
-        if (SaveManager.Instance.LoadClothesSet(previewManager.GetCurrentKey()).ItemAndVarIsInConfig(itemCFG, var))
+        if (SaveManager.Instance.LoadClothesSet(PreviewManager.GetCurrentKey()).ItemAndVarIsInConfig(itemCFG, var))
         {
             doneButton.SetActive(false);
         }
@@ -110,7 +115,7 @@ public class CharacterEditorUiController : MonoBehaviour
 
     private void DisplayItem(GameObject itemGO)
     {
-        currentClothesConfig = SaveManager.Instance.LoadClothesSet(previewManager.GetCurrentKey());
+        currentClothesConfig = SaveManager.Instance.LoadClothesSet(PreviewManager.GetCurrentKey());
         variantSlider.SetActive(true); //activate it just in case
 
 
@@ -164,6 +169,9 @@ public class CharacterEditorUiController : MonoBehaviour
                 }
                 varTab.activeIMG.gameObject.SetActive(hasActiveVar);
 
+                bool isActive = currentClothesConfig.ItemAndVarIsInConfig(itemCFG, V) == true ? true : false;
+                varTab.activeTick.SetActive(isActive);
+
                 bool isBought = shopManager.CheckIfItemIsBought(itemCFG, V)/* || V.cost == 0*/ == true ? false : true;
                 varTab.lockIMG.gameObject.SetActive(isBought);
             }
@@ -195,8 +203,9 @@ public class CharacterEditorUiController : MonoBehaviour
         Messenger.RemoveListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, HideBuyButton);
-
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
+        Messenger.RemoveListener<ItemConfig>(GameEvents.ITEM_PICKED, HideDoneButton);
+
     }
 
 

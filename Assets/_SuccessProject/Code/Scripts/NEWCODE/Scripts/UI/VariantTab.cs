@@ -18,6 +18,25 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     {
         Messenger.AddListener<RoomItemConfig,ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
         Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
+
+        Messenger.AddListener<ItemConfig>(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.AddListener<RoomItemConfig>(GameEvents.ROOM_ITEM_PICKED, OnRoomItemPicked);
+    }
+
+    private void OnRoomItemPicked(RoomItemConfig cfg)
+    {
+        var activeVar = SaveManager.Instance.LoadRoomSet().GetActiveVariant(cfg);
+
+        bool isActive = activeVar == variant ? true : false;
+        activeTick.SetActive(isActive);
+    }
+
+    private void OnItemPicked(ItemConfig cfg)
+    {
+        var activeVar = SaveManager.Instance.LoadClothesSet(PreviewManager.GetCurrentKey()).GetActiveVariant(cfg);
+
+        bool isActive = activeVar == variant ? true : false;
+        activeTick.SetActive(isActive);
     }
 
     private void OnRoomItemBought(RoomItemConfig cfg, ItemVariant var)
@@ -46,6 +65,9 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     {
         Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, OnItemBought);
         Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
+
+        Messenger.RemoveListener<ItemConfig>(GameEvents.ITEM_PICKED, OnItemPicked);
+        Messenger.RemoveListener<RoomItemConfig>(GameEvents.ROOM_ITEM_PICKED, OnRoomItemPicked);
     }
 }
 

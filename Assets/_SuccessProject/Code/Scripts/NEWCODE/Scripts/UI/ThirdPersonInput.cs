@@ -180,7 +180,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     void SubscibeToUI()
     {
-        Debug.Log("IsMine " + photonView.IsMine);
+/*        Debug.Log("IsMine " + photonView.IsMine);*/
         if ((photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             /*            LeftJoystick = FindObjectOfType<FixedJoystick>();*/

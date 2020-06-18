@@ -37,6 +37,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             SetDefaultConfig();
         }
 
+        Loader.Instance.AllSceneLoaded += PutOnClothes;
     }
 
     private void SetDefaultConfig()
@@ -68,11 +69,10 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     {
      
     }
-    private void Start()
+/*    private void Start()
     {
         PutOnClothes();
-
-    }
+    }*/
 
         // puts on real model
         private void PutOnClothes()
@@ -175,6 +175,8 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             SetDefaultConfig();
         }
+
+        Loader.Instance.AllSceneLoaded -= PutOnClothes;
     }
 
     ClothesConfig LoadConf(Gender gender, GameMode gameMode)

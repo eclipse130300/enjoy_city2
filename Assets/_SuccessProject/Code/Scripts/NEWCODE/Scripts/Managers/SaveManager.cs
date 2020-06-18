@@ -16,6 +16,13 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     private void Awake()
     {
         LoadAllConfigs();
+
+        Loader.Instance.AllSceneLoaded += SaveAllConfigs;
+    }
+
+    public override void OnDestroy()
+    {
+        Loader.Instance.AllSceneLoaded -= SaveAllConfigs;
     }
 #if UNITY_EDITOR
     #region DEBUG
@@ -234,11 +241,11 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     #endregion
 
-    private void OnApplicationQuit()
+/*    private void OnApplicationQuit()
     {
         SaveAllConfigs();
     }
-
+*/
 
 
     public T FromJson<T>(string json)

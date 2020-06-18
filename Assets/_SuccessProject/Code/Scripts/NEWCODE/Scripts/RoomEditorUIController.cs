@@ -42,8 +42,13 @@ public class RoomEditorUIController : MonoBehaviour
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, DisplayItem);
         Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, HideItemInfo);
         Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
-
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
+        Messenger.AddListener<RoomItemConfig>(GameEvents.ROOM_ITEM_PICKED, HideDoneButton);
+    }
+
+    private void HideDoneButton(RoomItemConfig cfg)
+    {
+        doneButton.SetActive(false);
     }
 
     private void ManipulateDisplayingInfo(ItemVariant var)
@@ -55,7 +60,6 @@ public class RoomEditorUIController : MonoBehaviour
             itemBoughtTab.SetActive(true);
             // donebutton on
             doneButton.SetActive(true);
-            Debug.Log("SHOW DONE BUTTON!!!!");
 
         }
         else
@@ -154,13 +158,16 @@ public class RoomEditorUIController : MonoBehaviour
                 if (currentRoomConfig.ItemIsInConfig(itemCFG))
                 {
                     hasActiveVar = currentRoomConfig.GetActiveVariant(itemCFG) == V ? true : false;
-                    Debug.Log("Item: " + itemCFG + ", active variant :" + currentRoomConfig.GetActiveVariant(itemCFG));
+/*                    Debug.Log("Item: " + itemCFG + ", active variant :" + currentRoomConfig.GetActiveVariant(itemCFG));*/
                 }
                 else
                 {
                     hasActiveVar = V == itemCFG.variants[0] ? true : false;
                 }
                 varTab.activeIMG.gameObject.SetActive(hasActiveVar);
+
+                bool isActive = currentRoomConfig.ItemAndVarIsInConfig(itemCFG, V) == true ? true : false;
+                varTab.activeTick.SetActive(isActive);
 
                 bool isBought = shopManager.CheckIfItemIsBought(itemCFG, V)/* || V.cost == 0*/ == true ? false : true;
                 varTab.lockIMG.gameObject.SetActive(isBought);
@@ -195,6 +202,7 @@ public class RoomEditorUIController : MonoBehaviour
         Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, HideBuyButton);
 
         Messenger.RemoveListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, ManipulateDisplayingInfo);
+        Messenger.RemoveListener<RoomItemConfig>(GameEvents.ROOM_ITEM_PICKED, HideDoneButton);
     }
 
 
