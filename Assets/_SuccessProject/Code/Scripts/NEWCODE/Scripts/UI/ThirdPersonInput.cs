@@ -91,6 +91,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
             Hinput = Mathf.Clamp(LeftJoystick.input.x + Input.GetAxis("Horizontal"), -1, 1);
             Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"), -1, 1);
+
+            if(JumpButton != null)
             m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
 
             camer.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
