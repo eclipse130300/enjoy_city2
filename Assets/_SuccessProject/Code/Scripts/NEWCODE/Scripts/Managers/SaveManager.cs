@@ -17,12 +17,12 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     {
         LoadAllConfigs();
 
-        Loader.Instance.AllSceneLoaded += SaveAllConfigs;
+     //  Loader.Instance.AllSceneLoaded += SaveAllConfigs;
     }
 
     public override void OnDestroy()
     {
-        Loader.Instance.AllSceneLoaded -= SaveAllConfigs;
+     //   Loader.Instance.AllSceneLoaded -= SaveAllConfigs;
     }
 #if UNITY_EDITOR
     #region DEBUG
@@ -84,7 +84,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     public ClothesConfig LoadClothesSet(string key)
     {
-        LoadAllConfigs();
+       // LoadAllConfigs();
         var clothes = changableDataConfig?.GetClothesConfig(key);
         Debug.Log("LOAD :" + key + clothes.pickedItemsAndVariants.Count.ToString());
 /*        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes); //TODO не нрав мне*/
@@ -99,14 +99,14 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     public RoomConfig LoadRoomSet()
     {
-        LoadAllConfigs();
+        //LoadAllConfigs();
         var roomCFG = changableDataConfig.roomConfig;
         return roomCFG;
 
     }
     public int GetLvl()
     {
-        LoadAllConfigs();
+       // LoadAllConfigs();
         return importantDataConfig.lvl;
     }
 
@@ -150,13 +150,13 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     public int GetExp()
     {
-        LoadAllConfigs();
+      //  LoadAllConfigs();
         return importantDataConfig.exp;
     }
 
     public int GetExpToNextLevel()
     {
-        LoadAllConfigs();
+     //   LoadAllConfigs();
         return importantDataConfig.expToNextLvl;
     }
 
@@ -177,7 +177,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         SaveImportantConfig();
         SaveShopConfig();
     }
-
+    
     private void SaveConfig(IDataConfig config)
     {
         string key = savePrefix + config.ToString();

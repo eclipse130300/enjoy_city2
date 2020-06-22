@@ -58,7 +58,7 @@ public class PreviewManager : MonoBehaviour
 
         Debug.Log("Default items added!");
 
-        LoadConf();
+        //LoadConf();
     }
 
     private void Start()
