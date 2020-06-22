@@ -8,7 +8,7 @@ public class RoomSkinManager : MonoBehaviour
 {
     public FURNITURE _furniture;
     public RoomConfig currentConfig;
-    public RoomConfig defaultConfig;
+/*    public RoomConfig defaultConfig;*/
 
 
     private void Awake()
@@ -16,7 +16,7 @@ public class RoomSkinManager : MonoBehaviour
         Messenger.AddListener<FURNITURE>(GameEvents.FURNITURE_CHANGED, OnFurnitureChanged);
         /*        Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, InitializeSkins);*/
         Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-        SetDefaultConfig();
+/*        SetDefaultConfig();*/
 /*        Loader.Instance.AllSceneLoaded += InitializeSkins;*/
     }
 
@@ -27,7 +27,7 @@ public class RoomSkinManager : MonoBehaviour
 
     }
 
-    private void SetDefaultConfig()
+/*    private void SetDefaultConfig()
     {
         var cfg = new RoomConfig();
 
@@ -40,7 +40,7 @@ public class RoomSkinManager : MonoBehaviour
         }
 
         defaultConfig = cfg;
-    }
+    }*/
 
     private void OnFurnitureChanged(FURNITURE furniture)
     {
@@ -55,11 +55,10 @@ public class RoomSkinManager : MonoBehaviour
     private void InitializeSkins()
     {
         LoadConf();
-        //PUT ON DEFAULT CLOTHES FIRST
-        ApplyConfig(defaultConfig);
+/*        //PUT ON DEFAULT CLOTHES FIRST
+        ApplyConfig(defaultConfig);*/
         //PUT ON CLOTHES FROM CONFIG
         ApplyConfig(currentConfig);
-
     }
 
     private void ApplyConfig(RoomConfig conf)
@@ -104,7 +103,7 @@ public class RoomSkinManager : MonoBehaviour
 
     void LoadConf()
     {
-        currentConfig = SaveManager.Instance.LoadRoomSet(); //!!
+        currentConfig = SaveManager.Instance.LoadRoomSet();
     }
 
 }
