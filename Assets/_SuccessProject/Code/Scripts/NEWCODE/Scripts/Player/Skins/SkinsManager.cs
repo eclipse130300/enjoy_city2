@@ -24,39 +24,44 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void Awake()
     {
         _gameMode = Loader.Instance.curentScene.gameMode;
-        photon =  PhotonView.Get(this);
 
+        photon =  PhotonView.Get(this);
         if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
         {
            
             Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
       
         }
+        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) {
+            Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+            SetDefaultConfig();
+        }
 
-        Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-        /*        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) {
-                    Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
-        *//*            SetDefaultConfig();*//*
-                }*/
-
-        Loader.Instance.AllSceneLoaded += InitializeSkins;
+        Loader.Instance.AllSceneLoaded += PutOnClothes;
     }
 
-    private void InitializeSkins()
+    private void SetDefaultConfig()
     {
-        currentConfig = LoadConf(_characterSex, _gameMode);
-/*        //PUT ON DEFAULT CLOTHES FIRST
-        ApplyConfig(defaultConfig);*/
-        //PUT ON CLOTHES FROM CONFIG
-        PutOnClothes(currentConfig);
-    }
+        var cfg = new ClothesConfig();
 
+        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+
+        foreach (ItemConfig defaultItem in allDefaultItems)
+        {
+            if (defaultItem != null)
+            {
+                cfg.AddItemToConfig(defaultItem, defaultItem.variants[0]);
+            }
+        }
+        PutOnClothes(cfg);
+        //  defaultConfig = cfg;
+    }
 
     private void OnGameModeChanged(GameMode gameMode)
     {
         _gameMode = gameMode;
         currentConfig = LoadConf(_characterSex, _gameMode);
-/*        SetDefaultConfig();*/
+        SetDefaultConfig();
         PutOnClothes(currentConfig);
     }
 
@@ -64,20 +69,18 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     {
      
     }
-
 /*    private void Start()
     {
         PutOnClothes();
     }*/
 
-    // puts on real model
-
-    private void PutOnClothes()
+        // puts on real model
+        private void PutOnClothes()
         {
         
             if (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)
             {
-                currentConfig = LoadConf(_characterSex, _gameMode); //ERROR HERE!
+                currentConfig = LoadConf(_characterSex, _gameMode);
                 PutOnClothes(currentConfig);
                
             } else
@@ -167,14 +170,13 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
         }
 
-        /*        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
-                {
-                    Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
-        *//*            SetDefaultConfig();*//*
-                }*/
-        Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        {
+            Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+            SetDefaultConfig();
+        }
 
-        Loader.Instance.AllSceneLoaded -= InitializeSkins;
+        Loader.Instance.AllSceneLoaded -= PutOnClothes;
     }
 
     ClothesConfig LoadConf(Gender gender, GameMode gameMode)

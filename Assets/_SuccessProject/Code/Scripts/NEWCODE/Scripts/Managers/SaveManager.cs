@@ -9,9 +9,9 @@ using Utils;
 
 public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameManager -- 4 errors now!
 {
-    public ShopDataConfig shopDataConfig/* = new ShopDataConfig()*/;
-    public ImportantDataConfig importantDataConfig/* = new ImportantDataConfig()*/;
-    public ChangableDataConfig changableDataConfig/* = new ChangableDataConfig()*/;
+    public ShopDataConfig shopDataConfig = new ShopDataConfig();
+    public ImportantDataConfig importantDataConfig = new ImportantDataConfig();
+    public ChangableDataConfig changableDataConfig = new ChangableDataConfig();
     static string savePrefix = "save_";
     private void Awake()
     {
@@ -78,35 +78,33 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public void SaveClothesSet(string key, ClothesConfig clothesConf)
     {
         changableDataConfig.AddClothesConfig(key, clothesConf);
-        Debug.Log("SAVE :" + key + clothesConf.pickedItemsAndVariants.Count.ToString());
         SaveChangableConfig();
     }
 
     public ClothesConfig LoadClothesSet(string key)
     {
-        LoadAllConfigs();
+        LoadChangableConfig();
         var clothes = changableDataConfig?.GetClothesConfig(key);
-        Debug.Log("LOAD :" + key + clothes.pickedItemsAndVariants.Count.ToString());
-/*        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes); //TODO не нрав мне*/
+        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes);
         return clothes;
     }
 
     public void SaveRoomSet(RoomConfig roomCFG)
     {
         changableDataConfig.roomConfig = roomCFG;
-        SaveAllConfigs();
+        SaveChangableConfig();
     }
 
     public RoomConfig LoadRoomSet()
     {
-        LoadAllConfigs();
+        LoadChangableConfig();
         var roomCFG = changableDataConfig.roomConfig;
         return roomCFG;
 
     }
     public int GetLvl()
     {
-        LoadAllConfigs();
+        LoadImportantConfig();
         return importantDataConfig.lvl;
     }
 
@@ -150,13 +148,13 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     public int GetExp()
     {
-        LoadAllConfigs();
+        LoadImportantConfig();
         return importantDataConfig.exp;
     }
 
     public int GetExpToNextLevel()
     {
-        LoadAllConfigs();
+        LoadImportantConfig();
         return importantDataConfig.expToNextLvl;
     }
 
@@ -165,7 +163,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         importantDataConfig.exp = exp;
         importantDataConfig.lvl = Lvl;
         importantDataConfig.expToNextLvl = expTonextLvl;
-        SaveAllConfigs();
+        SaveImportantConfig();
     }
 
 
@@ -229,6 +227,10 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     private void LoadImportantConfig()
     {
+        if (LoadConfig(importantDataConfig) == null)
+        {
+            importantDataConfig = new ImportantDataConfig();
+        }   
         importantDataConfig = LoadConfig(importantDataConfig);
     }
 
