@@ -74,7 +74,7 @@ public class PreviewManager : MonoBehaviour
 
     void LoadConf()
     {
-        string key = previewingCharSex.ToString() + previewingGameMode.ToString();
+        string key = GetCurrentKey();/*previewingCharSex.ToString() + previewingGameMode.ToString();*/
         previewingClothesConfig = SaveManager.Instance.LoadClothesSet(key);
     }
 
@@ -109,7 +109,7 @@ public class PreviewManager : MonoBehaviour
 
     void SavePreviewingConfig()
     {
-        string key = previewingCharSex.ToString() + previewingGameMode.ToString();
+        string key = GetCurrentKey(); /*previewingCharSex.ToString() + previewingGameMode.ToString();*/
         SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig); 
     }
     

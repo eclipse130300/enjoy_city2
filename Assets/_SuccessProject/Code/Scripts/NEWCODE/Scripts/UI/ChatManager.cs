@@ -1,10 +1,13 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Chat;
 using SocialGTA;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
@@ -24,6 +27,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private TouchScreenKeyboard keyboard;
     private RectTransform canvas;
+    public TextMeshProUGUI placeholderchatTXT;
+
+    public UnityEvent onEndEdit;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,14 +40,15 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Connect(ChatSettings.Load().AppId, "0.1", new AuthenticationValues(playerID));
 
         canvas = fullChatOverlay.parent.GetComponent<RectTransform>();
+/*        keyboard = FindObjectOfType<TMP_InputField>();*/
 
     }
 
     // Update is called once per frame
     void Update()
-    { 
-
+    {
         chatClient.Service();
+        TouchScreenKeyboard.hideInput = true;
 
         if (keyboard != null)
         {
@@ -53,34 +60,46 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             }
         }
 
-        if (keyboard?.status == TouchScreenKeyboard.Status.Visible)
+       // MobileDebug.Log("TouchScreenKeyboard "+ keyboard + " status " + keyboard?.status + " ratio " +MobileUtilities.GetKeyboardHeightRatio(true), "Chat",LogType.Log,1);
+        MobileDebug.Log("TouchScreenKeyboard.visible "+TouchScreenKeyboard.visible, "Chat", LogType.Log, 1);
+        MobileDebug.Log("TouchScreenKeyboard.hideInput " + TouchScreenKeyboard.hideInput, "Chat", LogType.Log,2);
+        MobileDebug.Log("TouchScreenKeyboard.isInPlaceEditingAllowed " + TouchScreenKeyboard.isInPlaceEditingAllowed, "Chat", LogType.Log, 3);
+        MobileDebug.Log("TouchScreenKeyboard.area " + TouchScreenKeyboard.area, "Chat", LogType.Log, 4);
+        MobileDebug.Log("TouchScreenKeyboard.isSupported " + TouchScreenKeyboard.isSupported, "Chat", LogType.Log, 5);
+        MobileDebug.Log("MobileUtilities.GetKeyboardHeightRatio(true) " + MobileUtilities.GetKeyboardHeightRatio(true), "Chat", LogType.Log, 6);
+        MobileDebug.Log("MobileUtilities.GetKeyboardHeightRatio(false) " + MobileUtilities.GetKeyboardHeightRatio(false), "Chat", LogType.Log, 7);
+        MobileDebug.Log("MobileUtilities.GetKeyboardHeight(true) " + MobileUtilities.GetKeyboardHeight(true), "Chat", LogType.Log, 8);
+        MobileDebug.Log("MobileUtilities.GetKeyboardHeight(false) " + MobileUtilities.GetKeyboardHeight(false), "Chat", LogType.Log, 9);
+        MobileDebug.Log("Screen.width " + Screen.width, "Chat", LogType.Log, 10);
+        MobileDebug.Log("Screen.height " + Screen.height, "Chat", LogType.Log, 11);
+
+
+        /*if (keyboard?.status == TouchScreenKeyboard.Status.Visible)*/
+        if (TouchScreenKeyboard.visible)
         {
             //make chat text area fix keyboard size
 
 
 #if !UNITY_EDITOR
-            float KBratio = MobileUtilities.GetKeyboardHeightRatio(true);
+/*            float KBratio = MobileUtilities.GetKeyboardHeightRatio(true);
             float KBheight = canvas.rect.height * KBratio;
-            float chatSize = canvas.rect.height - KBheight;
+            float chatSize = canvas.rect.height - KBheight;*/
+
+            float KBheight = MobileUtilities.GetKeyboardHeight(false);
+            float CanvasToScreenRatio = (float)Screen.height / canvas.rect.height;
+            float chatSize = canvas.rect.height - (KBheight / CanvasToScreenRatio);
 
             fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, chatSize);
             fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
 
             fullChatOverlay.anchoredPosition = new Vector2(0, 0);
 
-            MobileDebug.Log("chatSize " + chatSize);
-
-             MobileDebug.Log("KBheight " + KBheight);
-
-             MobileDebug.Log("KBratio " + KBratio);
 
 
 #else
 
             fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
             fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
-
-            Debug.Log("I DO THIS");
 #endif
         }
         else
@@ -106,9 +125,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             chatClient.PublishMessage("public", inputF.text);
             inputF.text = "";
         }
+        else
+        {
+            chatClient.PublishMessage("public", placeholderchatTXT.text);
+            placeholderchatTXT.text = "";
+        }
     }
 
-   /* void PrintMessageToChat*/
+    /* void PrintMessageToChat*/
 
     public void DebugReturn(DebugLevel level, string message)
     {
@@ -203,8 +227,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         closeFullChatButton.SetActive(true);
 
         closedChat.SetActive(false);
-
-        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
+/*
+        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);*/
     }
 
     public void ShowPreviewChat()

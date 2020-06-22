@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+
 public static class MobileUtilities
 {
     /// <summary>
@@ -7,14 +8,14 @@ public static class MobileUtilities
     /// </summary>
     public static float GetKeyboardHeightRatio(bool includeInput)
     {
-        return Mathf.Clamp01((float)GetKeyboardHeight(includeInput) / Display.main.systemHeight);
+        return Mathf.Clamp01((float)GetKeyboardHeight(includeInput) / Screen.height);
     }
-
-    /// <summary>
-    /// Returns the keyboard height in display pixels.
-    /// </summary>
-    public static int GetKeyboardHeight(bool includeInput)
+/// <summary>
+/// Returns the keyboard height in display pixels.
+/// </summary>
+public static int GetKeyboardHeight(bool includeInput)
     {
+#if !UNITY_EDITOR
 #if UNITY_ANDROID
         using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         {
@@ -38,12 +39,15 @@ public static class MobileUtilities
             using (var rect = new AndroidJavaObject("android.graphics.Rect"))
             {
                 view.Call("getWindowVisibleDisplayFrame", rect);
-                return Display.main.systemHeight - rect.Call<int>("height") + decorHeight;
+                return Screen.height - rect.Call<int>("height") + decorHeight;
             }
         }
 #else
         var height = Mathf.RoundToInt(TouchScreenKeyboard.area.height);
-        return height >= Display.main.systemHeight ? 0 : height;
+        return height >= Screen.height ? 0 : height;
+#endif
+#else
+        return 0;
 #endif
     }
 }

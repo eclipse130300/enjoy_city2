@@ -99,7 +99,6 @@ public class CharacterEditorUiController : MonoBehaviour
         //MAY BE DO NOT HIDE?
         buyButton.SetActive(false);
         itemBoughtTab.SetActive(true);
-        Debug.Log("I do it!");
     }
 
     public void OnItemBuyTap()
