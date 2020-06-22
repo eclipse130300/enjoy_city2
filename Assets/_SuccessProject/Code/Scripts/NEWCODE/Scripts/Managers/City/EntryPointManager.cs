@@ -100,7 +100,7 @@ public class EntryPointManager : MonoBehaviour
                     {
                         point.HideUI();
                         point.UnlistenInteractionButton();
-                        Debug.Log("Hide");
+/*                        Debug.Log("Hide");*/
 
                         activePoint = null;
                     }

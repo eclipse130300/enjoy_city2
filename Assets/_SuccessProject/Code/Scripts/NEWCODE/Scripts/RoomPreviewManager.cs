@@ -143,7 +143,7 @@ public class RoomPreviewManager : MonoBehaviour
 
             Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
             Messenger.Broadcast(GameEvents.ROOM_ITEM_PICKED, itemPreviewing);
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?
+/*            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?*/
         }
         else
         {

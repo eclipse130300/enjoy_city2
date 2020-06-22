@@ -8,9 +8,9 @@ using Utils;
 
 public class PreviewManager : MonoBehaviour
 {
-    public Gender previewingCharSex;
+    public static Gender previewingCharSex;
 
-    public GameMode previewingGameMode;
+    public static GameMode previewingGameMode;
 
     private SkinnedMeshRenderer previewingBodyPart;
 
@@ -24,7 +24,7 @@ public class PreviewManager : MonoBehaviour
 
     private ShopManager shopManager;
 
-    public string GetCurrentKey()
+    public static string GetCurrentKey()
     {
         return previewingCharSex.ToString() + previewingGameMode.ToString();
     }
@@ -74,7 +74,7 @@ public class PreviewManager : MonoBehaviour
 
     void LoadConf()
     {
-        string key = previewingCharSex.ToString() + previewingGameMode.ToString();
+        string key = GetCurrentKey();/*previewingCharSex.ToString() + previewingGameMode.ToString();*/
         previewingClothesConfig = SaveManager.Instance.LoadClothesSet(key);
     }
 
@@ -98,7 +98,7 @@ public class PreviewManager : MonoBehaviour
 
             Messenger.Broadcast(GameEvents.CLOTHES_CHANGED);
             Messenger.Broadcast(GameEvents.ITEM_PICKED, itemPreviewing);
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?
+/*            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE); //todo it's the same logically as Clothes_changed event?*/
         }
         else
         {
@@ -109,7 +109,7 @@ public class PreviewManager : MonoBehaviour
 
     void SavePreviewingConfig()
     {
-        string key = previewingCharSex.ToString() + previewingGameMode.ToString();
+        string key = GetCurrentKey(); /*previewingCharSex.ToString() + previewingGameMode.ToString();*/
         SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig); 
     }
     
@@ -143,7 +143,7 @@ public class PreviewManager : MonoBehaviour
             Debug.Log("I buy: " + itemPreviewing.ConfigId + " in variant: " + activeVariant.ConfigId);
             OnItemPicked();
             Messenger.Broadcast(GameEvents.ITEM_BOUGHT, itemPreviewing, activeVariant);
-            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);
+/*            Messenger.Broadcast(GameEvents.ITEM_OPERATION_DONE);*/
         }
         else
         {

@@ -21,7 +21,7 @@ public class ShopDataConfig : IDataConfig
 
     public bool IsModelItemInBoughtList(ItemConfig item)
     {
-        foreach (string dirtyPair in boughtRoomItems)
+        foreach (string dirtyPair in bought3DModelItems)
         {
             string[] strs = dirtyPair.Split('+');
             if (strs.Contains(item.ConfigId))
@@ -34,7 +34,7 @@ public class ShopDataConfig : IDataConfig
 
     public bool VariantIsBought(ItemConfig item, ItemVariant variant)
     {
-        foreach (string dirtyPair in boughtRoomItems)
+        foreach (string dirtyPair in bought3DModelItems)
         {
             string[] strs = dirtyPair.Split('+');
             if (strs.Contains(item.ConfigId))

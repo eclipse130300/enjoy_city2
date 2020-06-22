@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class GameUIController : MonoBehaviour
 {
     public GameObject interactionButton;
+    public GameObject jumpButton;
     public Image interactionButtonIMG;
 
 
@@ -18,6 +19,8 @@ public class GameUIController : MonoBehaviour
         Messenger.AddListener(GameEvents.ENTRY_POINT_EXIT, OnEntryPointExit);
 
         interactionButton.SetActive(false);
+
+        Loader.Instance.AllSceneLoaded += TurnOffJumpButton;
     }
 
     private void OnDestroy()
@@ -26,7 +29,23 @@ public class GameUIController : MonoBehaviour
         Messenger.RemoveListener(GameEvents.ENTRY_POINT_EXIT, OnEntryPointExit);
 
         interactionButton.SetActive(false);
+        jumpButton.SetActive(true);
+
+        Loader.Instance.AllSceneLoaded -= TurnOffJumpButton;
     }
+
+    private void TurnOffJumpButton()
+    {
+        if(Loader.Instance.curentScene.SceneName == "PlayerRoom")
+        {
+            jumpButton?.SetActive(false);
+        }
+        else
+        {
+            jumpButton?.SetActive(true);
+        }
+    }
+
     private void OnEntryPointExit()
     {
         interactionButton.SetActive(false);

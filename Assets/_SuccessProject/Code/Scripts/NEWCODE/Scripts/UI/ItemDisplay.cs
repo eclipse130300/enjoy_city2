@@ -64,8 +64,8 @@ public class ItemDisplay : MonoBehaviour, IItemHandler
             activeItemTick.SetActive(false);
         }
 
-        frameIMG.color = startFrameColor;
-        isPreviewing = false;
+/*        frameIMG.color = startFrameColor;
+        isPreviewing = false;*/
     }
 
     private void OnItemBought(ItemConfig cfg, ItemVariant var) // TODO var is unnecessary
@@ -76,7 +76,7 @@ public class ItemDisplay : MonoBehaviour, IItemHandler
             {
                 lockIcon.gameObject.SetActive(false);
                 activeItemTick.SetActive(true);
-                frameIMG.color = startFrameColor;
+/*                frameIMG.color = startFrameColor;*/
             }
         }
         else
