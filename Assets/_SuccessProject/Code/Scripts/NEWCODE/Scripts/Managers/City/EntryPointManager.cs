@@ -90,7 +90,7 @@ public class EntryPointManager : MonoBehaviour
                 {
                     point.ShowUI();
                     point.ListenInteractionButton();
-                    Debug.Log("Show");
+/*                    Debug.Log("Show");*/
 
                     activePoint = point;
                 }

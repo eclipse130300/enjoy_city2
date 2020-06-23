@@ -21,7 +21,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public GameObject fullSceenChat;
     public GameObject closeFullChatButton;
 
-    public RectTransform fullChatOverlay;
+    public RectTransform chatBoxToResize;
 
     [SerializeField] string playerID;
 
@@ -39,7 +39,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient = new ChatClient(this);
         chatClient.Connect(ChatSettings.Load().AppId, "0.1", new AuthenticationValues(playerID));
 
-        canvas = fullChatOverlay.parent.GetComponent<RectTransform>();
+        canvas = chatBoxToResize.parent.GetComponent<RectTransform>();
 /*        keyboard = FindObjectOfType<TMP_InputField>();*/
 
     }
@@ -89,24 +89,24 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             float CanvasToScreenRatio = (float)Screen.height / canvas.rect.height;
             float chatSize = canvas.rect.height - (KBheight / CanvasToScreenRatio);
 
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, chatSize);
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
+            chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, chatSize);
+            chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
 
-            fullChatOverlay.anchoredPosition = new Vector2(0, 0);
+            chatBoxToResize.anchoredPosition = new Vector2(0, 0);
 
 
 
 #else
 
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
+            chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
+            chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
 #endif
         }
         else
         {
 
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
-            fullChatOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
+            chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
+            chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);
 
         }
 

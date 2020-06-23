@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
+/*using UnityEditor.Animations;*/
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
@@ -13,7 +13,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     public PhotonView photonView;
 
-    public FixedJoystick LeftJoystick;
+    public FloatingJoystick LeftJoystick;
 
     public FixedButton JumpButton;
     public FixedButton CrouchButton;
@@ -91,6 +91,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
             Hinput = Mathf.Clamp( LeftJoystick.input.x + Input.GetAxis("Horizontal"),-1,1);
             Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"),-1,1);
+
+            if(JumpButton != null)
             m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
             
             camera.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
@@ -154,7 +156,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         Debug.Log("IsMine " + photonView.IsMine);
         if ((photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
-            LeftJoystick = FindObjectOfType<FixedJoystick>();
+            LeftJoystick = FindObjectOfType<FloatingJoystick>();
             TouchField = FindObjectOfType<FixedTouchField>();
             JumpButton = FindObjectOfType<FixedButton>();
 
