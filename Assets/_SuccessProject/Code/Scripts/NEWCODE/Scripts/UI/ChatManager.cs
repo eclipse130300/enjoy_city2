@@ -27,7 +27,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private TouchScreenKeyboard keyboard;
     private RectTransform canvas;
-    public TextMeshProUGUI placeholderchatTXT;
 
     public UnityEvent onEndEdit;
     // Start is called before the first frame update
@@ -50,7 +49,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Service();
         TouchScreenKeyboard.hideInput = true;
 
-        if (keyboard != null)
+
+/*        if (keyboard != null)
         {
             if (keyboard.status == TouchScreenKeyboard.Status.Done && keyboard.text != "")
             {
@@ -58,7 +58,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 chatClient.PublishMessage("public", txt);
                 keyboard.text = "";
             }
-        }
+        }*/
 
        // MobileDebug.Log("TouchScreenKeyboard "+ keyboard + " status " + keyboard?.status + " ratio " +MobileUtilities.GetKeyboardHeightRatio(true), "Chat",LogType.Log,1);
         MobileDebug.Log("TouchScreenKeyboard.visible "+TouchScreenKeyboard.visible, "Chat", LogType.Log, 1);
@@ -115,21 +115,45 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
     }
 
+    public void OnTextFieldFocused()
+    {
+        if(inputRoutine != null)
+        StopCoroutine(inputRoutine);
+        inputRoutine = null;
+    }
+
+    Coroutine inputRoutine;
 
     public void OnSendButtonClick()
     {
+        if(inputRoutine == null)
+        inputRoutine = StartCoroutine(WaitToSend());
+    }
+
+    IEnumerator WaitToSend()
+    {
+        var timeScinceLoad = Time.timeSinceLevelLoad;
+        while (inputF.text == "" && Time.timeSinceLevelLoad - timeScinceLoad < 2)
+        {
+            yield return null;
+        }
+
         if (inputF.text != "")
         {
             chatClient.PublishMessage("public", inputF.text);
             inputF.text = "";
         }
-        else
-        {
-            chatClient.PublishMessage("public", placeholderchatTXT.text);
-            placeholderchatTXT.text = "";
-        }
+
+        inputRoutine = null;
     }
 
+    public void OnDeselectInput()
+    {
+        if(inputRoutine != null)
+        {
+
+        }
+    }
     /* void PrintMessageToChat*/
 
     public void DebugReturn(DebugLevel level, string message)

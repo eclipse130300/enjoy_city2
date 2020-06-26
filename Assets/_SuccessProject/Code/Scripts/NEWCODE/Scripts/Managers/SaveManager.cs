@@ -78,31 +78,24 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public void SaveClothesSet(string key, ClothesConfig clothesConf)
     {
         changableDataConfig.AddClothesConfig(key, clothesConf);
-/*        Debug.Log("SAVE :" + key + clothesConf.pickedItemsAndVariants.Count.ToString());*/
         SaveChangableConfig();
     }
 
     public ClothesConfig LoadClothesSet(string key)
     {
-       // LoadAllConfigs();
         var clothes = changableDataConfig?.GetClothesConfig(key);
-/*        Debug.Log("LOAD :" + key + clothes.pickedItemsAndVariants.Count.ToString());*/
-        /*        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes); //TODO не нрав мне*/
         return clothes;
     }
 
     public void SaveRoomSet(RoomConfig roomCFG)
     {
         changableDataConfig.roomConfig = roomCFG;
-/*        Debug.Log("SAVE :" + roomCFG.pickedItemsAndVariants.Count.ToString());*/
         SaveAllConfigs();
     }
 
     public RoomConfig LoadRoomSet()
     {
-        //LoadAllConfigs();
         var roomCFG = changableDataConfig.roomConfig;
-/*        Debug.Log("LOAD :" + roomCFG.pickedItemsAndVariants.Count.ToString());*/
         return roomCFG;
 
     }
