@@ -245,6 +245,57 @@ namespace CMS.Editor
             return;
         }
 
+        public static void DrawList<T>(string label, List<T> list, T defaultValue) where T : Enum
+        {
+            GUILayout.Space(10);
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(label);
+
+            if (!showContent.ContainsKey(list))
+                showContent.Add(list, false);
+
+            showContent[list] = GUILayout.Toggle(showContent[list], String.Format("{0} ({1}) ", "showContent ", list.Count));
+            GUILayout.EndHorizontal();
+
+            if (!showContent[list])
+                return;
+
+
+            EditorGUILayout.Separator();
+
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                GUILayout.Space(10);
+                GUILayout.BeginHorizontal();
+/*                DrawField(label, list[i]);*/
+
+                list[i] = (T) DrawField(label, list[i]);
+
+                GUILayout.Space(10);
+                if (GUILayout.Button("-"))
+                {
+                    list.RemoveAt(i);
+                    i--;
+                }
+
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
+            if (GUILayout.Button("Add", GUILayout.Height(15)))
+            {
+                list.Add(defaultValue);
+                if (list[list.Count - 1] is IScriptableListItem)
+                {
+                    (list[list.Count - 1] as IScriptableListItem).ConfigId = label + (list.Count - 1).ToString();
+                }
+
+            }
+            GUILayout.Space(10);
+            return;
+        }
+
         static ScriptableListWindow window;
         static Vector2 scrollPos = new Vector2();
 

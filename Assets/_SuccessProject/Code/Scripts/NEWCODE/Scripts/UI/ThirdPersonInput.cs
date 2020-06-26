@@ -68,7 +68,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     {
         if (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady)
         {
-            Loader.Instance.AllSceneLoaded -= SubscibeToUI;
+            if (Loader.Instance != null)
+                Loader.Instance.AllSceneLoaded -= SubscibeToUI;
         }
     }
     private void Start()
@@ -94,7 +95,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
             if(JumpButton != null)
             m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
-            
+
             camera.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
 
             cameraRotation = new Vector3((transform.forward*5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward*5).y, (transform.forward*5 + transform.position).z) + Vector3.up;
@@ -121,7 +122,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         Jump();
 
 
-        mecanim.SetJump(targetJump > 0 || !_characterController.isGrounded);
+        mecanim.SetJump(targetJump);
         // pass all parameters to the character control script
         _characterController.Move(m_Move * Time.fixedDeltaTime * speed);
         m_Jump = false;
@@ -131,7 +132,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     
     private void LateUpdate()
     {
-        //return;
+        return;
         Vector3 rotation = Quaternion.LookRotation(cameraRotation - hips.transform.position , Vector3.up).eulerAngles;
         
         for (int i = 0; i < skinsManager.skinHolder.childCount; i++)

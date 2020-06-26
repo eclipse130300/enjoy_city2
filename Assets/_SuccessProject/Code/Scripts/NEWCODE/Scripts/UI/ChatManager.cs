@@ -81,9 +81,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
 
 #if !UNITY_EDITOR
-/*            float KBratio = MobileUtilities.GetKeyboardHeightRatio(true);
-            float KBheight = canvas.rect.height * KBratio;
-            float chatSize = canvas.rect.height - KBheight;*/
 
             float KBheight = MobileUtilities.GetKeyboardHeight(false);
             float CanvasToScreenRatio = (float)Screen.height / canvas.rect.height;
@@ -95,8 +92,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             chatBoxToResize.anchoredPosition = new Vector2(0, 0);
 
 
-
+            MobileDebug.Log("KBheight " + KBheight, "Chat", LogType.Log, 12);
 #else
+
 
             chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.rect.width);
             chatBoxToResize.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.rect.height);

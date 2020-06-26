@@ -11,7 +11,7 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
     public List<ClothesConfig> allClothesConfigs = new List<ClothesConfig>();
     public List<string> clothesConfigNames = new List<string>();
 
-    public RoomConfig roomConfig;
+    public RoomConfig roomConfig = new RoomConfig();
 
 
     string nickName;

@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class MecanimWrapper : MonoBehaviour
 {
+
+    
     [SerializeField] Animator animator;
+
+/*    private void Update()
+    {
+        SetHorizontalSpeed(0);
+        SetVerticalSpeed(0);
+
+    }*/
+
     public void SetHorizontalSpeed(float speed) {
 
         Animator[] animators = GetComponentsInChildren<Animator>();
@@ -38,7 +48,7 @@ public class MecanimWrapper : MonoBehaviour
             newAnimator.SetFloat("MoveZ", speed);
         }
     }
-    public void SetJump(bool value)
+    public void SetJump(float value)
     {
         Animator[] animators = GetComponentsInChildren<Animator>();
         foreach (var newAnimator in animators)
@@ -50,7 +60,7 @@ public class MecanimWrapper : MonoBehaviour
                 newAnimator.avatar = animator.avatar;
             }
             if (newAnimator != animator) newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-            newAnimator.SetBool("Jump", value);
+            newAnimator.SetFloat("Jump", value);
         }
     }
 }

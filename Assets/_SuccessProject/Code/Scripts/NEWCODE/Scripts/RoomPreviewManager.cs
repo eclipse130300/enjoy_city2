@@ -80,13 +80,13 @@ public class RoomPreviewManager : MonoBehaviour
             }
         }
 
-        TryAddDefaultItems();
         LoadRoomConfig();
+        TryAddDefaultItems();
     }
 
     private void TryAddDefaultItems() //first add default items - they should be opened instantly
     {
-        LoadRoomConfig();
+/*        LoadRoomConfig();*/
 
         if (currentRoomConf.pickedItemsAndVariants.Count == 0)
         {

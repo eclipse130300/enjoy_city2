@@ -31,7 +31,8 @@ public class GameUIController : MonoBehaviour
         interactionButton.SetActive(false);
         jumpButton.SetActive(true);
 
-        Loader.Instance.AllSceneLoaded -= TurnOffJumpButton;
+        if (Loader.Instance != null)
+            Loader.Instance.AllSceneLoaded -= TurnOffJumpButton;
     }
 
     private void TurnOffJumpButton()

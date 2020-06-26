@@ -34,10 +34,11 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         }
 
         Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-        /*        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)) {
-                    Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
-        *//*            SetDefaultConfig();*//*
-                }*/
+
+        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        {
+            Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+        }
 
         Loader.Instance.AllSceneLoaded += InitializeSkins;
     }
@@ -107,27 +108,57 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         if (config.itemObject != null)
         {
 
-            var bodyTransform = skinHolder.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
+            var bodyTransform = skinHolder?.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
 
             var newBodyPart = GameObject.Instantiate(config.itemObject, skinHolder);
+
             newBodyPart.name = bodyTransform.name;
-            GameObject.Destroy(bodyTransform.gameObject);
+            GameObject.DestroyImmediate(bodyTransform.gameObject);
 
+/*            if (config.mesh != null)
+            newBodyPart.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh = config.mesh;*/
 
-            if (config.mesh != null)
-                newBodyPart.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh = config.mesh;
             newBodyPart.GetComponentInChildren<SkinnedMeshRenderer>().material.color = variant.color;
+            //and we disable
+            DisableBodyParts(config.partsToDisable);
         }
         else
         {
-            if (skinHolder != null)
+            if (skinHolder != null && config.mesh != null/* && config.material != null*/)
             {
                 var bodyTransform = skinHolder.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
                 bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh = config.mesh;
+                /*            bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().material = config.material;*/
                 bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().material.color = variant.color;
             }
+            else
+            {
+                Debug.LogWarning("Set mesh/material in config and check skinholder!");
+            }
         }
+    }
 
+    private void DisableBodyParts(List<BodypartToDisable> bodypartsToDisable)
+    {
+        if (bodypartsToDisable == null) return;
+        //enable all bodyparts
+/*        var allBodyParts = Enum.GetNames(typeof(BodypartToDisable));
+
+        foreach (string bodyPartToEnable in allBodyParts)
+        {
+            Transform transf = skinHolder.Find(bodyPartToEnable);
+
+            if(!transf.gameObject.activeInHierarchy)
+            transf.gameObject.SetActive(true);
+        }*/
+
+        //disable bodyparts from config
+        foreach (BodypartToDisable bodyParttoDisable in bodypartsToDisable)
+        {
+        Transform bpTransform = skinHolder.Find(bodyParttoDisable.ToString());
+        bpTransform.gameObject.SetActive(false);
+            Debug.Log("disable :" + bpTransform.gameObject.name);
+        }
     }
 
 
@@ -167,13 +198,13 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
         }
 
-        /*        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
-                {
-                    Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
-        *//*            SetDefaultConfig();*//*
-                }*/
+        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        {
+            Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+        }
         Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
 
+        if(Loader.Instance != null)
         Loader.Instance.AllSceneLoaded -= InitializeSkins;
     }
 
@@ -188,8 +219,5 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         
     }
 }
-public enum Gender
-{
-    MALE,
-    FEMALE
-}
+
+

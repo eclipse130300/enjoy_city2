@@ -117,9 +117,6 @@ public class PreviewManager : MonoBehaviour
     //show item at model(preview)
     private void OnItemPressed(GameObject item)
     {
-    
-
-
         var itemCFG = item.GetComponent<ItemDisplay>().itemConfig;
         activeVariant = previewingClothesConfig?.GetActiveVariant(itemCFG);
 

@@ -75,7 +75,7 @@ public class RoomEditorUIController : MonoBehaviour
 
 
 
-        if (SaveManager.Instance.LoadRoomSet().ItemAndVarIsInConfig(itemCFG, var))
+        if (currentRoomConfig.ItemAndVarIsInConfig(itemCFG, var))
         {
             doneButton.SetActive(false);
         }

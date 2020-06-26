@@ -9,9 +9,9 @@ using Utils;
 
 public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameManager -- 4 errors now!
 {
-    public ShopDataConfig shopDataConfig/* = new ShopDataConfig()*/;
-    public ImportantDataConfig importantDataConfig/* = new ImportantDataConfig()*/;
-    public ChangableDataConfig changableDataConfig/* = new ChangableDataConfig()*/;
+    public ShopDataConfig shopDataConfig = new ShopDataConfig();
+    public ImportantDataConfig importantDataConfig = new ImportantDataConfig();
+    public ChangableDataConfig changableDataConfig = new ChangableDataConfig();
     static string savePrefix = "save_";
     private void Awake()
     {
@@ -78,7 +78,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public void SaveClothesSet(string key, ClothesConfig clothesConf)
     {
         changableDataConfig.AddClothesConfig(key, clothesConf);
-        Debug.Log("SAVE :" + key + clothesConf.pickedItemsAndVariants.Count.ToString());
+/*        Debug.Log("SAVE :" + key + clothesConf.pickedItemsAndVariants.Count.ToString());*/
         SaveChangableConfig();
     }
 
@@ -86,14 +86,15 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     {
        // LoadAllConfigs();
         var clothes = changableDataConfig?.GetClothesConfig(key);
-        Debug.Log("LOAD :" + key + clothes.pickedItemsAndVariants.Count.ToString());
-/*        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes); //TODO не нрав мне*/
+/*        Debug.Log("LOAD :" + key + clothes.pickedItemsAndVariants.Count.ToString());*/
+        /*        Messenger.Broadcast(GameEvents.CLOTHES_CONFIG_LOADED, clothes); //TODO не нрав мне*/
         return clothes;
     }
 
     public void SaveRoomSet(RoomConfig roomCFG)
     {
         changableDataConfig.roomConfig = roomCFG;
+/*        Debug.Log("SAVE :" + roomCFG.pickedItemsAndVariants.Count.ToString());*/
         SaveAllConfigs();
     }
 
@@ -101,6 +102,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     {
         //LoadAllConfigs();
         var roomCFG = changableDataConfig.roomConfig;
+/*        Debug.Log("LOAD :" + roomCFG.pickedItemsAndVariants.Count.ToString());*/
         return roomCFG;
 
     }
@@ -165,7 +167,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         importantDataConfig.exp = exp;
         importantDataConfig.lvl = Lvl;
         importantDataConfig.expToNextLvl = expTonextLvl;
-        SaveAllConfigs();
+        SaveImportantConfig();
     }
 
 
@@ -239,11 +241,11 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 
     #endregion
 
-/*    private void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         SaveAllConfigs();
     }
-*/
+
 
 
     public T FromJson<T>(string json)
