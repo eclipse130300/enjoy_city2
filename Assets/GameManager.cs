@@ -1,4 +1,5 @@
-﻿using ExitGames.Client.Photon;
+﻿using CMS.Config;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using SocialGTA;
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     static Player myPlayer;
     public static GameManager instance;
-
+    public MapConfig exitAfterDisconnect;
     bool _connectAndReady = false;
     public bool connected {
         get {
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
        
     }
+ 
     private void OnDestroy()
     {
         PhotonNetwork.Disconnect();
@@ -151,6 +153,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        if (exitAfterDisconnect != null) {
+            Loader.Instance.LoadGameScene(exitAfterDisconnect);
+        
+        }
     }
 
     public override void OnRegionListReceived(RegionHandler regionHandler)

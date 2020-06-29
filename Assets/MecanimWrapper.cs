@@ -63,6 +63,6 @@ public class MecanimWrapper : MonoBehaviour
             if (newAnimator != animator) newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
             
         }
-        animator.SetFloat("Jump", value*0.8f);
+        animator.SetFloat("Jump", value);
     }
 }
