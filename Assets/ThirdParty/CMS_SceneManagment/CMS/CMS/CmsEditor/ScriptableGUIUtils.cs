@@ -201,6 +201,7 @@ namespace CMS.Editor
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(label);
+            
 
             if (!showContent.ContainsKey(list))
                 showContent.Add(list, false);
