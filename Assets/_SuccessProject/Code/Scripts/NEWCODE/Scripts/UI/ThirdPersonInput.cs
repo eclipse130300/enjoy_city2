@@ -22,6 +22,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     public float jumpHeight;
     public float rotateSpeed = 5f;
     public float cameraYSpeed = 5f;
+    public float learpSpeedf =  1;
+    public float distanceToForceTP = 1;
     protected ThirdPersonUserControl Control;
 
     [SerializeField] SkinsManager skinsManager;
@@ -85,22 +87,35 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     private void FixedUpdate()
     {
-       
+
         if (LeftJoystick != null && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
-            
 
-            Hinput = Mathf.Clamp( LeftJoystick.input.x + Input.GetAxis("Horizontal"),-1,1);
-            Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"),-1,1);
 
-            if(JumpButton != null)
-            m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
+            Hinput = Mathf.Clamp(LeftJoystick.input.x + Input.GetAxis("Horizontal"), -1, 1);
+            Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"), -1, 1);
+
+            if (JumpButton != null)
+                m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
 
             camera.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
 
-            cameraRotation = new Vector3((transform.forward*5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward*5).y, (transform.forward*5 + transform.position).z) + Vector3.up;
+            cameraRotation = new Vector3((transform.forward * 5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward * 5).y, (transform.forward * 5 + transform.position).z) + Vector3.up;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + Vector3.up * TouchField.TouchDist.x * rotateSpeed * Time.fixedDeltaTime);
-           
+
+        }
+        else if(newPosition != Vector3.zero)
+        {
+            Hinput = Mathf.Lerp(Hinput, newHinput, Time.fixedDeltaTime * learpSpeedf);
+            Vinput = Mathf.Lerp(Vinput, newVinput, Time.fixedDeltaTime * learpSpeedf);
+            targetJump = Mathf.Lerp(targetJump, newTargetJump,Time.fixedDeltaTime * learpSpeedf);
+
+            if (Vector3.Distance(transform.position, newPosition) > distanceToForceTP) {
+
+                transform.position = Vector3.Lerp(transform.position, newPosition, Time.fixedDeltaTime * learpSpeedf);
+
+            }
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation),Time.fixedDeltaTime * learpSpeedf);
         }
         if (_characterController.isGrounded)
         {
@@ -203,7 +218,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             }
         }
     }
-
+    Vector3 newPosition = Vector3.zero;
+    Vector3 newRotation = Vector3.zero;
+    float newHinput = 0;
+    float newVinput = 0;
+    float newTargetJump = 0;
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
     
@@ -213,10 +232,13 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             stream.SendNext(transform.localPosition);
             stream.SendNext(transform.localRotation.eulerAngles);
             stream.SendNext(cameraRotation);
+          
             stream.SendNext(Hinput);
             stream.SendNext(Vinput);
-            stream.SendNext(m_Jump); 
-
+   
+            
+            stream.SendNext(m_Jump);
+            stream.SendNext(targetJump);
         }
         else
         {
@@ -224,9 +246,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             transform.localPosition = (Vector3)stream.ReceiveNext();
             transform.localRotation =  Quaternion.Euler((Vector3)stream.ReceiveNext());
             cameraRotation = (Vector3)stream.ReceiveNext();
+           
             Hinput = (float)stream.ReceiveNext();
             Vinput = (float)stream.ReceiveNext();
             m_Jump = (bool)stream.ReceiveNext();
+            newTargetJump = (float)stream.ReceiveNext();
         }
     }
 }
