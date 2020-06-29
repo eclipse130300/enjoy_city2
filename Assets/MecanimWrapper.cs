@@ -28,10 +28,10 @@ public class MecanimWrapper : MonoBehaviour
             }
             if (newAnimator != animator) newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
           //  newAnimator.playbackTime = animator.playbackTime;
-            newAnimator.SetFloat("MoveX", speed);
+           
 
         }
-       
+        animator.SetFloat("MoveX", speed);
     }
     public void SetVerticalSpeed(float speed) {
         Animator[] animators = GetComponentsInChildren<Animator>();
@@ -45,8 +45,9 @@ public class MecanimWrapper : MonoBehaviour
             }
            if(newAnimator != animator) newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
             //newAnimator.playbackTime = animator.playbackTime;
-            newAnimator.SetFloat("MoveZ", speed);
+            
         }
+        animator.SetFloat("MoveZ", speed);
     }
     public void SetJump(float value)
     {
@@ -60,7 +61,8 @@ public class MecanimWrapper : MonoBehaviour
                 newAnimator.avatar = animator.avatar;
             }
             if (newAnimator != animator) newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-            newAnimator.SetFloat("Jump", value);
+            
         }
+        animator.SetFloat("Jump", value*0.8f);
     }
 }

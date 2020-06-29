@@ -26,21 +26,29 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         _gameMode = Loader.Instance.curentScene.gameMode;
         photon =  PhotonView.Get(this);
 
-        if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
-        {
-           
-            Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
-      
-        }
 
-        Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+
+
 
         if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+            Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+            if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
+            {
+
+                Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
+
+            }
+            Loader.Instance.AllSceneLoaded += InitializeSkins;
+        }
+        else {
+            PutOnClothes();
+
+
         }
 
-        Loader.Instance.AllSceneLoaded += InitializeSkins;
+       
     }
 
     private void InitializeSkins()
