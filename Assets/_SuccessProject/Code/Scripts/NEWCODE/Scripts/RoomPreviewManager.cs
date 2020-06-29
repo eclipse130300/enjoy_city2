@@ -67,6 +67,8 @@ public class RoomPreviewManager : MonoBehaviour
     void SaveRoomConfig()
     {
         saveManager.SaveRoomSet(currentRoomConf);
+        SaveManager.Instance.SaveShopConfig();
+        SaveManager.Instance.SaveChangableConfig();
     }
 
     void Initialize()

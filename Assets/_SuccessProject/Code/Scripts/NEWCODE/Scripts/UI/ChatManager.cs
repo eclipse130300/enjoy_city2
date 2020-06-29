@@ -36,7 +36,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Connect(ChatSettings.Load().AppId, "0.1", new AuthenticationValues(playerID));
 
         canvas = chatBoxToResize.parent.GetComponent<RectTransform>();
-/*        keyboard = FindObjectOfType<TMP_InputField>();*/
+        TouchScreenKeyboard keyboard;
 
     }
 
@@ -46,12 +46,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Service();
         TouchScreenKeyboard.hideInput = true;
 
-        SendButtonPressCheck();
+        /*        SendButtonPressCheck();*/
 
 
         // MobileDebug.Log("TouchScreenKeyboard "+ keyboard + " status " + keyboard?.status + " ratio " +MobileUtilities.GetKeyboardHeightRatio(true), "Chat",LogType.Log,1);
-        MobileDebug.Log("TouchScreenKeyboard.visible "+TouchScreenKeyboard.visible, "Chat", LogType.Log, 1);
-        MobileDebug.Log("TouchScreenKeyboard.hideInput " + TouchScreenKeyboard.hideInput, "Chat", LogType.Log,2);
+
+        MobileDebug.Log("TouchScreenKeyboard.visible " + TouchScreenKeyboard.visible, "Chat", LogType.Log, 1);
+        MobileDebug.Log("TouchScreenKeyboard.hideInput " + TouchScreenKeyboard.hideInput, "Chat", LogType.Log, 2);
         MobileDebug.Log("TouchScreenKeyboard.isInPlaceEditingAllowed " + TouchScreenKeyboard.isInPlaceEditingAllowed, "Chat", LogType.Log, 3);
         MobileDebug.Log("TouchScreenKeyboard.area " + TouchScreenKeyboard.area, "Chat", LogType.Log, 4);
         MobileDebug.Log("TouchScreenKeyboard.isSupported " + TouchScreenKeyboard.isSupported, "Chat", LogType.Log, 5);
@@ -80,8 +81,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
             chatBoxToResize.anchoredPosition = new Vector2(0, 0);
 
-
-            MobileDebug.Log("KBheight " + KBheight, "Chat", LogType.Log, 12);
 #else
 
 
@@ -100,12 +99,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     }
 
-    private void SetChatSize(RectTransform rect, float Vsize)
-    {
-    }
-
     public void OnTextFieldFocused()
     {
+        TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
         if(inputRoutine != null)
         StopCoroutine(inputRoutine);
         inputRoutine = null;
@@ -136,7 +132,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         inputRoutine = null;
     }
 
-    void SendButtonPressCheck()
+/*    void SendButtonPressCheck()
     {
         Touch[] touches = Input.touches;
         Touch touch;
@@ -160,7 +156,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         }
            
                 
-    }
+    }*/
 
     public void DebugReturn(DebugLevel level, string message)
     {

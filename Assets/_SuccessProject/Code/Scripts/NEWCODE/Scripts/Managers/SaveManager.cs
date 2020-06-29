@@ -90,7 +90,7 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     public void SaveRoomSet(RoomConfig roomCFG)
     {
         changableDataConfig.roomConfig = roomCFG;
-        SaveAllConfigs();
+        SaveChangableConfig();
     }
 
     public RoomConfig LoadRoomSet()
@@ -101,7 +101,6 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     }
     public int GetLvl()
     {
-       // LoadAllConfigs();
         return importantDataConfig.lvl;
     }
 

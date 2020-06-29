@@ -112,6 +112,7 @@ public class PreviewManager : MonoBehaviour
         string key = GetCurrentKey(); /*previewingCharSex.ToString() + previewingGameMode.ToString();*/
         SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig);
         SaveManager.Instance.SaveShopConfig();
+        SaveManager.Instance.SaveChangableConfig();
     }
     
     //show item at model(preview)
