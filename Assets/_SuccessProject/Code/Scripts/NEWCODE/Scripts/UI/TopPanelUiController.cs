@@ -1,4 +1,5 @@
 ﻿using CMS.Config;
+using SocialGTA;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ public class TopPanelUiController : MonoBehaviour
     [SerializeField] TextMeshProUGUI lvlText;
     [SerializeField] TextMeshProUGUI softCurrency;
     [SerializeField] TextMeshProUGUI hardCurrency;
+    [SerializeField] TextMeshProUGUI NickName;
 
     private SaveManager saveManager;
 
@@ -26,6 +28,13 @@ public class TopPanelUiController : MonoBehaviour
         Messenger.AddListener(GameEvents.REFRESH_SANDBOX_UI, Refresh);
 
         Refresh();
+    }
+
+    private void Start()
+    {
+        AutorizationController autorization = new AutorizationController();
+        autorization.Login();
+        NickName.text = autorization.profile.UserName;
     }
 
     private void UpdateCur(RoomItemConfig arg1, ItemVariant arg2)

@@ -11,21 +11,36 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     ChatClient chatClient;
     public TMP_InputField inputF;
     public GameObject content;
-    public TextMeshProUGUI [] chatObjectsText;
+    public TextMeshProUGUI[] chatObjectsText;
     public GameObject previewChat;
     public GameObject closedChat;
     public GameObject fullSceenChat;
     public GameObject closeFullChatButton;
 
     public RectTransform chatBoxToResize;
-    public RectTransform sendButtonRect;
+    public RectTransform inputFieldRect;
 
     [SerializeField] string playerID;
 
     private TouchScreenKeyboard keyboard;
     private RectTransform canvas;
+    public string temp;
+    bool isPaused;
 
-    public UnityEvent onEndEdit;
+    public float previewChatDuration;
+
+    //test
+    public string inputText;
+
+    private bool KeyBoardIsVisible 
+        {
+        get
+        {
+            if (MobileUtilities.GetKeyboardHeight(false) > 0)
+                return true;
+            else return false;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -46,26 +61,30 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Service();
         TouchScreenKeyboard.hideInput = true;
 
-        /*        SendButtonPressCheck();*/
+    /*    InpuFiledPressCheck();*/
 
-
+        /*temp = inputF.text;*/
         // MobileDebug.Log("TouchScreenKeyboard "+ keyboard + " status " + keyboard?.status + " ratio " +MobileUtilities.GetKeyboardHeightRatio(true), "Chat",LogType.Log,1);
 
         MobileDebug.Log("TouchScreenKeyboard.visible " + TouchScreenKeyboard.visible, "Chat", LogType.Log, 1);
-        MobileDebug.Log("TouchScreenKeyboard.hideInput " + TouchScreenKeyboard.hideInput, "Chat", LogType.Log, 2);
-        MobileDebug.Log("TouchScreenKeyboard.isInPlaceEditingAllowed " + TouchScreenKeyboard.isInPlaceEditingAllowed, "Chat", LogType.Log, 3);
-        MobileDebug.Log("TouchScreenKeyboard.area " + TouchScreenKeyboard.area, "Chat", LogType.Log, 4);
-        MobileDebug.Log("TouchScreenKeyboard.isSupported " + TouchScreenKeyboard.isSupported, "Chat", LogType.Log, 5);
-        MobileDebug.Log("MobileUtilities.GetKeyboardHeightRatio(true) " + MobileUtilities.GetKeyboardHeightRatio(true), "Chat", LogType.Log, 6);
-        MobileDebug.Log("MobileUtilities.GetKeyboardHeightRatio(false) " + MobileUtilities.GetKeyboardHeightRatio(false), "Chat", LogType.Log, 7);
-        MobileDebug.Log("MobileUtilities.GetKeyboardHeight(true) " + MobileUtilities.GetKeyboardHeight(true), "Chat", LogType.Log, 8);
-        MobileDebug.Log("MobileUtilities.GetKeyboardHeight(false) " + MobileUtilities.GetKeyboardHeight(false), "Chat", LogType.Log, 9);
-        MobileDebug.Log("Screen.width " + Screen.width, "Chat", LogType.Log, 10);
-        MobileDebug.Log("Screen.height " + Screen.height, "Chat", LogType.Log, 11);
+
+        MobileDebug.Log("KeyBoardIsVisible" + KeyBoardIsVisible, "Chat", LogType.Log, 2);
+
+
+        /*        MobileDebug.Log("TouchScreenKeyboard.hideInput " + TouchScreenKeyboard.hideInput, "Chat", LogType.Log, 2);
+                MobileDebug.Log("TouchScreenKeyboard.isInPlaceEditingAllowed " + TouchScreenKeyboard.isInPlaceEditingAllowed, "Chat", LogType.Log, 3);
+                MobileDebug.Log("TouchScreenKeyboard.area " + TouchScreenKeyboard.area, "Chat", LogType.Log, 4);
+                MobileDebug.Log("TouchScreenKeyboard.isSupported " + TouchScreenKeyboard.isSupported, "Chat", LogType.Log, 5);
+                MobileDebug.Log("MobileUtilities.GetKeyboardHeightRatio(true) " + MobileUtilities.GetKeyboardHeightRatio(true), "Chat", LogType.Log, 6);
+                MobileDebug.Log("MobileUtilities.GetKeyboardHeightRatio(false) " + MobileUtilities.GetKeyboardHeightRatio(false), "Chat", LogType.Log, 7);
+                MobileDebug.Log("MobileUtilities.GetKeyboardHeight(true) " + MobileUtilities.GetKeyboardHeight(true), "Chat", LogType.Log, 8);
+                MobileDebug.Log("MobileUtilities.GetKeyboardHeight(false) " + MobileUtilities.GetKeyboardHeight(false), "Chat", LogType.Log, 9);
+                MobileDebug.Log("Screen.width " + Screen.width, "Chat", LogType.Log, 10);
+                MobileDebug.Log("Screen.height " + Screen.height, "Chat", LogType.Log, 11);*/
 
 
         /*if (keyboard?.status == TouchScreenKeyboard.Status.Visible)*/
-        if (TouchScreenKeyboard.visible)
+        if (KeyBoardIsVisible)
         {
             //make chat text area fix keyboard size
 
@@ -99,12 +118,41 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     }
 
+    public void OnEndEditInput()
+    {
+
+    }
+
+    public void OnTextFieldUnfocus()
+    {
+        if (keyboard != null)
+        {
+            keyboard.active = false;
+        }
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus == true)
+        {
+/*            temp = inputF.text;*/
+            inputF.interactable = false;
+            /*        isPaused = !hasFocus;*/
+            MobileDebug.Log("has focus :" + hasFocus.ToString(), "InputField", LogType.Log, 5);
+            inputF.interactable = true;
+/*            inputF.text = temp;*/
+        }
+    }
+
+
     public void OnTextFieldFocused()
     {
-        TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
-        if(inputRoutine != null)
-        StopCoroutine(inputRoutine);
-        inputRoutine = null;
+        if(keyboard != null)
+        {
+            keyboard.active = false;
+        }
+
+        keyboard = TouchScreenKeyboard.Open(inputF.text, TouchScreenKeyboardType.Default);
     }
 
     Coroutine inputRoutine;
@@ -132,31 +180,31 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         inputRoutine = null;
     }
 
-/*    void SendButtonPressCheck()
+    void InpuFiledPressCheck()
     {
+        if (KeyBoardIsVisible && string.IsNullOrEmpty(inputF.text)) return;
+
+
         Touch[] touches = Input.touches;
         Touch touch;
 
         if (touches.Length != 0)
         {
             touch = touches[0];
-            Debug.Log("detecting touch!");
         }
         else return;
-        
+
 
         if (touch.phase == TouchPhase.Began)
         {
             Vector2 position = touch.position;
-            if(RectTransformUtility.RectangleContainsScreenPoint(sendButtonRect, position))
+            if (RectTransformUtility.RectangleContainsScreenPoint(inputFieldRect, position))
             {
-                Debug.Log("CLICK OVER SEND BUTTON!");
-                OnSendButtonClick();
+                MobileDebug.Log("inputFtext :" + inputF.text, "InputField", LogType.Log, 1);
+                TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
             }
         }
-           
-                
-    }*/
+    }
 
     public void DebugReturn(DebugLevel level, string message)
     {
@@ -196,7 +244,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                     text.text += msgs + "\n";
                 }
 
-                if (senders[i] != playerID && fullSceenChat.activeInHierarchy == false )  ShowPreviewChat();
+                if (senders[i] != playerID && fullSceenChat.activeInHierarchy == false)
+                {
+                        StartCoroutine(PreviewChat());
+                }
             }
             Debug.Log(string.Format("OnGetMessages: {0} ({1}) > {2}", channelName, senders.Length, msgs));
 
@@ -255,14 +306,17 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);*/
     }
 
-    public void ShowPreviewChat()
+    IEnumerator PreviewChat()
     {
         previewChat.SetActive(true);
-        Invoke("HidePreviewChat", 3f); //todo coroutine
+
+        yield return new WaitForSeconds(previewChatDuration);
+
+        previewChat.SetActive(false);
     }
 
     public void HidePreviewChat()
     {
-        previewChat.SetActive(false);
+        
     }
 }
