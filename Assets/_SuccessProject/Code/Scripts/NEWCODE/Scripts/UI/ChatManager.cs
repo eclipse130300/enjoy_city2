@@ -1,14 +1,10 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Chat;
 using SocialGTA;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
@@ -22,6 +18,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public GameObject closeFullChatButton;
 
     public RectTransform chatBoxToResize;
+    public RectTransform sendButtonRect;
 
     [SerializeField] string playerID;
 
@@ -49,18 +46,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Service();
         TouchScreenKeyboard.hideInput = true;
 
+        SendButtonPressCheck();
 
-/*        if (keyboard != null)
-        {
-            if (keyboard.status == TouchScreenKeyboard.Status.Done && keyboard.text != "")
-            {
-                string txt = keyboard.text;
-                chatClient.PublishMessage("public", txt);
-                keyboard.text = "";
-            }
-        }*/
 
-       // MobileDebug.Log("TouchScreenKeyboard "+ keyboard + " status " + keyboard?.status + " ratio " +MobileUtilities.GetKeyboardHeightRatio(true), "Chat",LogType.Log,1);
+        // MobileDebug.Log("TouchScreenKeyboard "+ keyboard + " status " + keyboard?.status + " ratio " +MobileUtilities.GetKeyboardHeightRatio(true), "Chat",LogType.Log,1);
         MobileDebug.Log("TouchScreenKeyboard.visible "+TouchScreenKeyboard.visible, "Chat", LogType.Log, 1);
         MobileDebug.Log("TouchScreenKeyboard.hideInput " + TouchScreenKeyboard.hideInput, "Chat", LogType.Log,2);
         MobileDebug.Log("TouchScreenKeyboard.isInPlaceEditingAllowed " + TouchScreenKeyboard.isInPlaceEditingAllowed, "Chat", LogType.Log, 3);
@@ -147,14 +136,31 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         inputRoutine = null;
     }
 
-    public void OnDeselectInput()
+    void SendButtonPressCheck()
     {
-        if(inputRoutine != null)
-        {
+        Touch[] touches = Input.touches;
+        Touch touch;
 
+        if (touches.Length != 0)
+        {
+            touch = touches[0];
+            Debug.Log("detecting touch!");
         }
+        else return;
+        
+
+        if (touch.phase == TouchPhase.Began)
+        {
+            Vector2 position = touch.position;
+            if(RectTransformUtility.RectangleContainsScreenPoint(sendButtonRect, position))
+            {
+                Debug.Log("CLICK OVER SEND BUTTON!");
+                OnSendButtonClick();
+            }
+        }
+           
+                
     }
-    /* void PrintMessageToChat*/
 
     public void DebugReturn(DebugLevel level, string message)
     {
