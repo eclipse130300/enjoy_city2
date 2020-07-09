@@ -61,11 +61,6 @@ public class PreviewManager : MonoBehaviour
         //LoadConf();
     }
 
-    private void Start()
-    {
-        Messenger.Broadcast(GameEvents.GENDER_CHANGED, previewingCharSex); // TODO MAKE GENDER(character) MANAGER?
-    }
-
     private void OnGameModeChanged(GameMode gameMode)
     {
         previewingGameMode = gameMode;

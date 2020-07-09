@@ -48,7 +48,6 @@ namespace CMS.Config
             gameMode = (GameMode)ScriptableGUIUtils.DrawField("GameMode", gameMode);
             Inventory_frameColor = ScriptableGUIUtils.DrawField("Inventory_FrameColor", Inventory_frameColor);
             Inventory_image = ScriptableGUIUtils.DrawObjectField("Inventory_icon", Inventory_image);
-            gender = (Gender)ScriptableGUIUtils.DrawField("GENDER", gender);
             ScriptableGUIUtils.DrawList("ItemVariants", variants);
 
 
@@ -64,12 +63,6 @@ namespace CMS.Config
         }
 #endif
     }
-}
-
-public enum Gender
-{
-    MALE,
-    FEMALE
 }
 
 public enum BodypartToDisable

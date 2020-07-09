@@ -6,7 +6,7 @@ public class MecanimWrapper : MonoBehaviour
 {
 
     
-    [SerializeField] Animator animator;
+    public Animator animator;
 
 /*    private void Update()
     {
@@ -16,6 +16,7 @@ public class MecanimWrapper : MonoBehaviour
     }*/
 
     public void SetHorizontalSpeed(float speed) {
+        if (animator == null) return;
 
         Animator[] animators = GetComponentsInChildren<Animator>();
         foreach (var newAnimator in animators) {
@@ -34,6 +35,8 @@ public class MecanimWrapper : MonoBehaviour
         animator.SetFloat("MoveX", speed);
     }
     public void SetVerticalSpeed(float speed) {
+        if (animator == null) return;
+
         Animator[] animators = GetComponentsInChildren<Animator>();
         foreach (var newAnimator in animators)
         {
@@ -51,6 +54,8 @@ public class MecanimWrapper : MonoBehaviour
     }
     public void SetJump(float value)
     {
+        if (animator == null) return;
+
         Animator[] animators = GetComponentsInChildren<Animator>();
         foreach (var newAnimator in animators)
         {

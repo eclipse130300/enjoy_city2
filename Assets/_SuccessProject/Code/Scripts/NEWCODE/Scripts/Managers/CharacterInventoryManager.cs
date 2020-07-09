@@ -56,7 +56,7 @@ public class CharacterInventoryManager : BaseInventoryManager
         RefreshInventory();
     }
 
-    protected override void DisplayAppropriateItems() //here is a diff
+    protected override void DisplayAppropriateItems()
     {
         foreach (ItemConfig cfg in  inventory) //insantiate in inv
         {

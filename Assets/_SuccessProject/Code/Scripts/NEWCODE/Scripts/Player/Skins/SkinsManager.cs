@@ -34,6 +34,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         {
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+            Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);
             if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
             {
 
@@ -54,18 +55,21 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void InitializeSkins()
     {
         currentConfig = LoadConf(_characterSex, _gameMode);
-/*        //PUT ON DEFAULT CLOTHES FIRST
-        ApplyConfig(defaultConfig);*/
+      //PUT ON DEFAULT CLOTHES FIRST
+
         //PUT ON CLOTHES FROM CONFIG
         PutOnClothes(currentConfig);
     }
 
+    void OnBodyChanged(Transform transform)
+    {
+        skinHolder = transform;
+    }
 
     private void OnGameModeChanged(GameMode gameMode)
     {
         _gameMode = gameMode;
         currentConfig = LoadConf(_characterSex, _gameMode);
-/*        SetDefaultConfig();*/
         PutOnClothes(currentConfig);
     }
 
@@ -149,22 +153,12 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     private void DisableBodyParts(List<BodypartToDisable> bodypartsToDisable)
     {
         if (bodypartsToDisable == null) return;
-        //enable all bodyparts
-/*        var allBodyParts = Enum.GetNames(typeof(BodypartToDisable));
-
-        foreach (string bodyPartToEnable in allBodyParts)
-        {
-            Transform transf = skinHolder.Find(bodyPartToEnable);
-
-            if(!transf.gameObject.activeInHierarchy)
-            transf.gameObject.SetActive(true);
-        }*/
 
         //disable bodyparts from config
         foreach (BodypartToDisable bodyParttoDisable in bodypartsToDisable)
         {
-        Transform bpTransform = skinHolder.Find(bodyParttoDisable.ToString());
-        bpTransform.gameObject.SetActive(false);
+            Transform bpTransform = skinHolder.Find(bodyParttoDisable.ToString());
+            bpTransform.gameObject.SetActive(false);
             Debug.Log("disable :" + bpTransform.gameObject.name);
         }
     }
@@ -211,8 +205,9 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
         }
         Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
+        Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);
 
-        if(Loader.Instance != null)
+        if (Loader.Instance != null)
         Loader.Instance.AllSceneLoaded -= InitializeSkins;
     }
 

@@ -39,6 +39,15 @@ namespace CMS.Editor
         }
     }
 
+    public class BodyEditorWindow : BaseListEditor<BodyConfig>
+    {
+        [MenuItem("Configs/BodyConfig %#n")]
+        public static void InitResourcesEditorWindow()
+        {
+            EditorWindow.GetWindow(typeof(BodyEditorWindow));
+        }
+    }
+
 
 }
 #endif
