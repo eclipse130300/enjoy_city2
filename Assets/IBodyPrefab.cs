@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class IBodyPrefab : MonoBehaviour
 {
-// placeholder for bodyPrefab
+// used as a tag for bodyPrefab
 }

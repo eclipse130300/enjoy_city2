@@ -77,7 +77,7 @@ public class CharacterEditorUiController : MonoBehaviour
 
 
 
-        if (SaveManager.Instance.LoadClothesSet(PreviewManager.GetCurrentKey()).ItemAndVarIsInConfig(itemCFG, var))
+        if (SaveManager.Instance.LoadClothesSet(previewManager.GetCurrentKey()).ItemAndVarIsInConfig(itemCFG, var))
         {
             doneButton.SetActive(false);
         }
@@ -114,7 +114,7 @@ public class CharacterEditorUiController : MonoBehaviour
 
     private void DisplayItem(GameObject itemGO)
     {
-        currentClothesConfig = SaveManager.Instance.LoadClothesSet(PreviewManager.GetCurrentKey());
+        currentClothesConfig = SaveManager.Instance.LoadClothesSet(previewManager.GetCurrentKey());
         variantSlider.SetActive(true); //activate it just in case
 
 

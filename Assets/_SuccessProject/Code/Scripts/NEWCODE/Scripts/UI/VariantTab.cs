@@ -14,6 +14,8 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
     public VariantGroup group;
     public ItemVariant variant;
 
+    private PreviewManager previewManager;
+
     private void Awake()
     {
         Messenger.AddListener<RoomItemConfig,ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, OnRoomItemBought);
@@ -21,6 +23,8 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
 
         Messenger.AddListener<ItemConfig>(GameEvents.ITEM_PICKED, OnItemPicked);
         Messenger.AddListener<RoomItemConfig>(GameEvents.ROOM_ITEM_PICKED, OnRoomItemPicked);
+
+        previewManager = FindObjectOfType<PreviewManager>();
     }
 
     private void OnRoomItemPicked(RoomItemConfig cfg)
@@ -33,7 +37,7 @@ public class VariantTab : MonoBehaviour, IPointerClickHandler
 
     private void OnItemPicked(ItemConfig cfg)
     {
-        var activeVar = SaveManager.Instance.LoadClothesSet(PreviewManager.GetCurrentKey()).GetActiveVariant(cfg);
+        var activeVar = SaveManager.Instance.LoadClothesSet(previewManager.GetCurrentKey()).GetActiveVariant(cfg);
 
         bool isActive = activeVar == variant ? true : false;
         activeTick.SetActive(isActive);

@@ -12,7 +12,7 @@ public class PreviewManager : MonoBehaviour
 
     public static GameMode previewingGameMode;
 
-    private SkinnedMeshRenderer previewingBodyPart;
+/*    private SkinnedMeshRenderer previewingBodyPart;*/
 
     public ClothesConfig previewingClothesConfig;
 
@@ -24,14 +24,13 @@ public class PreviewManager : MonoBehaviour
 
     private ShopManager shopManager;
 
-    public static string GetCurrentKey()
-    {
-        return previewingCharSex.ToString() + previewingGameMode.ToString();
-    }
+    private BodyManager bodyManager;
+
 
     private void Awake()
     {
         shopManager = ShopManager.Instance;
+        bodyManager = GetComponent<BodyManager>();
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
 /*        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
@@ -40,7 +39,12 @@ public class PreviewManager : MonoBehaviour
         LoadConf();
 
         TryAddDefaultItems();
+    }
 
+    public string GetCurrentKey()
+    {
+        /*return previewingCharSex.ToString() + previewingGameMode.ToString();*/
+        return bodyManager.currentBodyConfig.gender.ToString() + previewingGameMode.ToString();
     }
 
     private void TryAddDefaultItems() //first add default items - they should be opened instantly
@@ -105,6 +109,7 @@ public class PreviewManager : MonoBehaviour
     void SavePreviewingConfig()
     {
         string key = GetCurrentKey(); /*previewingCharSex.ToString() + previewingGameMode.ToString();*/
+/*        Debug.Log(GetCurrentKey().ToString());*/
         SaveManager.Instance.SaveClothesSet(key, previewingClothesConfig);
         SaveManager.Instance.SaveShopConfig();
         SaveManager.Instance.SaveChangableConfig();

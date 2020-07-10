@@ -32,7 +32,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     protected CapsuleCollider CapCollider;
 
     private bool hasReferencies = false;
-    private float targetJump;
+    public float targetJump;
 
     [SerializeField] PlayerCamera camera;
     [SerializeField] private Transform m_Cam;
@@ -124,6 +124,13 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             m_Move = Vinput * transform.forward + Hinput * transform.right;
             mecanim.SetHorizontalSpeed(Hinput);
             mecanim.SetVerticalSpeed(Vinput);
+            mecanim.SetJump(false);
+        }
+        else
+        {
+/*            mecanim.SetHorizontalSpeed(0);
+            mecanim.SetVerticalSpeed(0);*/
+            mecanim.SetJump(true);
         }
 
         if (m_Move != Vector3.zero)
@@ -137,7 +144,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         Jump();
 
 
-        mecanim.SetJump(targetJump);
+        /*mecanim.SetJump(targetJump);*/
+
         // pass all parameters to the character control script
         _characterController.Move(m_Move * Time.fixedDeltaTime * speed);
         m_Jump = false;
@@ -200,22 +208,20 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     private void Jump()
     {
+        m_Move.y = targetJump;
+
+        targetJump -= Time.fixedDeltaTime * JumpForce;
+
+        if (_characterController.isGrounded && m_Jump)
         {
-            m_Move.y = targetJump;
+            targetJump = jumpHeight;
+            inertionMovement = new Vector3(m_Move.x, targetJump, m_Move.z);
 
-            targetJump -= Time.fixedDeltaTime * JumpForce;
+        }
 
-            if (_characterController.isGrounded && m_Jump)
-            {
-                targetJump = jumpHeight;
-                inertionMovement = new Vector3(m_Move.x, targetJump, m_Move.z);
-
-            }
-
-            if (!_characterController.isGrounded)
-            {
-                _characterController.Move(inertionMovement * Time.fixedDeltaTime);
-            }
+        if (!_characterController.isGrounded)
+        {
+            _characterController.Move(inertionMovement * Time.fixedDeltaTime);
         }
     }
     Vector3 newPosition = Vector3.zero;

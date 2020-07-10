@@ -1,34 +1,80 @@
 fileFormatVersion: 2
 guid: f1f091a8f602dfd4ab2883a11392890a
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: construction_crane
-    100002: construction_tubes
-    100004: construction_walls
-    100006: ConstructionBuilding
-    100008: //RootNode
-    400000: construction_crane
-    400002: construction_tubes
-    400004: construction_walls
-    400006: ConstructionBuilding
-    400008: //RootNode
-    2100000: 24 - Default
-    2300000: construction_crane
-    2300002: construction_tubes
-    2300004: construction_walls
-    2300006: ConstructionBuilding
-    3300000: construction_crane
-    3300002: construction_tubes
-    3300004: construction_walls
-    3300006: ConstructionBuilding
-    4300000: ConstructionBuilding
-    4300002: construction_walls
-    4300004: construction_crane
-    4300006: construction_tubes
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: construction_crane
+  - first:
+      1: 100002
+    second: construction_tubes
+  - first:
+      1: 100004
+    second: construction_walls
+  - first:
+      1: 100006
+    second: ConstructionBuilding
+  - first:
+      1: 100008
+    second: //RootNode
+  - first:
+      4: 400000
+    second: construction_crane
+  - first:
+      4: 400002
+    second: construction_tubes
+  - first:
+      4: 400004
+    second: construction_walls
+  - first:
+      4: 400006
+    second: ConstructionBuilding
+  - first:
+      4: 400008
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: 24 - Default
+  - first:
+      23: 2300000
+    second: construction_crane
+  - first:
+      23: 2300002
+    second: construction_tubes
+  - first:
+      23: 2300004
+    second: construction_walls
+  - first:
+      23: 2300006
+    second: ConstructionBuilding
+  - first:
+      33: 3300000
+    second: construction_crane
+  - first:
+      33: 3300002
+    second: construction_tubes
+  - first:
+      33: 3300004
+    second: construction_walls
+  - first:
+      33: 3300006
+    second: ConstructionBuilding
+  - first:
+      43: 4300000
+    second: ConstructionBuilding
+  - first:
+      43: 4300002
+    second: construction_walls
+  - first:
+      43: 4300004
+    second: construction_crane
+  - first:
+      43: 4300006
+    second: construction_tubes
   externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -57,10 +103,11 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 100
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 0
     importCameras: 0
@@ -68,18 +115,19 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -88,10 +136,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -101,13 +149,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

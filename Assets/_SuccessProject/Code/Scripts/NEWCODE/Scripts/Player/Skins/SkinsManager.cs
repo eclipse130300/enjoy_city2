@@ -54,8 +54,8 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
     private void InitializeSkins()
     {
+        //getSex From savemanager
         currentConfig = LoadConf(_characterSex, _gameMode);
-      //PUT ON DEFAULT CLOTHES FIRST
 
         //PUT ON CLOTHES FROM CONFIG
         PutOnClothes(currentConfig);
@@ -119,11 +119,11 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     public void PutOnItem(ItemConfig config,ItemVariant variant) {
         if (config.itemObject != null)
         {
+            if (skinHolder == null) return;
 
             var bodyTransform = skinHolder?.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
 
             var newBodyPart = GameObject.Instantiate(config.itemObject, skinHolder);
-
             newBodyPart.name = bodyTransform.name;
             GameObject.DestroyImmediate(bodyTransform.gameObject);
 

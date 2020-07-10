@@ -19,7 +19,7 @@ public class BodyManager : MonoBehaviour
     {
         // loads config from save manager and applies it
         // if cannot find one, add default config to save manager 
-        // apply default config
+        // applies default config
         ApplyBodyConfig(currentBodyConfig);
     }
 
