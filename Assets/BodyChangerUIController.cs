@@ -6,6 +6,7 @@ using UnityEngine;
 public class BodyChangerUIController : MonoBehaviour
 {
     [SerializeField] CameraHorizontalMover cameraMover;
+    [SerializeField] RectTransform canvasBodyRect;
 
     [SerializeField] GameObject wallPartPref;
     [SerializeField] int padding;
@@ -35,7 +36,7 @@ public class BodyChangerUIController : MonoBehaviour
             spawnedWalls.Add(newWall);
         }
 
-        Debug.Log(bodyConfigsAmount);
+/*        Debug.Log(bodyConfigsAmount);*/
 
         for (int i = padding; i < spawnedWalls.Count - padding; i++)
         {
@@ -46,7 +47,7 @@ public class BodyChangerUIController : MonoBehaviour
         }
 
         previewingIndex = 0;
-        cameraMover.SnapTo(spawnedBodies[previewingIndex].transform.position.x);
+        cameraMover.SnapTo(spawnedBodies[previewingIndex].transform.position, canvasBodyRect);
     }
 
     public void ChangeCharBody(bool isForward)
@@ -61,9 +62,9 @@ public class BodyChangerUIController : MonoBehaviour
 
 
         previewingIndex = Mathf.Clamp(previewingIndex, 0, spawnedBodies.Count - 1);
-        Debug.Log(previewingIndex);
 
-        cameraMover.MoveTo(spawnedBodies[previewingIndex].transform.position.x);
+
+        cameraMover.MoveTo(spawnedBodies[previewingIndex].transform.position, canvasBodyRect);
     }
 
     private bool inBounds(int index, int count)
