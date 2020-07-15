@@ -45,49 +45,14 @@ public class CameraHorizontalMover : MonoBehaviour
         /*StartCoroutine(LerpMove(targetPos, cameraMoveDirection, cameraBodyScreenPoint));*/
         /*StartCoroutine(LerpMove(cameraOffsetPos));*/
     }
-
+    public Vector3 getOffset(RectTransform bodyRect) {
+        Vector3 vect = camera.ScreenToWorldPoint(new Vector3(bodyRect.position.x, bodyRect.position.y, camera.transform.position.z));
+        return new Vector3(transform.position.x - vect.x, transform.position.y - vect.y, transform.position.z - vect.z);
+    }
+    // private void getOffset(RectTransform bodyRect)
     public void SnapTo(Vector3 targetPos, RectTransform bodyRect)
     {
-        transform.position = new Vector3(targetPos.x, transform.position.y, offsetZ);
-
-        Vector2 currentBodyPos = camera.WorldToScreenPoint(targetPos);
-
-        float desiredBodyscreenPosX = Screen.width + bodyRect.anchoredPosition.x; //+ cause rect is anchored to the right bottom point
-        Debug.Log("BODY DESIRED RECT :" + bodyRect.anchoredPosition);
-        Debug.Log(desiredBodyscreenPosX);
-        diffeneceX = Mathf.Abs(Mathf.Abs(desiredBodyscreenPosX) - Mathf.Abs(currentBodyPos.x));
-        Debug.Log(diffeneceX);
-        /*
-                OffsetX = (float)diffeneceX / Screen.width;*/
-        Vector3 newPos = new Vector3(currentBodyPos.x + diffeneceX, currentBodyPos.y, 0);
-        newPos = camera.ScreenToWorldPoint(newPos);
-        Debug.Log("NEWPOS : " + camera.previousViewProjectionMatrix * newPos);
-        newPos = camera.previousViewProjectionMatrix * newPos;
-
-        transform.position = new Vector3(newPos.x, transform.position.y, offsetZ);
-        /*        targetPos.y = transform.position.y;
-                float side = (targetPos - transform.position).magnitude;
-                Debug.Log(side);
-
-                Vector2 pixelPoint = RectTransformUtility.PixelAdjustPoint(bodyRect.rect.position, bodyRect.transform, canvas);
-
-                Ray ray = camera.ScreenPointToRay(pixelPoint);
-                Debug.Log(bodyRect.rect.position);
-                RaycastHit hit;
-
-                float hypotenuse = 0f;
-                if (Physics.Raycast(ray, out hit));
-                {
-                    Vector3 hitpoint = hit.point;
-                    hitpoint.y = transform.position.y;
-                    test = hitpoint;
-                    hypotenuse = (hitpoint - transform.position).magnitude;
-                }
-                Debug.Log(hypotenuse);
-
-                OffsetX = Mathf.Sqrt(hypotenuse * hypotenuse - side * side);
-
-                transform.position = new Vector3(targetPos.x - OffsetX, transform.position.y, offsetZ);*/
+        transform.position = new Vector3(targetPos.x -  getOffset(bodyRect).x, transform.position.y, offsetZ); 
     }
 
 /*    IEnumerator LerpMove(Vector3 targetPos)
