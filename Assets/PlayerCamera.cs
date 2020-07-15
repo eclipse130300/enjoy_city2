@@ -8,7 +8,7 @@ public class PlayerCamera : MonoBehaviour
 
 
     [SerializeField] protected Transform target;
-
+    [SerializeField] protected Transform lookTarget;
     [SerializeField] protected float rotationSpeed = 5f;
     [SerializeField] protected float moveSpeed = 20f;
     [SerializeField] protected float CameraPosY = 1f;

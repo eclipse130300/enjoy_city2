@@ -64,6 +64,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         }
         _characterController = GetComponent<CharacterController>();
 
+      //  mecanim.lookTarget = camera.lo
        // ObservedComponents.Add(this);
     }
     private void OnDestroy()
