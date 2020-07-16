@@ -61,7 +61,7 @@ public class CharacterEditorUiController : MonoBehaviour
             itemBoughtTab.SetActive(true);
             // donebutton on
             doneButton.SetActive(true);
-            Debug.Log("SHOW DONE BUTTON!!!!");
+/*            Debug.Log("SHOW DONE BUTTON!!!!");*/
 
         }
         else
@@ -160,7 +160,7 @@ public class CharacterEditorUiController : MonoBehaviour
                 if (currentClothesConfig.ItemIsInConfig(itemCFG))
                 {
                     hasActiveVar = currentClothesConfig.GetActiveVariant(itemCFG) == V ? true : false;
-                    Debug.Log("Item: " + itemCFG + ", active variant :" + currentClothesConfig.GetActiveVariant(itemCFG));
+/*                    Debug.Log("Item: " + itemCFG + ", active variant :" + currentClothesConfig.GetActiveVariant(itemCFG));*/
                 }
                 else
                 {

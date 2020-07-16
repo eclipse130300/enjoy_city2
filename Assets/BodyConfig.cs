@@ -18,7 +18,8 @@ namespace CMS.Config
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
 
-        public GameObject body_prefab;
+        public GameObject game_body_prefab;
+        public GameObject preview_body_prefab;
         public Color body_color;
         public Gender gender;
         public RuntimeAnimatorController controller;
@@ -30,7 +31,9 @@ namespace CMS.Config
         {
             base.Draw();
 
-            body_prefab = ScriptableGUIUtils.DrawObjectField("body_prefab", body_prefab);
+            game_body_prefab = ScriptableGUIUtils.DrawObjectField("game_body_prefab", game_body_prefab);
+            preview_body_prefab = ScriptableGUIUtils.DrawObjectField("preview_body_prefab", preview_body_prefab);
+
             gender = (Gender)ScriptableGUIUtils.DrawField("GENDER", gender);
             body_color = ScriptableGUIUtils.DrawField("body_color", body_color);
 

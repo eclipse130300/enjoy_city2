@@ -67,7 +67,7 @@ public class MecanimWrapper : MonoBehaviour
             /*if (newAnimator != animator)*/ newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
             
         }
-        Debug.Log(value);
+/*        Debug.Log(value);*/
         animator.SetBool("Jumping", value);
         
 
@@ -100,7 +100,7 @@ public class MecanimWrapper : MonoBehaviour
             //if the IK is active, set the position and rotation directly to the goal. 
             if (ikActive)
             {
-
+                if (getGroundPos(transform.position, Vector3.down) == Vector3.zero) return;
                 // Set the look target position, if one has been assigned
                 if (lookTarget != null)
                 {

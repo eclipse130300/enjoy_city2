@@ -15,7 +15,7 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
 
 
     string nickName;
-    Gender gender;
+    public BodyConfig currentBodyConfig;
 
     public Dictionary<string, ClothesConfig> pickedClothesConfigs = new Dictionary<string, ClothesConfig>(); //нужна тольк во время выполнения программы
                                                                                                              //для связи шмотки и айди активного варианта
@@ -63,9 +63,9 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
         nickName = nick;
     }
 
-    public void SetCharGender(Gender sex)
+/*    public void SetCharGender(Gender sex)
     {
         gender = sex;
-    }
+    }*/
 }
 

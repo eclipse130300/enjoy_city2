@@ -54,6 +54,16 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
     }*/
     #endregion
 #endif
+    public BodyConfig LoadBody()
+    {
+        return changableDataConfig.currentBodyConfig;
+    }
+
+    public void SaveBody(BodyConfig bodyConfig)
+    {
+        changableDataConfig.currentBodyConfig = bodyConfig;
+    }
+
 
     public ItemVariant GetActiveVariant(RoomItemConfig cfg)
     {

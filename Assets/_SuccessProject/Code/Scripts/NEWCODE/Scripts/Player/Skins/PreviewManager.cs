@@ -31,6 +31,7 @@ public class PreviewManager : MonoBehaviour
     {
         shopManager = ShopManager.Instance;
         bodyManager = GetComponent<BodyManager>();
+        previewingCharSex = SaveManager.Instance.LoadBody().gender;
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
 /*        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
@@ -44,14 +45,15 @@ public class PreviewManager : MonoBehaviour
     public string GetCurrentKey()
     {
         /*return previewingCharSex.ToString() + previewingGameMode.ToString();*/
-        return bodyManager.currentBodyConfig.gender.ToString() + previewingGameMode.ToString();
+/*        Debug.Log(previewingCharSex.ToString() + previewingGameMode.ToString());*/
+        return SaveManager.Instance.LoadBody().gender + previewingGameMode.ToString();
     }
 
     private void TryAddDefaultItems() //first add default items - they should be opened instantly
     {
         if (previewingClothesConfig.pickedItemsAndVariants.Count != 0) return;
 
-        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).ToList();
+        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).Where(t => t.gender == previewingCharSex).ToList();
 
         foreach (ItemConfig defaultItem in allDefaultItems)
         {
@@ -60,7 +62,7 @@ public class PreviewManager : MonoBehaviour
         }
         SavePreviewingConfig();
 
-        Debug.Log("Default items added!");
+/*        Debug.Log("Default items added!");*/
 
         //LoadConf();
     }

@@ -26,7 +26,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         _gameMode = Loader.Instance.curentScene.gameMode;
         photon =  PhotonView.Get(this);
 
-
+        _characterSex = SaveManager.Instance.LoadBody().gender; //take body gender (we choose it at the first launch)
 
 
 
@@ -34,14 +34,14 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         {
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-            Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);
+/*            Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);*/
             if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
             {
 
                 Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
 
             }
-            Loader.Instance.AllSceneLoaded += InitializeSkins;
+/*            Loader.Instance.AllSceneLoaded += InitializeSkins;*/
         }
         else {
             PutOnClothes();
@@ -52,7 +52,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
        
     }
 
-    private void InitializeSkins()
+    public void InitializeSkins()
     {
         //getSex From savemanager
         currentConfig = LoadConf(_characterSex, _gameMode);
@@ -61,10 +61,10 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         PutOnClothes(currentConfig);
     }
 
-    void OnBodyChanged(Transform transform)
+/*    void OnBodyChanged(Transform transform)
     {
         skinHolder = transform;
-    }
+    }*/
 
     private void OnGameModeChanged(GameMode gameMode)
     {
@@ -159,7 +159,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         {
             Transform bpTransform = skinHolder.Find(bodyParttoDisable.ToString());
             bpTransform.gameObject.SetActive(false);
-            Debug.Log("disable :" + bpTransform.gameObject.name);
+/*            Debug.Log("disable :" + bpTransform.gameObject.name);*/
         }
     }
 
@@ -205,10 +205,10 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
         }
         Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-        Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);
+/*        Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);*/
 
-        if (Loader.Instance != null)
-        Loader.Instance.AllSceneLoaded -= InitializeSkins;
+/*        if (Loader.Instance != null)
+        Loader.Instance.AllSceneLoaded -= InitializeSkins;*/
     }
 
     ClothesConfig LoadConf(Gender gender, GameMode gameMode)

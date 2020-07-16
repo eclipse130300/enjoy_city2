@@ -1,6 +1,7 @@
 ﻿using CMS.Config;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BodyChangerUIController : MonoBehaviour
@@ -11,10 +12,17 @@ public class BodyChangerUIController : MonoBehaviour
     [SerializeField] GameObject wallPartPref;
     [SerializeField] int padding;
     public List<GameObject> spawnedWalls = new List<GameObject>();
-    public List<GameObject> spawnedBodies = new List<GameObject>();
+    public List<GameObject> spawnedPreviewBodies = new List<GameObject>();
+    public List<BodyConfig> allBodyConfigs = new List<BodyConfig>();
 
     public int previewingIndex;
     public int bodyConfigsAmount;
+
+    [SerializeField] MapConfig charEditorConfig;
+
+    //test 
+
+    public List<BodyConfig> configList;
 
     private void Start()
     {
@@ -41,13 +49,19 @@ public class BodyChangerUIController : MonoBehaviour
         for (int i = padding; i < spawnedWalls.Count - padding; i++)
         {
             var placeholderTransform = spawnedWalls[i].transform.Find("CharPlaceholder");
-            var bodyPref = ScriptableList<BodyConfig>.instance.list[i - 1].body_prefab;
+            allBodyConfigs.Add(ScriptableList<BodyConfig>.instance.list[i - 1]);
+
+
+            /*var bodyPref = ScriptableList<BodyConfig>.instance.list[i - 1].preview_body_prefab;*/
+            var bodyPref = allBodyConfigs[i-padding].preview_body_prefab;
+
+
             GameObject newBody = Instantiate(bodyPref, placeholderTransform.position, placeholderTransform.rotation, placeholderTransform);
-            spawnedBodies.Add(newBody);
+            spawnedPreviewBodies.Add(newBody);
         }
 
         previewingIndex = 0;
-        cameraMover.SnapTo(spawnedBodies[previewingIndex].transform.position, canvasBodyRect);
+        cameraMover.SnapTo(spawnedPreviewBodies[previewingIndex].transform.position, canvasBodyRect);
     }
 
     public void ChangeCharBody(bool isForward)
@@ -61,15 +75,22 @@ public class BodyChangerUIController : MonoBehaviour
             previewingIndex-1;
 
 
-        previewingIndex = Mathf.Clamp(previewingIndex, 0, spawnedBodies.Count - 1);
+        previewingIndex = Mathf.Clamp(previewingIndex, 0, spawnedPreviewBodies.Count - 1);
 
 
-        cameraMover.MoveTo(spawnedBodies[previewingIndex].transform.position, canvasBodyRect);
+        cameraMover.MoveTo(spawnedPreviewBodies[previewingIndex].transform.position, canvasBodyRect);
     }
 
-    private bool inBounds(int index, int count)
+    public void OnDoneButtonTap()
     {
-        return (index >= 0) && (index < count);
+        //find config with current body
+        /*List<BodyConfig>*/
+        BodyConfig bodyConf = allBodyConfigs[previewingIndex]; /*ScriptableList<BodyConfig>.instance.list.Where(x => x.preview_body_prefab == spawnedPreviewBodies[previewingIndex]).FirstOrDefault();*/
+/*        Debug.Log(bodyConf.gender.ToString());*/
+        //add this config to savemanager
+        SaveManager.Instance.SaveBody(bodyConf);
+
+        Loader.Instance.LoadGameScene(charEditorConfig);
     }
 }
 

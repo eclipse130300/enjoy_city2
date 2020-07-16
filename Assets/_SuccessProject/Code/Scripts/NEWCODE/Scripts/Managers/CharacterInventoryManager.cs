@@ -22,13 +22,10 @@ public class CharacterInventoryManager : BaseInventoryManager
 
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.AddListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
-        Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
+
+        characterGender = SaveManager.Instance.LoadBody().gender;
     }
 
-    private void OnGenderChanged(Gender gender)
-    {
-        characterGender = gender;
-    }
 
     private void Start()
     {
@@ -108,7 +105,7 @@ public class CharacterInventoryManager : BaseInventoryManager
         Where(t => t.bodyPart == currentbodyPart).
         Where(t => t.gameMode == currentMode).
         Where(t => t.gender == characterGender).
-        Where(t => !t.ToString().Contains("default")).
+        /*Where(t => !t.ToString().Contains("default")).*/
         ToList();
     }
         
@@ -116,7 +113,6 @@ public class CharacterInventoryManager : BaseInventoryManager
     {
         Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, GameModeChanged);
         Messenger.RemoveListener<BODY_PART>(GameEvents.INVENTORY_BODY_PART_CHANGED, BodyPartChanged);
-        Messenger.AddListener<Gender>(GameEvents.GENDER_CHANGED, OnGenderChanged);
     }
 }
 
