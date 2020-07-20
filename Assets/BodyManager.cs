@@ -85,6 +85,7 @@ public class BodyManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        if(Loader.Instance != null)
         Loader.Instance.AllSceneLoaded -= Initialize;
     }
 }
