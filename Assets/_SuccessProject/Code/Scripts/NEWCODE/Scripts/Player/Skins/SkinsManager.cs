@@ -140,7 +140,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             {
                 var bodyTransform = skinHolder.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
                 bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh = config.mesh;
-                /*            bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().material = config.material;*/
+/*                bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().material = config.material;*/
                 bodyTransform.GetComponentInChildren<SkinnedMeshRenderer>().material.color = variant.color;
             }
             else
