@@ -47,7 +47,8 @@ public class EntryPointManager : MonoBehaviour
 
         StartCheck();
 
-        StartCoroutine(ContinuousCheck());
+        if (!allEntryPoints.IsNullOrEmpty())
+            StartCoroutine(ContinuousCheck());
 
     }
 
@@ -81,6 +82,7 @@ public class EntryPointManager : MonoBehaviour
 
     IEnumerator ContinuousCheck()
     {
+
         while (true)
         {
             for (int i = 0; i < checkPointsPerFrame; i++)
