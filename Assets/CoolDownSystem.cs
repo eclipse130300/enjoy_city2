@@ -53,6 +53,7 @@ public class CoolDownSystem : MonoBehaviour
     {
         coolDowns.Add(new CoolDownData(cooldown));
     }
+
 }
 
 [System.Serializable]

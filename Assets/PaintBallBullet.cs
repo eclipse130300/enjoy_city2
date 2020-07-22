@@ -8,10 +8,11 @@ public class PaintBallBullet : MonoBehaviour
     [HideInInspector]
     public Vector3 targetPoint;
 
-    private void Start()
-    { 
-        Invoke("SelfDestroy", 7f);
+    private void OnEnable()
+    {
+        Invoke("SelfDestroy", 3f);
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -35,12 +36,17 @@ public class PaintBallBullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        SelfDestroy();
-        Debug.Log("I HIT :" + collision.gameObject.name);
+
     }
 
     void SelfDestroy()
     {
+/*        Debug.Log("I DESTROY MYSELF!");*/
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        SelfDestroy();
     }
 }

@@ -100,7 +100,7 @@ public class GameObjectPooler : MonoBehaviour
 
 	private GameObject InstatiateNewGameObject(GameObject gameObject)
 	{
-		gameObject = (GameObject)Instantiate(gameObject);
+		gameObject = (GameObject)Instantiate(gameObject, transform);
 		gameObject.SetActive(false);
 		return gameObject;
 	}

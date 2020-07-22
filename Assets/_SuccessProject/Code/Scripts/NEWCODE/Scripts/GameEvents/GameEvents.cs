@@ -38,4 +38,8 @@ public static class GameEvents
     /*public const string BODY_CHANGED = "BODY_CHANGED";*/
 
     public const string SHOOT_PRESSED = "SHOOT_PRESSED";
+
+    public const string AMMO_UPDATED = "AMMO_UPDATED";
+
+    public const string RELOAD_PRESSED = "RELOAD_PRESSED";
 }
