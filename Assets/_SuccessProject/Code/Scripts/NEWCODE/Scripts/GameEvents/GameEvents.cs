@@ -12,6 +12,7 @@ public static class GameEvents
     public const string LVL_CHANGED = "LVL_CHANGED";
     public const string EXP_CHANGED = "EXP_CHANGED";
 
+    //items(room and clothes)
     public const string ITEM_PRESSED = "ITEM_PRESSED";
 
     public const string ITEM_OPERATION_DONE = "ITEM_OPERATION_DONE";
@@ -35,11 +36,10 @@ public static class GameEvents
     public const string ROOM_ITEM_BOUGHT = "ROOM_ITEM_BOUGHT";
     public const string ROOM_ITEM_PICKED = "ROOM_ITEM_PICKED";
 
-    /*public const string BODY_CHANGED = "BODY_CHANGED";*/
-
-    public const string SHOOT_PRESSED = "SHOOT_PRESSED";
-
+    //paintBall
+    public const string AUTO_SHOOT = "AUTO_SHOOT";
     public const string AMMO_UPDATED = "AMMO_UPDATED";
-
     public const string RELOAD_PRESSED = "RELOAD_PRESSED";
+    public const string SUPER_SHOT_PRESSED = "SUPER_SHOT_PRESSED";
+    public const string PAINTBALL_POWER_UP_PRESSED = "PAINTBALL_POWER_UP_PRESSED";
 }

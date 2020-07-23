@@ -67,14 +67,19 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
       //  mecanim.lookTarget = camera.lo
        // ObservedComponents.Add(this);
     }
+
+
     private void OnDestroy()
     {
         if (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady)
         {
             if (Loader.Instance != null)
                 Loader.Instance.AllSceneLoaded -= SubscibeToUI;
+
+
         }
     }
+
     private void Start()
     {
 
@@ -85,6 +90,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         // get the third person character ( this should never be null due to require component )
 
     }
+
+
 
     private void FixedUpdate()
     {
@@ -183,7 +190,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         {
             LeftJoystick = FindObjectOfType<FloatingJoystick>();
             TouchField = FindObjectOfType<FixedTouchField>();
-            JumpButton = FindObjectOfType<FixedButton>();
+            /*JumpButton = FindObjectOfType<FixedButton>();*/
 
             hasReferencies = true;
         }

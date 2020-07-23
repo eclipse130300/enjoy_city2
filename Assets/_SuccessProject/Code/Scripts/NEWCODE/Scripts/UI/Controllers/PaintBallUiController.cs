@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 public class PaintBallUiController : MonoBehaviour
 {
-    [SerializeField] FixedButton shootButton;
+/*    [SerializeField] FixedButton shootButton;*/
     [SerializeField] FixedButton reloadButton;
     [SerializeField] FixedButton SuperShotButton;
     [SerializeField] FixedButton powerUpButton;
@@ -25,12 +26,12 @@ public class PaintBallUiController : MonoBehaviour
     {
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
-        Messenger.AddListener<float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+        Messenger.AddListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
     }
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener<float>(GameEvents.AMMO_UPDATED, SetAmmoFill); 
+        Messenger.RemoveListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill); 
     }
 
     private void Start()
@@ -40,34 +41,53 @@ public class PaintBallUiController : MonoBehaviour
         StartCoroutine(AutoShootTargetCheck());
     }
 
-    private void SetAmmoFill(float value)
+    private void SetAmmoFill(float targetValue, float time)
     {
-        StartCoroutine(LerpAmmoFill(value));
+        if(targetValue == 0)
+        {
+            ammoFill.fillAmount = 0;
+        }
+
+        ammoFill.DOFillAmount(targetValue, time);
+
+/*        StartCoroutine(LerpAmmoFill(targetValue, time));*/
     }
 
-    IEnumerator LerpAmmoFill(float targetValue)
+/*    IEnumerator LerpAmmoFill(float targetValue, float time)
     {
+        var distance = Mathf.Max(targetValue, ammoFill.fillAmount) - Mathf.Min(targetValue, ammoFill.fillAmount);
+
+        Debug.Log("distance" + distance);
+
         while (ammoFill.fillAmount != targetValue)
         {
-            ammoFill.fillAmount = Mathf.MoveTowards(ammoFill.fillAmount, targetValue, lerpSpeed);
+            ammoFill.fillAmount = Mathf.MoveTowards(ammoFill.fillAmount, targetValue, (distance/time) * Time.deltaTime);
             yield return null;
         }
 
+        Debug.Log("finished!");
         ammoFill.fillAmount = targetValue;
-/*        Debug.Log("finished!");*/
-    }
+
+
+        
+    }*/
 
     private void Update()
     {
-        if(shootButton.Pressed)
-        {
-            Quaternion cameraOrientation = GetCameraOrientation();
-            Messenger.Broadcast(GameEvents.SHOOT_PRESSED, cameraOrientation);
-        }
-
-        if(reloadButton.Clicked)
+        if(reloadButton.Pressed)
         {
             Messenger.Broadcast(GameEvents.RELOAD_PRESSED);
+        }
+
+        if(SuperShotButton.Pressed)
+        {
+            Quaternion cameraOrientation = GetCameraOrientation();
+            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, cameraOrientation);
+        }
+
+        if(powerUpButton.Pressed)
+        {
+            Messenger.Broadcast(GameEvents.PAINTBALL_POWER_UP_PRESSED);
         }
     }
 
@@ -85,10 +105,10 @@ public class PaintBallUiController : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100f, rayLayerMask))
             {
-                Debug.Log(hit.collider.tag) ;
+/*                Debug.Log(hit.collider.tag) ;*/
                 if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
-                    Messenger.Broadcast(GameEvents.SHOOT_PRESSED, GetCameraOrientation());
+                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, GetCameraOrientation());
                 }
             }
             yield return null;

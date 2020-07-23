@@ -21,7 +21,7 @@ public class PaintBallBullet : MonoBehaviour
 
     private void MoveTo(Vector3 targetPoint)
     {
-        if (Vector3.Distance(transform.position, targetPoint) >= 3f)
+        if (Vector3.Distance(transform.position, targetPoint) >= 0.1f)
         {
             transform.position += transform.forward * speed * Time.deltaTime;
 /*            transform.position += Vector3.Lerp(transform.position, targetPoint, Time.deltaTime * speed);*/
@@ -30,13 +30,6 @@ public class PaintBallBullet : MonoBehaviour
         {
             SelfDestroy();
         }
-
-
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-
     }
 
     void SelfDestroy()
@@ -47,6 +40,7 @@ public class PaintBallBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+/*        Debug.Log(other.gameObject.name);*/
         SelfDestroy();
     }
 }
