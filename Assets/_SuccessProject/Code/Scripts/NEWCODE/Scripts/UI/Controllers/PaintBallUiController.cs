@@ -17,10 +17,10 @@ public class PaintBallUiController : MonoBehaviour
     [SerializeField] RectTransform crosshairRect;
 
     Camera playerCamera;
-    public LayerMask rayLayerMask;
+    public LayerMask noPlayerLayerMask;
 
     //test
-    Ray ray;
+    Vector3 shotPoint;
 
     private void Awake()
     {
@@ -38,7 +38,7 @@ public class PaintBallUiController : MonoBehaviour
     {
         ammoFill.fillAmount = 1;
 
-        StartCoroutine(AutoShootTargetCheck());
+        StartCoroutine(AutoShootEnemyCheck());
     }
 
     private void SetAmmoFill(float targetValue, float time)
@@ -49,28 +49,7 @@ public class PaintBallUiController : MonoBehaviour
         }
 
         ammoFill.DOFillAmount(targetValue, time);
-
-/*        StartCoroutine(LerpAmmoFill(targetValue, time));*/
     }
-
-/*    IEnumerator LerpAmmoFill(float targetValue, float time)
-    {
-        var distance = Mathf.Max(targetValue, ammoFill.fillAmount) - Mathf.Min(targetValue, ammoFill.fillAmount);
-
-        Debug.Log("distance" + distance);
-
-        while (ammoFill.fillAmount != targetValue)
-        {
-            ammoFill.fillAmount = Mathf.MoveTowards(ammoFill.fillAmount, targetValue, (distance/time) * Time.deltaTime);
-            yield return null;
-        }
-
-        Debug.Log("finished!");
-        ammoFill.fillAmount = targetValue;
-
-
-        
-    }*/
 
     private void Update()
     {
@@ -81,8 +60,9 @@ public class PaintBallUiController : MonoBehaviour
 
         if(SuperShotButton.Pressed)
         {
-            Quaternion cameraOrientation = GetCameraOrientation();
-            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, cameraOrientation);
+            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, GetHitPoint());
+
+            shotPoint = GetHitPoint();
         }
 
         if(powerUpButton.Pressed)
@@ -91,38 +71,61 @@ public class PaintBallUiController : MonoBehaviour
         }
     }
 
-    IEnumerator AutoShootTargetCheck()
+    IEnumerator AutoShootEnemyCheck()
     {
+        Ray ray = new Ray();
         while (true)
         {
-            /*ray = playerCamera.ScreenPointToRay(new Vector3(0,0,0));*/
             ray.origin = playerCamera.transform.position;
             ray.direction = playerCamera.transform.forward;
 
-
-            /*ray.direction = playerCamera.transform.TransformDirection(playerCamera.transform.forward);*/
-
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, rayLayerMask))
+            if (Physics.Raycast(ray, out hit, 100f, noPlayerLayerMask))
             {
-/*                Debug.Log(hit.collider.tag) ;*/
                 if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
-                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, GetCameraOrientation());
+                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point);
                 }
             }
             yield return null;
         }
     }
 
-    private Quaternion GetCameraOrientation()
+    private Vector3 GetHitPoint()
     {
-        return playerCamera.transform.rotation;
+        if(CrosshairAnyHitPointCheck() != Vector3.zero)
+        {
+            return CrosshairAnyHitPointCheck(); //if we find any point - use its hit point as a direction
+        }
+        else
+        {
+            Vector3 customHitpoint = playerCamera.transform.position + playerCamera.transform.forward * 30f;  //if no - use camera pos+direction* 30 as hitpoint
+            return customHitpoint;  
+        }
+         
+    }
+
+    private Vector3 CrosshairAnyHitPointCheck()
+    {
+        Ray newRay = new Ray();
+        newRay.origin = playerCamera.transform.position;
+        newRay.direction = playerCamera.transform.forward;
+
+        RaycastHit hit;
+        if (Physics.Raycast(newRay, out hit, 100f, noPlayerLayerMask))
+        {
+          return hit.point;
+        }
+        else
+        {
+          return Vector3.zero;
+        }
+        
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(ray);
+        Gizmos.DrawWireSphere(shotPoint, 1f);
     }
 }

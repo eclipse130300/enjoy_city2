@@ -52,8 +52,8 @@ public class PaintBallPowerUp : MonoBehaviour, IHaveCooldown
         var startingSpd = personInput.speed;
         var startingShootingDelay = shootAbility.shootingDelay;
 
-        personInput.speed += CalculateBoostValue(personInput.speed, percentBoost);
-        shootAbility.shootingDelay -= CalculateBoostValue(shootAbility.shootingDelay, percentBoost);
+        personInput.speed += CalculatePercent(personInput.speed, percentBoost);
+        shootAbility.shootingDelay -= CalculatePercent(shootAbility.shootingDelay, percentBoost);
 
         yield return new WaitForSeconds(powerUpTime);
 
@@ -62,9 +62,9 @@ public class PaintBallPowerUp : MonoBehaviour, IHaveCooldown
 
     }
 
-    private float CalculateBoostValue(float currentValue, int percentBoost)
+    private float CalculatePercent(float currentValue, int percentBoost)
     {
-        float percentsToValue = (float) (currentValue / 100f) * percentBoost; //percent from current value
+        float percentsToValue = (currentValue / 100f) * percentBoost; //percent from current value
 
         return percentsToValue;
     }

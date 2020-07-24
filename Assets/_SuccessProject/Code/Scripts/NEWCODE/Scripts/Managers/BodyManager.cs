@@ -36,7 +36,7 @@ public class BodyManager : MonoBehaviour
         /*currentBodyConfig = null;*/
 
         // loads config from save manager and applies it
-        if (saveManager.LoadBody() != null && !bodyIsSpawned)
+        if (saveManager.LoadBody() != null || !bodyIsSpawned)
         {
             currentBodyConfig = saveManager.LoadBody();
             ApplyBodyConfig(currentBodyConfig);

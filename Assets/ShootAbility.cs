@@ -10,23 +10,17 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     [SerializeField] GameObject shootingPoint;
     [SerializeField] float targetPointDistance;
 
-    [Header("When shootPointRotX > 0 we correct rotation(do not shoot in the legs) in degrees!")]
-    [SerializeField] float minYAimCorrection = -3f;
-    [SerializeField] float maxYAimCorrection = -10f;
-
-    [Header("X shooting point rotation influenced by correction")]
-    [SerializeField] float minXinfluencedRotation = 0f;
-    [SerializeField] float maxXinfluencedRotation = 18.43f;
-
     [Header("Ammo")]
     public float shootingDelay = 0.1f;
     [SerializeField] int maxAmmo;
     [SerializeField] float reloadTime;
-    [Header("More value is the bigger superShot range is!")]
+    [Header("More value is the bigger range is!")]
     [Range(1f, 10f)]
     [SerializeField] float superShotSprayMultiplier = 1f;
+    [Range(1f, 10f)]
+    [SerializeField] float autoShotSprayMultiplier = 1f;
 
-    public int currentAmmo; //private
+    private int currentAmmo;
     private bool isReloading = false;
 
     private ThirdPersonInput playerInput;
@@ -39,13 +33,16 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     public float CoolDownDuration => cD;
 
+    //test p
+    public Ray ray = new Ray();
+
     private void Awake()
     {
         playerInput = GetComponent<ThirdPersonInput>();
 
-        Messenger.AddListener<Quaternion>(GameEvents.AUTO_SHOOT, ShootAbitilyCheck);
+        Messenger.AddListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
         Messenger.AddListener(GameEvents.RELOAD_PRESSED, Reload);
-        Messenger.AddListener<Quaternion>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
+        Messenger.AddListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
     }
 
     private void Start()
@@ -56,23 +53,23 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener<Quaternion>(GameEvents.AUTO_SHOOT, ShootAbitilyCheck);
+        Messenger.RemoveListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
         Messenger.RemoveListener(GameEvents.RELOAD_PRESSED, Reload);
-        Messenger.RemoveListener<Quaternion>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
+        Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
     }
 
-    private void ShootAbitilyCheck(Quaternion camOrient)
+/*    private void ShootAbitilyCheck(Vector3 crosshairHitpoint)
     {
         if (coolDownSystem.IsOnCoolDown(iD) || isReloading) return;
 
-        Shoot(camOrient);
+        CheckObstacles(crosshairHitpoint);
 
         coolDownSystem.PutOnCooldown(this);
-    }
+    }*/
 
-    void Shoot(Quaternion camOrient, float sprayMultiplier = 1f)
+    void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
     {
-        SetBullet(camOrient, sprayMultiplier);
+        SetBullet(shootDir, sprayMultiplier);
         DescreaseAmmo(1);
     }
 
@@ -97,8 +94,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         if (currentAmmo == maxAmmo) return;
         if (isReloading) return;
 
-
-        Debug.Log("Reloading!");
         StartCoroutine(Reloading(reloadTime));
     }
 
@@ -114,13 +109,14 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         isReloading = false;
     }
 
-    private void SetBullet(Quaternion camOrient , float sprayMultiplier)
+    private void SetBullet(Vector3 shootDir, float sprayMultiplier)
     {
         GameObject newBullet = GameObjectPooler.Instance.GetObject(bulletPrefab);
 
-        shootingPoint.transform.rotation = camOrient;
-        float eulerRotationX = shootingPoint.transform.rotation.eulerAngles.x;
-        CorrectBulletDirection(eulerRotationX, sprayMultiplier);
+        //it's a main rotation
+        shootingPoint.transform.rotation = Quaternion.LookRotation(shootDir, Vector3.up);
+
+        CreateSprayRotation(sprayMultiplier); //it's a spray rotation 
 
         newBullet.transform.position = shootingPoint.transform.position;
         newBullet.transform.rotation = shootingPoint.transform.rotation;
@@ -130,40 +126,58 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         newBullet.SetActive(true);
     }
 
-    private void CorrectBulletDirection(float currectRotationX, float sprayMultiplier)
+    private void CheckObstacles(Vector3 crosshairHitpoint)  //we check obstacles from shooting point to crosshair hit point to prevent obstacle shooting while enemy in sight
     {
-        if (shootingPoint.transform.rotation.x > 0)  //we correct aim to prevent floorshooting while looking at the floor with crosshair(looking down)
-        {
-            float rotationXnormalized = (currectRotationX - minXinfluencedRotation) / (maxXinfluencedRotation - minXinfluencedRotation);
-            float finalCorrection = rotationXnormalized * (maxYAimCorrection - minYAimCorrection) + minYAimCorrection;
+        if (coolDownSystem.IsOnCoolDown(iD) || isReloading) return;
 
-            shootingPoint.transform.Rotate(-finalCorrection, 0, 0);
-        }
-        else //if we look up, use min correction
+        Vector3 shootDir = (crosshairHitpoint - shootingPoint.transform.position).normalized;
+
+        /*Ray ray = new Ray();*/
+        ray.origin = shootingPoint.transform.position;
+        ray.direction = shootDir;
+
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
         {
-            shootingPoint.transform.Rotate(-minYAimCorrection, 0, 0);
+            if(hit.collider.CompareTag("Enemy"))
+            {
+/*                Debug.Log("I checked obstacles!");*/
+                Shoot(shootDir, autoShotSprayMultiplier);
+                coolDownSystem.PutOnCooldown(this);
+            }
         }
+
+    }
+
+    private void CreateSprayRotation(float sprayMultiplier)
+    {
         
         Vector2 dirDiflection = UnityEngine.Random.insideUnitCircle; 
-        Vector3 dirOffsetVector = new Vector3(dirDiflection.x, dirDiflection.y, 0);
+        Vector3 dirDisplacementVector = new Vector3(dirDiflection.x, dirDiflection.y, 0);
 
         var randomMultiplier = RandomFromDistribution.RandomFromStandardNormalDistribution(); //we use standardDistribution to simulate real-shooting
 
         var absInputMultyplier = (Mathf.Abs(playerInput.Hinput) + 1) * (Mathf.Abs(playerInput.Vinput) + 1);
         absInputMultyplier = Mathf.Clamp(absInputMultyplier, absInputMultyplier, 2); //clamp input to make spray independent from moving direction
 
-        dirOffsetVector *= randomMultiplier * absInputMultyplier * sprayMultiplier;  
+        dirDisplacementVector *= randomMultiplier * absInputMultyplier * sprayMultiplier;  
 
-        shootingPoint.transform.Rotate(dirOffsetVector.x, dirOffsetVector.y, 0); //take current rotation and change it based on offset vec
+        shootingPoint.transform.Rotate(dirDisplacementVector.x, dirDisplacementVector.y, 0); //take current rotation and change it based on offset vec
     }
 
-    private void SuperShot(Quaternion camOrient)
+    private void SuperShot(Vector3 hitpoint)
     {
-        while(currentAmmo > 0)
+        Vector3 shootDir = (hitpoint - shootingPoint.transform.position).normalized;
+
+        while (currentAmmo > 0)
         {
-            Shoot(camOrient, superShotSprayMultiplier);
+            Shoot(shootDir, superShotSprayMultiplier);
         }
     }
 
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawRay(ray);
+    }
 }

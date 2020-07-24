@@ -8,9 +8,11 @@ public class PaintBallBullet : MonoBehaviour
     [HideInInspector]
     public Vector3 targetPoint;
 
+    [SerializeField] GameObject bulletStainProjectorPrefab;
+
     private void OnEnable()
     {
-        Invoke("SelfDestroy", 3f);
+        Invoke("ImmediateSelfDestroy", 3f);
     }
 
     // Update is called once per frame
@@ -28,19 +30,46 @@ public class PaintBallBullet : MonoBehaviour
         }
         else
         {
-            SelfDestroy();
+            ImmediateSelfDestroy();
         }
     }
 
-    void SelfDestroy()
+    void CollisionDestroy(ContactPoint contactPoint)
     {
-/*        Debug.Log("I DESTROY MYSELF!");*/
+        //play VFX
+
+        //leave stain projection
+        LeaveStainProjector(contactPoint);
+
+
+
         gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter(Collider other)
+    void ImmediateSelfDestroy()
     {
-/*        Debug.Log(other.gameObject.name);*/
-        SelfDestroy();
+        gameObject.SetActive(false);
+    }
+
+
+    private void LeaveStainProjector(ContactPoint contactpoint)
+    {
+        GameObject stainProjector = GameObjectPooler.Instance.GetObject(bulletStainProjectorPrefab);
+        stainProjector.transform.position = contactpoint.point;
+        stainProjector.transform.forward = contactpoint.normal;
+
+        stainProjector.SetActive(true);
+    }
+
+/*    private void OnTriggerEnter(Collider other)
+    {
+*//*        Debug.Log(other.gameObject.name);*//*
+        
+        other.Get
+    }*/
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        CollisionDestroy(collision.GetContact(0));
     }
 }
