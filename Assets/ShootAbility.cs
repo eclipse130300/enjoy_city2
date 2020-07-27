@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Utils;
 
 public class ShootAbility : MonoBehaviour , IHaveCooldown
 {
@@ -173,11 +174,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         {
             Shoot(shootDir, superShotSprayMultiplier);
         }
-    }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.black;
-        Gizmos.DrawRay(ray);
+        UnityEditor.EditorApplication.isPaused = true;
     }
 }

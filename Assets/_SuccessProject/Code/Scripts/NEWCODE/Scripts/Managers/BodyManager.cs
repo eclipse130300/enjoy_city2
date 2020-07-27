@@ -52,7 +52,7 @@ public class BodyManager : MonoBehaviour
 
     }
 
-    private void ApplyBodyConfig(BodyConfig config)
+    private void ApplyBodyConfig(BodyConfig bodyCfg)
     {
         Debug.Log("CALL - APPLYBODY");
         //first delete all children
@@ -63,7 +63,7 @@ public class BodyManager : MonoBehaviour
         }
 
         //than instantiate pref
-        var body = Instantiate(config.game_body_prefab);
+        var body = Instantiate(bodyCfg.game_body_prefab);
         body.transform.SetParent(gameObject.transform);
         body.transform.localPosition = Vector3.zero;
         body.transform.localRotation = Quaternion.identity;
@@ -71,8 +71,8 @@ public class BodyManager : MonoBehaviour
         //apply other stuff
         var animator = body.GetComponent<Animator>();
         if (animator == null) body.AddComponent<Animator>();
-        animator.runtimeAnimatorController = config.controller;
-        animator.avatar = config.avatar;
+        animator.runtimeAnimatorController = bodyCfg.controller;
+        animator.avatar = bodyCfg.avatar;
         animator.applyRootMotion = false;
 
         GetComponent<MecanimWrapper>().animator = animator;

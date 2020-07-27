@@ -56,12 +56,14 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
 #endif
     public BodyConfig LoadBody()
     {
-        return changableDataConfig.currentBodyConfig;
+        var body = ScriptableList<BodyConfig>.instance.GetItemByID(changableDataConfig.currentBodyConfigId);
+
+        return body;
     }
 
     public void SaveBody(BodyConfig bodyConfig)
     {
-        changableDataConfig.currentBodyConfig = bodyConfig;
+        changableDataConfig.currentBodyConfigId = bodyConfig.ConfigId;
     }
 
 

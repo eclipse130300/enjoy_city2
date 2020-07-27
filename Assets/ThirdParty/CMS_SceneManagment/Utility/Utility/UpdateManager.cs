@@ -65,7 +65,7 @@ namespace Utils
         public void Register(IUpdatable obj)
         {
             int index = obj.Index;
-            if (index < 0)
+            if (index <= 0)
             {
                 index = _index++;
                 obj.Index = index;
@@ -131,7 +131,7 @@ namespace Utils
                 item.Value = 0;
             }
 
-            while (num < _count && num < MaxCallsPerFrame && totalNum <= _count)
+            while (count>0 && num < _count && num < MaxCallsPerFrame && totalNum <= _count)
             {
                 if (_lastIndex >= count)
                     _lastIndex = 0;
@@ -172,7 +172,7 @@ namespace Utils
                         }
                     }
                     ++totalNum;
-                }
+                } 
                 ++_lastIndex;
             }
 
