@@ -1,4 +1,5 @@
 ﻿
+using Demo;
 using JetBrains.Annotations;
 using Photon.Pun;
 using System.Collections;
@@ -116,7 +117,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         {
             Hinput = Mathf.Lerp(Hinput, newHinput, Time.fixedDeltaTime * learpSpeedf);
             Vinput = Mathf.Lerp(Vinput, newVinput, Time.fixedDeltaTime * learpSpeedf);
-            targetJump = Mathf.Lerp(targetJump, newTargetJump,Time.fixedDeltaTime * learpSpeedf);
+            targetJump = Mathf.Lerp(targetJump, newTargetJump, Time.fixedDeltaTime * learpSpeedf);
 
             if (Vector3.Distance(transform.position, newPosition) > distanceToForceTP) {
 
@@ -190,7 +191,6 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         {
             LeftJoystick = FindObjectOfType<FloatingJoystick>();
             TouchField = FindObjectOfType<FixedTouchField>();
-            /*JumpButton = FindObjectOfType<FixedButton>();*/
 
             hasReferencies = true;
         }
@@ -218,7 +218,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     {
         m_Move.y = targetJump;
 
-        targetJump -= Time.fixedDeltaTime * JumpForce;
+        
 
         if (_characterController.isGrounded && m_Jump)
         {
@@ -229,7 +229,13 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
         if (!_characterController.isGrounded)
         {
+            targetJump -=  Time.fixedDeltaTime * JumpForce;
+
             _characterController.Move(inertionMovement * Time.fixedDeltaTime);
+        }
+        else
+        {
+            targetJump = Mathf.Clamp(targetJump, 0, Mathf.Infinity);
         }
     }
     Vector3 newPosition = Vector3.zero;

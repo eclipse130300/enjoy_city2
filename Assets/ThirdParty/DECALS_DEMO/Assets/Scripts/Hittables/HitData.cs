@@ -41,9 +41,8 @@ namespace Demo
 		/// </summary>
 		public float MarkSize { get; private set; }
 
-		/*public Color color;*/
 
-		public HitData(Vector3 position, Vector3 direction, Material mark, float markSize/*, Color color*/)
+		public HitData(Vector3 position, Vector3 direction, Material mark, float markSize)
 		{
 			Position = position;
 			Direction = direction;

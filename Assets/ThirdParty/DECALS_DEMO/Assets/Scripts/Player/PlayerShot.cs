@@ -96,7 +96,7 @@ namespace Demo
 				return;
 
 			//notify the controller
-			HittablesController.Instance.OnShotHit(new HitData(collision.contacts[0].point, hitDirection, mark, markSize));
+			HittablesController.Instance.OnShotHit(new HitData(collision.contacts[0].point, hitDirection, mark, markSize), Color.red);
 
 			//remove from scene
 			gameObject.SetActive(false);

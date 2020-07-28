@@ -4,10 +4,10 @@ using System.Collections;
 using UnityEngine;
 using Utils;
 
-public class ShootAbility : MonoBehaviour , IHaveCooldown
+public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
 {
     [SerializeField] GameObject bulletPrefab;
-    /*    [SerializeField] GameObject superBulletPrefab;*/
+
     [SerializeField] GameObject shootingPoint;
     [SerializeField] float targetPointDistance;
 
@@ -58,15 +58,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         Messenger.RemoveListener(GameEvents.RELOAD_PRESSED, Reload);
         Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
     }
-
-/*    private void ShootAbitilyCheck(Vector3 crosshairHitpoint)
-    {
-        if (coolDownSystem.IsOnCoolDown(iD) || isReloading) return;
-
-        CheckObstacles(crosshairHitpoint);
-
-        coolDownSystem.PutOnCooldown(this);
-    }*/
 
     void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
     {
@@ -175,6 +166,17 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
             Shoot(shootDir, superShotSprayMultiplier);
         }
 
-        UnityEditor.EditorApplication.isPaused = true;
+/*        UnityEditor.EditorApplication.isPaused = true;*/
+    }
+
+    public void InitializeBullet(GameObject bulletPref, Color bulletColor)
+    {
+        if(bulletPrefab != bulletPref)
+        {
+            bulletPrefab = bulletPref;
+        }
+
+        bulletPrefab.GetComponent<MeshRenderer>().sharedMaterial.color = bulletColor;
+        bulletPrefab.GetComponent<PaintBallBullet>().bulletColor = bulletColor;
     }
 }

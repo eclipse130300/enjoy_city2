@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 namespace Demo
 {
@@ -277,14 +278,14 @@ namespace Demo
 		/// Assigns shot space TRS matrix to current material, if it was hit, and sets the renderer's materials array.
 		/// </summary>
 		/// <param name="shotSpaceTRS">TRS matrix to use for shifting model's vertices to shot space.</param>
-		public void EndHitSetup(Matrix4x4 shotSpaceTRS/*, Color color*/)
+		public void EndHitSetup(Matrix4x4 shotSpaceTRS, Color color)
 		{
 			//no hit at the moment - exit
 			if(material == null)
 				return;
-			
-/*			//set color
-			material.SetColor(colorID, color);*/
+
+			//set color
+			material.SetColor(colorID, color);
 
 			//set matrix, appending with object space to world space one
 			material.SetMatrix(projID, shotSpaceTRS * trans.localToWorldMatrix);
@@ -294,6 +295,7 @@ namespace Demo
 
 			//clear current
 			material = null;
+			
 		}
 
 		/// <summary>

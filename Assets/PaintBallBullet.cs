@@ -13,11 +13,12 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
     public Vector3 targetPoint;
     [SerializeField] LayerMask noPlayerLayerMask;
 
+    public Color bulletColor = Color.green;
+
+
 
     //Test
     public Ray ray;
-
-
 
     /// <summary>
     /// Cached reference so we don't search for it with GetComponent which is slow.
@@ -35,14 +36,17 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
     /// Imprint on environment.
     /// </summary>
     [SerializeField]
-    private Material mark;
+    private Material[] marks;
 
     /// <summary>
     /// In world units. Use reasonably small values on mobile devices.
     /// </summary>
     [SerializeField]
     [Range(.01f, float.PositiveInfinity)]
+
     private float markSize = 1f;
+/*    [Header("+/- to size to make it random")]
+    [SerializeField] float randomSizeRange = 0.2f;*/
 
     /// <summary>
     /// Previous position - used to determine hit direction.
@@ -53,8 +57,6 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
     /// Ref to the rigidbody.
     /// </summary>
     public Rigidbody Body { get { return body; } }
-
-
 
     public int Index { get; set; }
 
@@ -76,6 +78,11 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
     private bool alreadyProcessed;
 
 
+    private void Awake()
+    {
+        GetComponent<MeshRenderer>().material.color = bulletColor;
+    }
+
     private void OnEnable()
     {
         Invoke("ImmediateSelfDestroy", 3f);
@@ -83,6 +90,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         alreadyProcessed = false;
 
         UpdateManager.Instance.Register(this);
+
     }
 
     private void OnDisable()
@@ -98,11 +106,6 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         hitDirection = trans.position - posPrev;
         posPrev = trans.position;
     }
-    private void Update()
-    {
-        
-    }
-
 
     private void MoveTo(Vector3 targetPoint)
     {
@@ -123,20 +126,6 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
 
     private void OnCollisionEnter(Collision collision)
     {
-        /*        Debug.Log("HIT PROCESSED!");
-
-                if (alreadyProcessed)
-                    return;
-
-                //notify the controller
-                HittablesController.Instance.OnShotHit(new HitData(collision.contacts[0].point, hitDirection, mark, markSize));
-
-                *//*			//remove from scene
-                            Destroy(gameObject);*//*
-                gameObject.SetActive(false);
-
-                alreadyProcessed = true;*/
-
         Ray ray = new Ray();
 
         ray.direction = collision.GetContact(0).point - hitDirection;
@@ -155,9 +144,12 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
             return;
 
         //notify the controller
-        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, mark, markSize));
 
-        //remove from scene
+        /*        var randomSize = Random.Range(Mathf.Min(0,markSize - randomSizeRange), Mathf.Max(markSize + randomSizeRange, 1f));*/
+
+        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, MaterialPooler.Instance.GetRandomBulletMaterial() , markSize), bulletColor);
+
+        //remove bullet from scene
         gameObject.SetActive(false);
 
         alreadyProcessed = true;
@@ -176,6 +168,18 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
             Debug.Log("ONUPDATE RAY COLLISION!  " + hit.collider.gameObject.name);
             ExplodeBullet(hit.point);
         }
+/*
+        Ray ray2 = new Ray();
+
+        ray2.direction = -transform.forward;
+        ray2.origin = transform.position;
+
+        RaycastHit hit2;
+        if (Physics.Raycast(ray, out hit2, speed * Time.fixedDeltaTime * collisionTestOffset, noPlayerLayerMask))
+        {
+            Debug.Log("2 RAY COLLISION!  " + hit2.collider.gameObject.name);
+            ExplodeBullet(hit2.point);
+        }*/
     }
 
     private void OnDrawGizmos()

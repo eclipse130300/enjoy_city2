@@ -75,7 +75,7 @@ namespace Demo
 		/// Checks all registered hittables with the provided shot data to see which one was hit.
 		/// </summary>
 		/// <param name="shot"></param>
-		public void OnShotHit(HitData hitData)
+		public void OnShotHit(HitData hitData, Color color)
 		{
 			//combine removing with adding
 			Vector3? hitToOverwrite = (!hitLimitReached)? (Vector3?)null : hits[hitIndex];
@@ -97,7 +97,7 @@ namespace Demo
 				foreach(Hittable hittable in hittables)
 				{
 					//set rest of data
-					hittable.EndHitSetup(shotSpaceTRS/*, color*/);
+					hittable.EndHitSetup(shotSpaceTRS, color);
 
 					//check again for removal - non-hit ones were not checked
 					if(hitLimitReached)

@@ -41,7 +41,8 @@ public class PlayerCamera : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, movePoint, moveSpeed * Time.fixedDeltaTime);
         transform.rotation = Quaternion.Slerp(transform.rotation, Rotation, rotationSpeed * Time.fixedDeltaTime);
     }
+
     public void MoveTo(float yOfsetDelta) {
-        this.yOfset = Mathf.Clamp(this.yOfset+ yOfsetDelta,minYOfset,maxYOfset);
+        this.yOfset = Mathf.Clamp(this.yOfset + yOfsetDelta, minYOfset, maxYOfset);
     }
 }
