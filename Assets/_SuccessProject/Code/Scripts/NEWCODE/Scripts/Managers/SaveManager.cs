@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using Utils;
 
-public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameManager -- 4 errors now!
+public class SaveManager : Singleton<SaveManager>
 {
     public ShopDataConfig shopDataConfig = new ShopDataConfig();
     public ImportantDataConfig importantDataConfig = new ImportantDataConfig();
@@ -72,10 +72,10 @@ public class SaveManager : Singleton<SaveManager> //TODO inherit from baseGameMa
         return LoadRoomSet().GetActiveVariant(cfg);
     }
 
-    public void GetActiveVariant(ItemConfig cfg)
+/*    public void GetActiveVariant(ItemConfig cfg)
     {
         //todo think about this shit
-    }
+    }*/
 
     public List<string> Get3DItemList()
     {

@@ -47,14 +47,10 @@ public class BodyManager : MonoBehaviour
             // if cannot find one, add default config to save manager 
             // applies default config
         }
-
-
-
     }
 
     private void ApplyBodyConfig(BodyConfig bodyCfg)
     {
-        Debug.Log("CALL - APPLYBODY");
         //first delete all children
         var allChildren = transform.GetComponentsInChildren<IBodyPrefab>();
         foreach(IBodyPrefab child in allChildren)

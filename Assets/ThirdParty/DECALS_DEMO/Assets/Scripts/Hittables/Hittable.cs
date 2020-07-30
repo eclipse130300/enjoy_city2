@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utils;
 
@@ -182,7 +183,9 @@ namespace Demo
 			{
 				subMeshIndex = materials.IndexOf(null);
 
-				material = new Material(hitData.Mark);
+				/*material = new Material(hitData.Mark); */
+				material =/* MaterialPooler.Instance.GetRandomBulletMaterial(renderer);*/ hitData.Mark;
+
 				materials[subMeshIndex] = material;
 
 				hits[subMeshIndex - subMeshCountInitial] = hitData.Position;
@@ -208,7 +211,9 @@ namespace Demo
 					mesh.subMeshCount++;
 
 					//create mark material
-					material = new Material(hitData.Mark);
+					material = hitData.Mark;
+
+
 					materials.Add(material);
 
 					//store hit
@@ -278,7 +283,7 @@ namespace Demo
 		/// Assigns shot space TRS matrix to current material, if it was hit, and sets the renderer's materials array.
 		/// </summary>
 		/// <param name="shotSpaceTRS">TRS matrix to use for shifting model's vertices to shot space.</param>
-		public void EndHitSetup(Matrix4x4 shotSpaceTRS, Color color)
+		public void EndHitSetup(Matrix4x4 shotSpaceTRS, Color color, Material material)
 		{
 			//no hit at the moment - exit
 			if(material == null)
@@ -291,11 +296,15 @@ namespace Demo
 			material.SetMatrix(projID, shotSpaceTRS * trans.localToWorldMatrix);
 
 			//reassign materials array to renderer
-			renderer.materials = materials.ToArray();
-
+			/*renderer.materials = materials.ToArray();*/
+			var mats = renderer.sharedMaterials.ToList();
+		//	renderer.sharedMaterials.Append()
+		   renderer.sharedMaterials = materials.ToArray();
 			//clear current
-			material = null;
-			
+			//material = null;
+		
+
+
 		}
 
 		/// <summary>

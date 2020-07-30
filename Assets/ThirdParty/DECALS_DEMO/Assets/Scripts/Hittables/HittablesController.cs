@@ -97,7 +97,7 @@ namespace Demo
 				foreach(Hittable hittable in hittables)
 				{
 					//set rest of data
-					hittable.EndHitSetup(shotSpaceTRS, color);
+					hittable.EndHitSetup(shotSpaceTRS, color, hitData.Mark);
 
 					//check again for removal - non-hit ones were not checked
 					if(hitLimitReached)

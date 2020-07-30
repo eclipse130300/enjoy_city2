@@ -134,20 +134,19 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            ExplodeBullet(hit.point);
+            ExplodeBullet(hit.point, hit.collider.gameObject.GetComponent<Renderer>());
         }
     }
 
-    void ExplodeBullet(Vector3 collisionPoint)
+    void ExplodeBullet(Vector3 collisionPoint, Renderer renderer)
     {
         if (alreadyProcessed)
             return;
 
+
+
         //notify the controller
-
-        /*        var randomSize = Random.Range(Mathf.Min(0,markSize - randomSizeRange), Mathf.Max(markSize + randomSizeRange, 1f));*/
-
-        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, MaterialPooler.Instance.GetRandomBulletMaterial() , markSize), bulletColor);
+        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, MaterialPooler.Instance.GetRandomBulletMaterial(renderer) , markSize), bulletColor);
 
         //remove bullet from scene
         gameObject.SetActive(false);
@@ -165,8 +164,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, speed * Time.fixedDeltaTime * collisionTestOffset, noPlayerLayerMask))
         {
-            Debug.Log("ONUPDATE RAY COLLISION!  " + hit.collider.gameObject.name);
-            ExplodeBullet(hit.point);
+            ExplodeBullet(hit.point, hit.collider.gameObject.GetComponent<Renderer>());
         }
 /*
         Ray ray2 = new Ray();

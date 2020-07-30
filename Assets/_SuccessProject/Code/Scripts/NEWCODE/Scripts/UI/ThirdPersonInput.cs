@@ -11,8 +11,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 [RequireComponent(typeof(PhotonView))]
 public class ThirdPersonInput :MonoBehaviour, IPunObservable
 {
-
+    [SerializeField] LayerMask noPlayerLayerMask;
     public PhotonView photonView;
+    [SerializeField] float groundCheckRadius;
 
     public FloatingJoystick LeftJoystick;
 
@@ -31,6 +32,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     protected bool isCrouching = false;
     protected CapsuleCollider CapCollider;
+
+    bool isGrounded;
 
     private bool hasReferencies = false;
     public float targetJump;
@@ -96,6 +99,9 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     private void FixedUpdate()
     {
+        Collider[] overlapColliders =  Physics.OverlapSphere(transform.localPosition, groundCheckRadius, noPlayerLayerMask);
+
+        isGrounded = overlapColliders.Length != 0 ? true : false;
 
         if (LeftJoystick != null && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
@@ -126,7 +132,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             }
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation),Time.fixedDeltaTime * learpSpeedf);
         }
-        if (_characterController.isGrounded)
+        if (isGrounded)
         {
             // calculate camera relative direction to move:
             m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
@@ -134,6 +140,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             mecanim.SetHorizontalSpeed(Hinput);
             mecanim.SetVerticalSpeed(Vinput);
             mecanim.SetJump(false);
+            targetJump = -1f;
         }
         else
         {
@@ -148,10 +155,9 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             m_Move -= m_Move*Time.fixedDeltaTime;
         }
 
-        
-        
-        Jump();
 
+
+        Jump();
 
         /*mecanim.SetJump(targetJump);*/
 
@@ -216,33 +222,33 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     private void Jump()
     {
-        m_Move.y = targetJump;
-
-        
-
-        if (_characterController.isGrounded && m_Jump)
+        if (isGrounded && m_Jump)
         {
             targetJump = jumpHeight;
             inertionMovement = new Vector3(m_Move.x, targetJump, m_Move.z);
 
         }
 
-        if (!_characterController.isGrounded)
+        if (!isGrounded)
         {
             targetJump -=  Time.fixedDeltaTime * JumpForce;
 
             _characterController.Move(inertionMovement * Time.fixedDeltaTime);
         }
-        else
+       /* else
         {
             targetJump = Mathf.Clamp(targetJump, 0, Mathf.Infinity);
-        }
+            Debug.Log(_characterController.isGrounded);
+        }*/
+
+        m_Move.y = targetJump;
     }
     Vector3 newPosition = Vector3.zero;
     Vector3 newRotation = Vector3.zero;
     float newHinput = 0;
     float newVinput = 0;
     float newTargetJump = 0;
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
     
@@ -272,5 +278,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             m_Jump = (bool)stream.ReceiveNext();
             newTargetJump = (float)stream.ReceiveNext();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.localPosition, 0.3f);
     }
 }
