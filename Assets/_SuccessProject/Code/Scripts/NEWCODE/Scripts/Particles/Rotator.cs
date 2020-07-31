@@ -9,7 +9,7 @@ public class Rotator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(speed);
+        transform.Rotate(speed * Time.deltaTime);
         transform.position = transform.position+(Vector3.up *( Mathf.PingPong(Time.time, 1) -0.5f)* sinAmpitude)*Time.deltaTime;
     }
 }
