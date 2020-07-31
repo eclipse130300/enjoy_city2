@@ -208,12 +208,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void DebugReturn(DebugLevel level, string message)
     {
-        Debug.Log(message);
+/*        Debug.Log(message);*/
     }
 
     public void OnChatStateChange(ChatState state)
     {
-        Debug.Log(state);
+/*        Debug.Log(state);*/
     }
 
     public void OnConnected()
@@ -224,7 +224,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnDisconnected()
     {
-        Debug.Log("Disconnected");
+/*        Debug.Log("Disconnected");*/
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
@@ -249,7 +249,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                         StartCoroutine(PreviewChat());
                 }
             }
-            Debug.Log(string.Format("OnGetMessages: {0} ({1}) > {2}", channelName, senders.Length, msgs));
+/*            Debug.Log(string.Format("OnGetMessages: {0} ({1}) > {2}", channelName, senders.Length, msgs));*/
 
         }
     }

@@ -54,6 +54,16 @@ public class SaveManager : Singleton<SaveManager>
     }*/
     #endregion
 #endif
+    public string GetNickName()
+    {
+       return changableDataConfig.GetNickName();
+    }
+
+    public void SetNick(string nick)
+    {
+        changableDataConfig.SetNickName(nick);
+    }
+
     public BodyConfig LoadBody()
     {
         var body = ScriptableList<BodyConfig>.instance.GetItemByID(changableDataConfig.currentBodyConfigId);

@@ -63,9 +63,16 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
         nickName = nick;
     }
 
+    public string GetNickName()
+    {
+        return nickName;
+    }
+
 /*    public void SetCharGender(Gender sex)
     {
         gender = sex;
     }*/
+
+
 }
 

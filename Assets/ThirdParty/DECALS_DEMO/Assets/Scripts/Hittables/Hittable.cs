@@ -182,7 +182,9 @@ namespace Demo
 			{
 				subMeshIndex = materials.IndexOf(null);
 
-				material = new Material(hitData.Mark);
+				material = MaterialPooler.Instance.GetRandomBulletMaterial(renderer, this , hitData.Position);
+
+/*				material = new Material(hitData.Mark);*/
 				materials[subMeshIndex] = material;
 
 				hits[subMeshIndex - subMeshCountInitial] = hitData.Position;
@@ -207,8 +209,12 @@ namespace Demo
 					//make room fornew submesh
 					mesh.subMeshCount++;
 
-					//create mark material
-					material = new Material(hitData.Mark);
+
+					material = MaterialPooler.Instance.GetRandomBulletMaterial(renderer, this , hitData.Position);
+
+/*					//create mark material
+					material = new Material(hitData.Mark);*/
+
 					materials.Add(material);
 
 					//store hit

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Demo;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,17 @@ public class MaterialPooler : MonoBehaviourSingleton<MaterialPooler>
 
     int handyIndex;
 
-    public List<BulletMaterialsInfo> existingMaterials = new List<BulletMaterialsInfo>(); 
+    public List<BulletMaterialsInfo> existingMaterials = new List<BulletMaterialsInfo>();
+
+    public HittablesController hittablesController;
+
+    private void Awake()
+    {
+        if(hittablesController == null)
+        {
+            hittablesController = FindObjectOfType<HittablesController>();
+        }
+    }
 
     private void Start()
     {
@@ -34,23 +45,13 @@ public class MaterialPooler : MonoBehaviourSingleton<MaterialPooler>
         }
     }
 
-    public Material GetRandomBulletMaterial(Renderer renderer)
+    public Material GetRandomBulletMaterial(Renderer renderer, Hittable hittable, Vector3 collisionPoint)
     {
         handyIndex = UnityEngine.Random.Range(0, materials.Length);
         var randomMat = materials[handyIndex];
         var newMaterial = bulletHitPools[randomMat].GetObject();
-        /*
-        //
-        var rendererMaterials = renderer.materials.ToList();
-        rendererMaterials.Add(newMaterial);
 
-       renderer.GetMaterials(rendererMaterials);
-
-        renderer.materials = rendererMaterials.ToArray();
-        */
-
-
-        existingMaterials.Add(new BulletMaterialsInfo(newMaterial, renderer, singleHitExistence, handyIndex));
+        existingMaterials.Add(new BulletMaterialsInfo(newMaterial, renderer, singleHitExistence, handyIndex, collisionPoint, hittable));
 
         return newMaterial;
 
@@ -87,12 +88,9 @@ public class MaterialPooler : MonoBehaviourSingleton<MaterialPooler>
             }
         }
 
-        info.renderer.sharedMaterials = (objMaterials).ToArray();
-        
-       /* info.renderer.GetMaterials(objMaterials);*/
+        /*        info.renderer.sharedMaterials = (objMaterials).ToArray();*/
 
-
-       /* Debug.Log(info.renderer.materials.Length);*/
+        info.hittable.Clear(info.hitPos);
 
        bulletHitPools[GetMaterial(info.poolId)].PutObject(info.material);
         existingMaterials.Remove(info);

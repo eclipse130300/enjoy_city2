@@ -32,12 +32,20 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
     }
 
+    string gameVersion = "1";
+
+    Paintball_lobby_UI_controller paintball_Lobby_UI_Controller;
+
     private void Awake()
     {
-        Loader.Instance.afterLoading = tryConnect();
+        PhotonNetwork.AutomaticallySyncScene = true;
+
+
+        paintball_Lobby_UI_Controller = FindObjectOfType<Paintball_lobby_UI_controller>();
+/*        Loader.Instance.afterLoading = tryConnect();*/
     }
 
-    public IEnumerator tryConnect()
+/*    public IEnumerator tryConnect()
     {
         PhotonNetwork.ConnectUsingSettings();
         while (!connected)
@@ -46,32 +54,58 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
         }
         yield return null;
-        Debug.Log("connected");
-    }
+        Debug.Log("connectedTOPHOTON!");
+    }*/
 
     private void Start()
     {
-
+        Connect();
     }
 
     private void OnDestroy()
     {
         PhotonNetwork.Disconnect();
     }
+
+    public void Connect()
+    {
+        // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
+        if (PhotonNetwork.IsConnected)
+        {
+            // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
+            PhotonNetwork.JoinRandomRoom();
+        }
+        else
+        {
+            // #Critical, we must first and foremost connect to Photon Online Server.
+            PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.GameVersion = gameVersion;
+        }
+    }
+
     public override void OnConnected()
     {
         Debug.Log("OnConnected");
 /*        JoinLobby();*/
     }
+
     public override void OnJoinedLobby()
     {
         PhotonNetwork.JoinRandomRoom();
+
+
+        /*PhotonNetwork.JoinOrCreateRoom(" newRoom ", new RoomOptions { MaxPlayers = maxPlayers }, TypedLobby.Default);*/
+
+
+        Debug.Log("JOINED LOBBY!");
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("OnConnectedToMaster");
+        Debug.Log("CONNECTED TO MASTER");
         JoinLobby();
+
+        /*        PhotonNetwork.JoinRandomRoom();*/
     }
 
     private void JoinLobby()
@@ -86,12 +120,14 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
         Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
         // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayers });
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayers }); /*RoomOptions ro = new RoomOptions; ro.*/
     }
 
     public override void OnJoinedRoom()
     {
         Debug.Log("SOMEONE ENTERED THE ROOM");
+
+        paintball_Lobby_UI_Controller.OnNewPlayerConnected(1);
 
         //create player model
 
@@ -99,6 +135,8 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
         //CreatePlayer();
     }
+
+
 
     private void CreatePlayer()
     {
@@ -194,6 +232,10 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
+        Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
+
+        // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayers });
     }
 
 
