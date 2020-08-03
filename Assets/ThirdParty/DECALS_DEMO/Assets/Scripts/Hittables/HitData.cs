@@ -32,21 +32,25 @@ namespace Demo
 		/// Needed to determine the projection direction.
 		/// </summary>
 		public Vector3 Direction { get; private set; }
-		/// <summary>
+
+
+/*		/// <summary>
 		/// Used to render the mark.
 		/// </summary>
-		public Material Mark { get; private set; }
+		public Material Mark { get; private set; }*/
+
+
 		/// <summary>
 		/// In world units.
 		/// </summary>
 		public float MarkSize { get; private set; }
 
 
-		public HitData(Vector3 position, Vector3 direction, Material mark, float markSize)
+		public HitData(Vector3 position, Vector3 direction,/* Material mark,*/ float markSize)
 		{
 			Position = position;
 			Direction = direction;
-			Mark = mark;
+/*			Mark = mark;*/
 			MarkSize = markSize;
 
 		}

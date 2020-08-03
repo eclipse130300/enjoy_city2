@@ -68,6 +68,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         }
         _characterController = GetComponent<CharacterController>();
 
+        if(groundCheckRadius <= 0f)
+        {
+            groundCheckRadius = _characterController.radius;
+        }
+
       //  mecanim.lookTarget = camera.lo
        // ObservedComponents.Add(this);
     }
@@ -192,7 +197,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     void SubscibeToUI()
     {
-        Debug.Log("IsMine " + photonView.IsMine);
+/*        Debug.Log("IsMine " + photonView.IsMine);*/
         if ((photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             LeftJoystick = FindObjectOfType<FloatingJoystick>();

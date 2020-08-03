@@ -33,7 +33,8 @@ namespace Demo
 		/// After the limit is reached, old marks will be replaced by the new ones.
 		/// USE small values (~100) for mobile devices.
 		/// </summary>
-		public const uint MAX_MARKS = 1000;
+		public const uint MAX_MARKS = 400;
+
 
 		/// <summary>
 		/// Cache for easy access.
@@ -97,7 +98,7 @@ namespace Demo
 				foreach(Hittable hittable in hittables)
 				{
 					//set rest of data
-					hittable.EndHitSetup(shotSpaceTRS, color, hitData.Mark);
+					hittable.EndHitSetup(shotSpaceTRS, color);
 
 					//check again for removal - non-hit ones were not checked
 					if(hitLimitReached)

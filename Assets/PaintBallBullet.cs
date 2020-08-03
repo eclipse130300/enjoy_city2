@@ -143,10 +143,8 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         if (alreadyProcessed)
             return;
 
-
-
         //notify the controller
-        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, MaterialPooler.Instance.GetRandomBulletMaterial(renderer) , markSize), bulletColor);
+        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, markSize), bulletColor);
 
         //remove bullet from scene
         gameObject.SetActive(false);
