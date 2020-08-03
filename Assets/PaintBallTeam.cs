@@ -9,12 +9,14 @@ public class PaintBallTeam
     public TEAM teamName;
     public int playersMax;
     public  List<PaintBallPlayer> playersInTeam = new List<PaintBallPlayer>();
+    public GameObject[] teamPedestals;
 
-    public PaintBallTeam(Color color, TEAM teamName, int playersMax)
+    public PaintBallTeam(Color color, TEAM teamName, int playersMax, GameObject[] teamPedestals)
     {
         this.color = color;
         this.teamName = teamName;
         this.playersMax = playersMax;
+        this.teamPedestals = teamPedestals;
     }
 
     public void JoinTeam(PaintBallPlayer newPlayer)
@@ -31,6 +33,9 @@ public class PaintBallTeam
         if(playersInTeam.Count < playersMax)
         {
             playersInTeam.Add(newPlayer);
+
+            newPlayer.playerTeam = this;
+
             Debug.Log("PLAYER :" + newPlayer.nickName + "JOINED " + teamName.ToString() + " TEAM!");
         }
     }

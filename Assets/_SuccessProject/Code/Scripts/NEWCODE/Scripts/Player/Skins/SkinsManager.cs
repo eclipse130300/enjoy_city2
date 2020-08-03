@@ -52,6 +52,11 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
        
     }
 
+    public void InitializeFields(Transform skinHolder)
+    {
+        this.skinHolder = skinHolder; 
+    }
+
     public void InitializeSkins()
     {
         //getSex From savemanager
@@ -164,7 +169,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     }
 
 
-    private void PutOnClothes(ClothesConfig config)
+    public void PutOnClothes(ClothesConfig config)
     {
     
         //PUT ON CLOTHES FROM CONFIG

@@ -19,10 +19,17 @@ public class Paintball_lobby_UI_controller : MonoBehaviour
     void InitializeTeams()
     {
         var allTEams = Enum.GetValues(typeof(TEAM)).Cast<TEAM>().ToList();
+/*        int arrayIndex = 0;*/
 
         for (int i = 0; i < allTEams.Count; i++)
         {
-            teams[i] = new PaintBallTeam(teamColors[i], allTEams[i], maxPlayersInTeam);
+            GameObject[] teamPedestals = new GameObject[maxPlayersInTeam];
+            pedestals.CopyTo(maxPlayersInTeam * i, teamPedestals, 0, maxPlayersInTeam);
+
+
+            teams[i] = new PaintBallTeam(teamColors[i], allTEams[i], maxPlayersInTeam, teamPedestals);
+
+/*            arrayIndex += maxPlayersInTeam; */
         }
     }
 
@@ -33,11 +40,13 @@ public class Paintball_lobby_UI_controller : MonoBehaviour
         InitializeTeams();
     }
 
-    public void OnNewPlayerConnected(int playersAmount)
+    public void OnNewPlayerConnected(int playersAmount = 1)
     {
         //we check every team
         int theLessPlayerNum = maxPlayersInTeam;
         PaintBallTeam teamToJoin = null;
+
+        //if one team has less players than another
 
         foreach(PaintBallTeam team in teams)
         {
@@ -52,15 +61,14 @@ public class Paintball_lobby_UI_controller : MonoBehaviour
 
         PaintBallPlayer newPlayer = new PaintBallPlayer(saveManager.LoadBody(), saveManager.LoadClothesSet(saveManager.LoadBody().gender.ToString() + GameMode.Paintball.ToString()), saveManager.GetNickName());
 
+        //join team
         teamToJoin.JoinTeam(newPlayer);
 
-        //if one team has less players than another
+        //we create player model on first empty pedestal
+        var pedestal = newPlayer.GetTeamPedestal(teamToJoin);
+        pedestal.GetComponent<PedestalController>().SpawnPlayer(newPlayer);
 
-
-        //and players in team less than maxTeamPlayers - playersAmount
-
-
-        //join team
+        //we put nick above his head
 
     }
 

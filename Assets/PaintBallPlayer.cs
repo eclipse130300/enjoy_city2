@@ -10,10 +10,22 @@ public class PaintBallPlayer
     public ClothesConfig clothesConfig;
     public string nickName;
 
+    public PaintBallTeam playerTeam;
+    public GameObject pedestalUI;
+
     public PaintBallPlayer (BodyConfig bodyConfig, ClothesConfig clothesConfig, string nickName)
     {
         this.bodyConfig = bodyConfig;
         this.clothesConfig = clothesConfig;
         this.nickName = nickName;
+    }
+
+    public GameObject GetTeamPedestal(PaintBallTeam team)
+    {
+        var myPedestal = team.teamPedestals[team.playersInTeam.Count - 1];
+
+        pedestalUI = myPedestal;
+
+        return pedestalUI;
     }
 }

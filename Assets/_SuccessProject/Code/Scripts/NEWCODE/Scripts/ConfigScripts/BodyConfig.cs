@@ -18,8 +18,8 @@ namespace CMS.Config
     {
         [Draw(DrawAttributeTypes.NotForDraw, "")]
 
-        public GameObject game_body_prefab;
-        public GameObject preview_body_prefab;
+        public GameObject game_body_prefab; //naked body for different clothes
+        public GameObject preview_body_prefab; //body with default 
         public Color body_color;
         public Gender gender;
         public RuntimeAnimatorController controller;

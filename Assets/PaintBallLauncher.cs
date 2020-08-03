@@ -127,13 +127,9 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
     {
         Debug.Log("SOMEONE ENTERED THE ROOM");
 
-        paintball_Lobby_UI_Controller.OnNewPlayerConnected(1);
+        //notifyUIcontroller 
+        paintball_Lobby_UI_Controller.OnNewPlayerConnected();
 
-        //create player model
-
-        //show player info (nick)
-
-        //CreatePlayer();
     }
 
 
