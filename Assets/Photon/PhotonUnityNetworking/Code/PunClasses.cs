@@ -159,7 +159,7 @@ namespace Photon.Pun
         /// <param name="position">The position for the instance.</param>
         /// <param name="rotation">The rotation for the instance.</param>
         /// <returns>A disabled instance to use by PUN or null if the prefabId is unknown.</returns>
-        GameObject Instantiate(string prefabId, Vector3 position, Quaternion rotation);
+        GameObject Instantiate(string prefabId, Vector3 position, Quaternion rotation, Transform parent);
 
         /// <summary>
         /// Called to destroy (or just return) the instance of a prefab. It's disabled and the pool may reset and cache it for later use in Instantiate.
@@ -977,7 +977,7 @@ namespace Photon.Pun
         /// <param name="position">Location of the new object.</param>
         /// <param name="rotation">Rotation of the new object.</param>
         /// <returns></returns>
-        public GameObject Instantiate(string prefabId, Vector3 position, Quaternion rotation)
+        public GameObject Instantiate(string prefabId, Vector3 position, Quaternion rotation, Transform parent)
         {
             GameObject res = null;
             bool cached = this.ResourceCache.TryGetValue(prefabId, out res);
@@ -997,7 +997,7 @@ namespace Photon.Pun
             bool wasActive = res.activeSelf;
             if (wasActive) res.SetActive(false);
 
-            GameObject instance =GameObject.Instantiate(res, position, rotation) as GameObject;
+            GameObject instance =GameObject.Instantiate(res, position, rotation, parent) as GameObject;
 
             if (wasActive) res.SetActive(true);
             return instance;
