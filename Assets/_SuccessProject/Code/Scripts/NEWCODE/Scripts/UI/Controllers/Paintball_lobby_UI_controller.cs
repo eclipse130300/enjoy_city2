@@ -64,11 +64,12 @@ public class Paintball_lobby_UI_controller : MonoBehaviour
         //join team
         teamToJoin.JoinTeam(newPlayer);
 
-        //we pick first empty pedestal
+        //we create player model on first empty pedestal
         var pedestal = newPlayer.GetTeamPedestal(teamToJoin);
+        pedestal.GetComponent<PedestalController>().SpawnPlayer(newPlayer);
 
-        //we spawn body and put nick above his head
-        pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(newPlayer);
+        //we put nick above his head
+
     }
 
     public void OnPlayerDisconected()

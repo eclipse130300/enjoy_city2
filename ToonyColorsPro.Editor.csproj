@@ -301,12 +301,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="DOTween">
-      <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/Demigiant/DOTween/DOTween.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTweenEditor">
-      <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/Demigiant/DOTween/Editor/DOTweenEditor.dll</HintPath>
-    </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>C:/Users/admin/Desktop/UnityProjects/enjoy-city/Assets/Photon/PhotonLibs/Photon3Unity3D.dll</HintPath>
     </Reference>

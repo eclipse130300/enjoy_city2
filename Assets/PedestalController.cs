@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PedestalController : MonoBehaviourPunCallbacks
+public class PedestalController : MonoBehaviour
 {
 
     public GameObject darkBody;
@@ -22,7 +22,7 @@ public class PedestalController : MonoBehaviourPunCallbacks
         photon = GetComponent<PhotonView>();
     }
 
-    public void SpawnPlayerAndInfo(PaintBallPlayer player)
+    public void SpawnPlayer(PaintBallPlayer player)
     {
         SpawnBody(player);
         SpawnPlayerInfo(player);
@@ -35,7 +35,7 @@ public class PedestalController : MonoBehaviourPunCallbacks
             darkBody.SetActive(false);
 
             //instattiate body from dobyConf
-            var nakedBody = PhotonNetwork.Instantiate(player.bodyConfig.game_body_prefab.name, spawnPlaceHolder.transform.position, spawnPlaceHolder.transform.rotation,0,null,spawnPlaceHolder.transform);
+            var nakedBody = Instantiate(player.bodyConfig.game_body_prefab, spawnPlaceHolder.transform.position, spawnPlaceHolder.transform.rotation, spawnPlaceHolder.transform);
 
             //add component SkinsManager
             var skinsManager = nakedBody.AddComponent<SkinsManager>();
@@ -51,13 +51,15 @@ public class PedestalController : MonoBehaviourPunCallbacks
     private void SpawnPlayerInfo(PaintBallPlayer player)
     {
         //spawn info in placeholder
-        var newInfo = PhotonNetwork.Instantiate(playerInfoRectPrefab.name, infoPlaceHolder.transform.position , Quaternion.identity, 0, null, infoCanvas.transform);
+        var newInfo = Instantiate(playerInfoRectPrefab, infoPlaceHolder.transform.position , Quaternion.identity, infoCanvas.transform);
 
-        newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, photon.IsMine);
-    }
+        newInfo.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = player.nickName;
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        
+/*        GameObject addTofriendsButton = newInfo.GetComponentInChildren<Button>().gameObject;*/
+        if(photon.IsMine)
+        {
+        }
+
+        //if it's our player hide add button
     }
 }

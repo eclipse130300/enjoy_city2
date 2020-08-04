@@ -23,7 +23,6 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
     public static GameManager instance;
     public MapConfig exitAfterDisconnect;
     bool _connectAndReady = false;
-
     public bool connected
     {
         get
@@ -43,7 +42,6 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
 
         paintball_Lobby_UI_Controller = FindObjectOfType<Paintball_lobby_UI_controller>();
-
 /*        Loader.Instance.afterLoading = tryConnect();*/
     }
 
@@ -99,15 +97,13 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
         /*PhotonNetwork.JoinOrCreateRoom(" newRoom ", new RoomOptions { MaxPlayers = maxPlayers }, TypedLobby.Default);*/
 
 
-        Debug.Log("JOINED LOBBY!" + PhotonNetwork.CurrentLobby);
+        Debug.Log("JOINED LOBBY!");
     }
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("CONNECTED TO MASTER");
-        /*        JoinLobby();*/
-
-        PhotonNetwork.NetworkingClient.OpJoinRandomOrCreateRoom(null, null);
+        JoinLobby();
 
         /*        PhotonNetwork.JoinRandomRoom();*/
     }
@@ -129,7 +125,7 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("ROOM ENTER.ROOM COUNT - " + PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log("SOMEONE ENTERED THE ROOM");
 
         //notifyUIcontroller 
         paintball_Lobby_UI_Controller.OnNewPlayerConnected();

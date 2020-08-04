@@ -41,9 +41,7 @@ namespace Photon.Pun
         public Player creator;
         public int timestamp;
 
-        public Transform parent;
-
-        public InstantiateParameters(string prefabName, Vector3 position, Quaternion rotation, byte @group, object[] data, byte objLevelPrefix, int[] viewIDs, Player creator, int timestamp, Transform parent)
+        public InstantiateParameters(string prefabName, Vector3 position, Quaternion rotation, byte @group, object[] data, byte objLevelPrefix, int[] viewIDs, Player creator, int timestamp)
         {
             this.prefabName = prefabName;
             this.position = position;
@@ -54,8 +52,6 @@ namespace Photon.Pun
             this.viewIDs = viewIDs;
             this.creator = creator;
             this.timestamp = timestamp;
-
-            this.parent = parent;
         }
     }
 
@@ -2338,7 +2334,7 @@ namespace Photon.Pun
         }
 
 
-        public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null, Transform parent = null)
+        public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
         {
             if (CurrentRoom == null)
             {
@@ -2346,11 +2342,11 @@ namespace Photon.Pun
                 return null;
             }
 
-            Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, data, currentLevelPrefix, null, LocalPlayer, ServerTimestamp, parent);
+            Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, data, currentLevelPrefix, null, LocalPlayer, ServerTimestamp);
             return NetworkInstantiate(netParams, false);
         }
 
-        public static GameObject InstantiateSceneObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null, Transform parent = null)
+        public static GameObject InstantiateSceneObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
         {
             if (CurrentRoom == null)
             {
@@ -2360,14 +2356,14 @@ namespace Photon.Pun
 
             if (LocalPlayer.IsMasterClient)
             {
-                Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, data, currentLevelPrefix, null, LocalPlayer, ServerTimestamp, parent);
+                Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, data, currentLevelPrefix, null, LocalPlayer, ServerTimestamp);
                 return NetworkInstantiate(netParams, true);
             }
 
             return null;
         }
 
-        private static GameObject NetworkInstantiate(Hashtable networkEvent, Player creator , Transform parent = null)
+        private static GameObject NetworkInstantiate(Hashtable networkEvent, Player creator)
         {
 
             // some values always present:
@@ -2430,7 +2426,7 @@ namespace Photon.Pun
             }
 
 
-            Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, incomingInstantiationData, objLevelPrefix, viewsIDs, creator, serverTime, parent);
+            Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, incomingInstantiationData, objLevelPrefix, viewsIDs, creator, serverTime);
             return NetworkInstantiate(netParams, false, true);
         }
 
@@ -2448,7 +2444,7 @@ namespace Photon.Pun
             GameObject go = null;
             PhotonView[] photonViews;
 
-            go = prefabPool.Instantiate(parameters.prefabName, parameters.position, parameters.rotation, parameters.parent);
+            go = prefabPool.Instantiate(parameters.prefabName, parameters.position, parameters.rotation);
 
 
             if (go == null)
