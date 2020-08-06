@@ -111,6 +111,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     {
         PutOnClothes(JsonConvert.DeserializeObject<ClothesConfig>(config));
     }
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         Debug.Log("OnPlayerPropertiesUpdate" + changedProps["skin"]);
@@ -192,6 +193,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
             customProperties.Add("skin", JsonConvert.SerializeObject(config));
             photon.Owner.SetCustomProperties(customProperties);
+           
         }
        
     }

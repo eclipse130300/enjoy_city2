@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using CMS.Config;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -35,7 +36,10 @@ public class PedestalController : MonoBehaviourPunCallbacks
             darkBody.SetActive(false);
 
             //instattiate body from dobyConf
-            var nakedBody = PhotonNetwork.Instantiate(player.bodyConfig.game_body_prefab.name, spawnPlaceHolder.transform.position, spawnPlaceHolder.transform.rotation,0,null,spawnPlaceHolder.transform);
+            var bodyPref = ScriptableList<BodyConfig>.instance.GetItemByID(player.bodyConfigID).game_body_prefab;
+
+            var nakedBody = PhotonNetwork.Instantiate(bodyPref.name, spawnPlaceHolder.transform.position, 
+                spawnPlaceHolder.transform.rotation,0,null,spawnPlaceHolder.transform);
 
             //add component SkinsManager
             var skinsManager = nakedBody.AddComponent<SkinsManager>();
@@ -54,10 +58,5 @@ public class PedestalController : MonoBehaviourPunCallbacks
         var newInfo = PhotonNetwork.Instantiate(playerInfoRectPrefab.name, infoPlaceHolder.transform.position , Quaternion.identity, 0, null, infoCanvas.transform);
 
         newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, photon.IsMine);
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        
     }
 }
