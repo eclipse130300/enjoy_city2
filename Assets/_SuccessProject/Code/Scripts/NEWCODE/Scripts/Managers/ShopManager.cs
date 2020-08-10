@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopManager : Singleton<ShopManager>
+public class ShopManager : MonoBehaviourSingleton<ShopManager>
 {
     private SaveManager saveManager;
 

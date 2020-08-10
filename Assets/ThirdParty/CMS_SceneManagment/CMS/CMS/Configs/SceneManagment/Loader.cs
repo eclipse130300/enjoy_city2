@@ -134,7 +134,7 @@ public class Loader : BaseLoader
     public void LoadGameScene(MapConfig config)
     {
 /*        Debug.Log("LoadGameScene " + config.ConfigId);*/
-        if(curentScene != config)
+        if (curentScene != config)
         {
             priveousScene = curentScene;
             curentScene = config;

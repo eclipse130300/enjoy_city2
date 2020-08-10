@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using Utils;
 
-public class SaveManager : Singleton<SaveManager>
+public class SaveManager : MonoBehaviourSingleton<SaveManager>
 {
     public ShopDataConfig shopDataConfig = new ShopDataConfig();
     public ImportantDataConfig importantDataConfig = new ImportantDataConfig();

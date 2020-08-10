@@ -135,7 +135,9 @@ public class MobileDebug : MonoBehaviour {
 			#endif
 			instance = this;
 		}
-		DontDestroyOnLoad(this);
+
+/*		DontDestroyOnLoad(this);*/
+
 		if(instance.lineDictionary==null)
 			instance.lineDictionary = new Dictionary<string, List<DebugMessageLine> >();	
 			

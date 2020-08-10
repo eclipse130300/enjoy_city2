@@ -12,6 +12,8 @@ public class InfoPlayer : MonoBehaviour
     {
         nickTxt.text = text;
         addFriendsButton.SetActive(!photonIsMine);
+
+        Debug.Log("I INITIALIZE INFO :" + text);
     }
 
 }

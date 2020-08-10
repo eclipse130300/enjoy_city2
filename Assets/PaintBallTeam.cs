@@ -27,10 +27,7 @@ public class PaintBallTeam
         if(playersInTeam.Count < playersMax)
         {
             playersInTeam.Add(newPlayer);
-
-/*            newPlayer.playerTeam = this;*/
-
-            Debug.Log("PLAYER :" + newPlayer.nickName + "JOINED " + teamName.ToString() + " TEAM!");
+/*            Debug.Log("PLAYER :" + newPlayer.nickName + "JOINED " + teamName.ToString() + " TEAM!");*/
         }
     }
 

@@ -188,7 +188,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
                 }
             }
         }
-        if (photon!= null && photon.IsMine)
+        if (photon != null && photon.IsMine && photon.Owner != null)
         {
             ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
             customProperties.Add("skin", JsonConvert.SerializeObject(config));
