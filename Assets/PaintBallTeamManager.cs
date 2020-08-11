@@ -100,4 +100,27 @@ public class PaintBallTeamManager : MonoBehaviour
             return playerNewTeam;
         }
     }
+
+    public void RemovePlayerFromGame(string UserId)
+    {
+        foreach(var pedestal in pedestals)
+        {
+            var controller = pedestal.GetComponent<PedestalController>();
+            if(controller.currentPlayer.photonUserID == UserId)
+            {
+                foreach(PaintBallTeam team in teams)
+                {
+                    foreach(PaintBallPlayer player in team.playersInTeam.ToList())
+                    {
+                        if(player.photonUserID == UserId)
+                        {
+                            team.RemoveFromTeam(player);
+                        }
+                    }
+                }
+
+                controller.DeletePlayerAndInfo();
+            }
+        }
+    }
 }

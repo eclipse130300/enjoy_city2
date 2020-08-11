@@ -8,10 +8,10 @@ public class InfoPlayer : MonoBehaviour
     public TextMeshProUGUI nickTxt;
     public GameObject addFriendsButton;
 
-    public void Initialize(string text, bool photonIsMine)
+    public void Initialize(string text, bool isMyPlayer)
     {
         nickTxt.text = text;
-        addFriendsButton.SetActive(!photonIsMine);
+        addFriendsButton.SetActive(!isMyPlayer);
     }
 
 }

@@ -41,6 +41,8 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
     [SerializeField] RectTransform playerInfoRect;
     [SerializeField] GameObject playerInfoPlaceHolder;
 
+    private static Player myPlayer;
+
     private void Start()
     {
         Connect();
@@ -89,7 +91,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayers });
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayers, CleanupCacheOnLeave = true });
     }
 
     public override void OnJoinedRoom()
@@ -150,19 +152,22 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (PhotonNetwork.IsMasterClient && changedProps["newPlayerToJoin"] != null)
+        if (changedProps["newPlayerToJoin"] != null)
         {
-            SpawnNewPlayerForMaster(targetPlayer, changedProps);
+            if (PhotonNetwork.IsMasterClient)
+                SpawnNewPlayerForMaster(targetPlayer, changedProps);
         }
-        else
+        if (changedProps["newPlayerForClients"] != null)
         {
             SpawnNewPlayerForClients(targetPlayer, changedProps);
         }
+        
+
     }
 
     private void SpawnNewPlayerForClients(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (changedProps["newPlayerForClients"] != null && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.UserId))
+        if (changedProps["newPlayerForClients"] != null && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber.ToString()))
         {
             string playerJson = changedProps["newPlayerForClients"].ToString();
             PaintBallPlayer finalPlayer = JsonConvert.DeserializeObject<PaintBallPlayer>(playerJson);
@@ -174,7 +179,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
 
     private void SpawnNewPlayerForMaster(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (paintBallTeamManager.LookForEmptySlot() && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.UserId))
+        if (paintBallTeamManager.LookForEmptySlot() && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber.ToString())) //
         {
             string newPlayerJSON = changedProps["newPlayerToJoin"].ToString();
             PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayerJSON);
@@ -182,7 +187,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
             int teamToJoinIndex = paintBallTeamManager.PickTeam().teamIndex;
             changedProps.Add("teamIndex", teamToJoinIndex);
 
-            player.photonUserID = targetPlayer.UserId;
+            player.photonUserID = targetPlayer.ActorNumber.ToString(); //
 
             string playerJSON = JsonConvert.SerializeObject(player);
             changedProps.Add("newPlayerForClients", playerJSON);
@@ -204,11 +209,15 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
+
+        paintBallTeamManager.RemovePlayerFromGame(otherPlayer.ActorNumber.ToString()); //
+
+        Debug.Log("PLAYERS IN ROOM! - " + PhotonNetwork.CurrentRoom.PlayerCount);
     }
 
     public void OnClick_exitPaintball()
     {
-        PhotonNetwork.LeaveLobby();
+        PhotonNetwork.Disconnect();
         Loader.Instance.LoadGameScene(exitAfterDisconnect);
     }
 }

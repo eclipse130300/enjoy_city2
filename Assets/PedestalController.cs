@@ -18,6 +18,10 @@ public class PedestalController : MonoBehaviourPunCallbacks
     public GameObject infoPlaceHolder;
 
     private PhotonView photon;
+    // current info
+    public PaintBallPlayer currentPlayer;
+    private GameObject playerPref;
+    private GameObject playerInfo;
 
     private void Awake()
     {
@@ -52,6 +56,9 @@ public class PedestalController : MonoBehaviourPunCallbacks
 
             //put on clothes from our field 
             skinsManager.PutOnClothes(player.clothesConfig);
+
+            playerPref = nakedBody;
+            currentPlayer = player;
         }
     }
 
@@ -66,7 +73,17 @@ public class PedestalController : MonoBehaviourPunCallbacks
         autorization.Login();
         string playerID = autorization.profile.UserName;
 
-        newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, /*photon.IsMine*/ player.nickName != playerID); //we check if our player is target player
+        newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, player.nickName == SaveManager.Instance.GetNickName()); //we check if our player is target player
+
+        playerInfo = newInfo;
     }
+    public void DeletePlayerAndInfo()
+    {
+        currentPlayer = null;
+        Destroy(playerPref);
+        Destroy(playerInfo);
+        darkBody.SetActive(true);
+    }
+
 
 }

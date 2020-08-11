@@ -31,4 +31,9 @@ public class PaintBallTeam
         }
     }
 
+    public void RemoveFromTeam(PaintBallPlayer player)
+    {
+        playersInTeam.Remove(player);
+    }
+
 }
