@@ -18,7 +18,11 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour
             return _instance;
         }
     }
-  
+    public virtual void OnDestroy()
+    {
+
+    }
+
     protected virtual void InitSingleton() { }
 }
 
@@ -47,4 +51,6 @@ public class ScriptableObjectSingleton<T> : ScriptableObject
     {
         _instance = null;
     }
+
+
 }

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public static class GameEvents
 {
+    //photon event-bytes
+    public const byte NEWPLAYER_CONNECTED_EVENT = 1;
+
+
+    //city
     public const string ENTRY_POINT_ENTERED = "ENTRY_POINT_ENTERED";
     public const string ENTRY_POINT_EXIT = "ENTRY_POINT_EXIT";
 

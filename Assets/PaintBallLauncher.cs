@@ -1,14 +1,16 @@
 ﻿using CMS.Config;
 using ExitGames.Client.Photon;
+using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using SocialGTA;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallLauncher : MonoBehaviourPunCallbacks
+public class PaintBallLauncher : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField] string playerOrigin;
     const string roomPrefix = "Канал";
@@ -23,6 +25,7 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
     public static GameManager instance;
     public MapConfig exitAfterDisconnect;
     bool _connectAndReady = false;
+
     public bool connected
     {
         get
@@ -36,30 +39,72 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
     Paintball_lobby_UI_controller paintball_Lobby_UI_Controller;
 
+    [SerializeField] List<GameObject> pedestals = new List<GameObject>();
+    [SerializeField] List<RectTransform> playerInfos = new List<RectTransform>();
+    [SerializeField] RectTransform playerInfoRect;
+    [SerializeField] GameObject playerInfoPlaceHolder;
+    private const int teamsAmount = 2;
+    [SerializeField] PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
+    [SerializeField] Color[] teamColors = new Color[teamsAmount];
+    [SerializeField] int maxPlayersInTeam = 4;
+
+    PhotonView photon;
+
     private void Awake()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+/*        PhotonNetwork.AutomaticallySyncScene = false;*/
 
 
         paintball_Lobby_UI_Controller = FindObjectOfType<Paintball_lobby_UI_controller>();
-/*        Loader.Instance.afterLoading = tryConnect();*/
+
+        photon = GetComponent<PhotonView>();
     }
 
-/*    public IEnumerator tryConnect()
+    void InitializeTeams()
     {
-        PhotonNetwork.ConnectUsingSettings();
-        while (!connected)
-        {
-            yield return null;
+        var allTEams = Enum.GetValues(typeof(TEAM)).Cast<TEAM>().ToList();
+        /*        int arrayIndex = 0;*/
 
+        for (int i = 0; i < allTEams.Count; i++)
+        {
+            GameObject[] teamPedestals = new GameObject[maxPlayersInTeam];
+            pedestals.CopyTo(maxPlayersInTeam * i, teamPedestals, 0, maxPlayersInTeam);
+
+
+            teams[i] = new PaintBallTeam(teamColors[i], allTEams[i], maxPlayersInTeam, teamPedestals, i);
         }
-        yield return null;
-        Debug.Log("connectedTOPHOTON!");
-    }*/
+    }
+
+
+    /*    public IEnumerator tryConnect()
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            while (!connected)
+            {
+                yield return null;
+
+            }
+            yield return null;
+            Debug.Log("connectedTOPHOTON!");
+        }*/
 
     private void Start()
     {
+        InitializeTeams();
+
         Connect();
+    }
+
+    public bool LookForEmptySlot()
+    {
+        int allPlayersConnected = 0;
+
+        foreach (var team in teams)
+        {
+            allPlayersConnected += team.playersInTeam.Count;
+        }
+
+        return allPlayersConnected < teamsAmount * maxPlayersInTeam;
     }
 
     private void OnDestroy()
@@ -85,27 +130,19 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
     public override void OnConnected()
     {
-        Debug.Log("OnConnected");
 /*        JoinLobby();*/
     }
 
     public override void OnJoinedLobby()
     {
-        PhotonNetwork.JoinRandomRoom();
+        PhotonNetwork.JoinOrCreateRoom( "test" , new RoomOptions { MaxPlayers = maxPlayers} , TypedLobby.Default);
 
-
-        /*PhotonNetwork.JoinOrCreateRoom(" newRoom ", new RoomOptions { MaxPlayers = maxPlayers }, TypedLobby.Default);*/
-
-
-        Debug.Log("JOINED LOBBY!");
+        Debug.Log("JOINED LOBBY!" + PhotonNetwork.CurrentLobby);
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("CONNECTED TO MASTER");
         JoinLobby();
-
-        /*        PhotonNetwork.JoinRandomRoom();*/
     }
 
     private void JoinLobby()
@@ -125,58 +162,39 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("SOMEONE ENTERED THE ROOM");
+        Debug.Log("PLAYERS IN ROOM! - " + PhotonNetwork.CurrentRoom.PlayerCount);
 
-        paintball_Lobby_UI_Controller.OnNewPlayerConnected(1);
+        SendLocalPlayerDataToMaster();
+        // return;
 
-        //create player model
-
-        //show player info (nick)
-
-        //CreatePlayer();
+        SpawnExistingPlayers();
     }
 
-
-
-    private void CreatePlayer()
+    void SpawnExistingPlayers()
     {
-        EntryPoint[] points = FindObjectsOfType<EntryPoint>();
-        EntryPoint point = points.FirstOrDefault((x) => {
-            return x.mapCFG.ConfigId == Loader.Instance.priveousScene.ConfigId;
-        });
-        AutorizationController autorization = new AutorizationController();
-        autorization.Login();
-        PhotonNetwork.LocalPlayer.NickName = autorization.profile.UserName;
-        PhotonNetwork.Instantiate(playerOrigin, point.transform.position, point.transform.rotation);
-        _connectAndReady = true;
+        List<Player> connectedPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
+        foreach (Player player in connectedPlayers)
+        {
+            OnPlayerPropertiesUpdate(player, player.CustomProperties);
+        }
     }
 
-/*    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    void SendLocalPlayerDataToMaster()
     {
-        Debug.Log("OnRoomListUpdate");
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.SuppressRoomEvents = false;
-        roomOptions.BroadcastPropsChangeToAll = true;
-        roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = maxPlayers;
-        roomOptions.PublishUserId = true;
+        SaveManager saveManager = SaveManager.Instance;
 
-        string roomName = "";
-        foreach (var room in roomList)
-        {
-            if (room.PlayerCount < room.MaxPlayers)
-            {
-                Debug.Log("ROOM " + room.Name);
-                roomName = room.Name;
-            }
-        }
-        if (string.IsNullOrEmpty(roomName))
-        {
-            roomName = roomPrefix + "_" + roomList.Count + 1;
-        }
+        PaintBallPlayer newPlayerToJoin = new PaintBallPlayer(saveManager.LoadBody().ConfigId,
+          saveManager.LoadClothesSet(saveManager.LoadBody().gender.ToString() + GameMode.Paintball.ToString()), saveManager.GetNickName());
 
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-    }*/
+        ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+        customProperties.Add("newPlayerToJoin", JsonConvert.SerializeObject(newPlayerToJoin));
+        PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+
+/*        string newPlayerStr = JsonConvert.SerializeObject(newPlayerToJoin);
+        photon.RPC("MasterSearch", RpcTarget.MasterClient, newPlayerStr);   // TODO Check if master has recieved this call*/
+
+        Debug.Log("SENT DATA TO MASTER!");
+    }
 
     public override void OnLeftLobby()
     {
@@ -203,27 +221,22 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
     }
 
 
-
-
     public override void OnDisconnected(DisconnectCause cause)
     {
         if (exitAfterDisconnect != null)
         {
-            Loader.Instance.LoadGameScene(exitAfterDisconnect);
+          //  Loader.Instance.LoadGameScene(exitAfterDisconnect);
 
         }
     }
 
     public override void OnRegionListReceived(RegionHandler regionHandler)
     {
+
     }
-
-
-
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
@@ -241,11 +254,129 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
 
 
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
-    {
+    { 
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        if (PhotonNetwork.IsMasterClient && changedProps["newPlayerToJoin"] != null)
+        {
+            if (LookForEmptySlot() && !PlayerIsInTeam(targetPlayer.UserId))
+            {
+                string newPlayerJSON = changedProps["newPlayerToJoin"].ToString();
+                PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayerJSON);
+
+                int teamToJoinIndex = PickTeam().teamIndex;
+                changedProps.Add("teamIndex", teamToJoinIndex);
+
+                player.photonUserID = targetPlayer.UserId;
+
+                string playerJSON = JsonConvert.SerializeObject(player);
+                changedProps.Add("Player", playerJSON);
+
+                /*                var dataStr = JsonConvert.SerializeObject(teamToJoinIndex, player);*/
+
+                AddPlayerToTeamAndSpawn(teamToJoinIndex, player);
+                targetPlayer.SetCustomProperties(changedProps);
+            }
+
+        }
+        else
+        {
+            if (changedProps["Player"] != null && !PlayerIsInTeam(targetPlayer.UserId))
+            {
+                string playerJson = changedProps["Player"].ToString();
+                PaintBallPlayer finalPlayer = JsonConvert.DeserializeObject<PaintBallPlayer>(playerJson);
+
+                int teamIndex = (int)changedProps["teamIndex"];
+
+                AddPlayerToTeamAndSpawn(teamIndex, finalPlayer);
+            }
+        }
+    }
+
+/*    [PunRPC]
+    void MasterSearch(string newPlayerStr)
+    {
+        PaintBallPlayer newPlayerToJoin = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayerStr);
+
+        if (LookForEmptySlot() && !PlayerIsInTeam(newPlayerToJoin.photonUserID))
+        {
+            int teamToJoinIndex = PickTeam().teamIndex;
+
+            photon.RPC("AddPlayerToTeamAndSpawn", , teamToJoinIndex, newPlayerStr);
+*//*            AddPlayerToTeamAndSpawn(teamToJoinIndex, newPlayerToJoin);*//*
+        }
+    }*/
+
+    bool PlayerIsInTeam(string userID)
+    {
+        foreach (var team in teams)
+        {
+            foreach (PaintBallPlayer pl in team.playersInTeam)
+            {
+                if(pl.photonUserID == userID)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void AddPlayerToTeamAndSpawn(int teamIndex, PaintBallPlayer player)
+    {
+/*        PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(playerStr);*/
+
+
+        PaintBallTeam playerNewTeam = null;
+
+        foreach (var team in teams)
+        {
+            if(team.teamIndex == teamIndex)
+            {
+                playerNewTeam = team;
+                playerNewTeam.JoinTeam(player);
+            }
+        }
+
+        if(playerNewTeam == null)
+        {
+            Debug.LogError("CannotFind team by index");
+        }
+        else
+        { 
+            var pedestal = player.GetTeamPedestal(playerNewTeam);
+
+            pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(player);
+            Debug.Log("Player spawned");
+        }
+    }
+
+    PaintBallTeam PickTeam(/*PaintBallPlayer player*/)
+    {
+        //we check every team
+        int theLessPlayerNum = maxPlayersInTeam;
+        PaintBallTeam teamToJoin = null;
+
+        //if one team has less players than another
+        foreach (PaintBallTeam team in teams)
+        {
+            if (team.playersInTeam.Count < theLessPlayerNum)
+            {
+                theLessPlayerNum = team.playersInTeam.Count;
+                teamToJoin = team;
+            }
+        }
+/*        //join team
+        teamToJoin.JoinTeam(player);*/
+
+        return teamToJoin;
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        //when they recieve event, they check their own teams list and and new player(in field list and screen) if necessary
     }
 
     public override void OnFriendListUpdate(List<FriendInfo> friendList)
@@ -268,21 +399,18 @@ public class PaintBallLauncher : MonoBehaviourPunCallbacks
     {
     }
 
-    /// <summary>
-    /// Called when the client receives an event from the server indicating that an error happened there.
-    /// </summary>
-    /// <remarks>
-    /// In most cases this could be either:
-    /// 1. an error from webhooks plugin (if HasErrorInfo is enabled), read more here:
-    /// https://doc.photonengine.com/en-us/realtime/current/gameplay/web-extensions/webhooks#options
-    /// 2. an error sent from a custom server plugin via PluginHost.BroadcastErrorInfoEvent, see example here: 
-    /// https://doc.photonengine.com/en-us/server/current/plugins/manual#handling_http_response
-    /// 3. an error sent from the server, for example, when the limit of cached events has been exceeded in the room
-    /// (all clients will be disconnected and the room will be closed in this case)
-    /// read more here: https://doc.photonengine.com/en-us/realtime/current/gameplay/cached-events#special_considerations
-    /// </remarks>
-    /// <param name="errorInfo">object containing information about the error</param>
-    public override void OnErrorInfo(ErrorInfo errorInfo)
-    {
-    }
+
 }
+
+/*[System.Serializable]
+public class JoinData
+{
+    public int teamIndex;
+    public PaintBallPlayer player;
+
+    public JoinData(PaintBallPlayer player, int teamIndex)
+    {
+        this.player = player;
+        this.teamIndex = teamIndex;
+    }
+}*/

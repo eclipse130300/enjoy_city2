@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SoundManager : Singleton<SoundManager>
+public class SoundManager : MonoBehaviourSingleton<SoundManager>
 {
     private Loader loader;
     private AudioSource audioSource;

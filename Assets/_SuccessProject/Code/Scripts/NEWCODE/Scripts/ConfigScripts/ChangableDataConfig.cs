@@ -14,7 +14,7 @@ public class ChangableDataConfig : ISerializationCallbackReceiver, IDataConfig
     public RoomConfig roomConfig = new RoomConfig();
 
 
-    string nickName;
+    public string nickName;
     public string currentBodyConfigId ;
 
     public Dictionary<string, ClothesConfig> pickedClothesConfigs = new Dictionary<string, ClothesConfig>(); //нужна тольк во время выполнения программы

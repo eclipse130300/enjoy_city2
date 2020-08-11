@@ -8,7 +8,7 @@ AnimationInstancing.cs - The core part of the Animation Instancing library
 using UnityEngine;
 using System.Collections;
 
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+/*public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     protected static T _instance;
 
@@ -57,4 +57,4 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         return applicationIsQuitting;
     }
-}
+}*/

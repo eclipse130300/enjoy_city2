@@ -7,7 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BaseLoader : Singleton<BaseLoader>
+public class BaseLoader : MonoBehaviourSingleton<BaseLoader>
 {
     public float LoadProgress
     {
@@ -52,11 +52,17 @@ public class BaseLoader : Singleton<BaseLoader>
     protected Coroutine loadAllScenesCoroutine;
     protected Coroutine unloadAllScenesCoroutine;
 
-    public IEnumerator afterLoading;
-    void Start()
-    {
+    private bool isInited = false;
 
-        Init();
+    public IEnumerator afterLoading;
+    void Awake()
+    {
+        if (!isInited)
+        {
+            Init();
+            isInited = true;
+        }
+
     }
     protected virtual void Init()
     {
@@ -74,6 +80,11 @@ public class BaseLoader : Singleton<BaseLoader>
             }
 
         }
+
+    }
+
+    void SetActiveScene(Scene scene)
+    {
 
     }
 
@@ -118,6 +129,7 @@ public class BaseLoader : Singleton<BaseLoader>
     {
         if (Application.isPlaying)
         {
+            Debug.Log("UNLOAD SCENE :" + name); 
 
             if (!sceneToUnload.Contains(name) && (loadedScenes.Contains(name) || sceneToLoad.Contains(name)))
                 sceneToUnload.Add(name);

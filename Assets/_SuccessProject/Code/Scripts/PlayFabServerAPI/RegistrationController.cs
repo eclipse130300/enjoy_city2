@@ -35,7 +35,11 @@ namespace SocialGTA {
         #region Custom Functions
 
         public void OnClickRegistration () {
+
+            SaveManager.Instance.SetNick(userNameIF.text);
             Loader.Instance.LoadGameScene(createCharacter);
+
+
             SaveProfileSettings.Profile = new ProfileModel
             {
                 UserName = userNameIF.text,
@@ -49,7 +53,7 @@ namespace SocialGTA {
                     Email = emailIF.text,
                     Passworld = passworldIF.text
                 };
-              
+
                 // loaderManager.LoadAsyncScene(cCharacterSceneID);
 
             }, error => {
