@@ -28,9 +28,9 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
         _characterSex = SaveManager.Instance.LoadBody().gender; //take body gender (we choose it at the first launch)
 
+        if (photon == null) return;
 
-
-        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        if ((/*photon == null || */photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
@@ -41,12 +41,10 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
                 Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
 
             }
-/*            Loader.Instance.AllSceneLoaded += InitializeSkins;*/
         }
-        else {
+        else 
+        {
             PutOnClothes();
-
-
         }
 
        
@@ -97,9 +95,8 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
             {
                 currentConfig = LoadConf(_characterSex, _gameMode); //ERROR HERE!
                 PutOnClothes(currentConfig);
-               
-            } else
-    
+            } 
+            else
             {
                // Debug.Log("   Other         " + photon.Owner.UserId + " "+photon.Owner.CustomProperties["skin"].ToString());
                if(photon.Owner.CustomProperties["skin"] != null)
@@ -114,13 +111,13 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        Debug.Log("OnPlayerPropertiesUpdate" + changedProps["skin"]);
+        if (photon == null) return;
+
+/*        Debug.Log("OnPlayerPropertiesUpdate" + changedProps["skin"]);*/
         if (targetPlayer == photon.Owner && !photon.IsMine)
             PutOnClothes(changedProps["skin"].ToString());
-        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-       
-       
-       
+        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);  
+
     }
     public void PutOnItem(ItemConfig config,ItemVariant variant) {
         if (config.itemObject != null)
@@ -188,6 +185,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
                 }
             }
         }
+
         if (photon != null && photon.IsMine && photon.Owner != null)
         {
             ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();

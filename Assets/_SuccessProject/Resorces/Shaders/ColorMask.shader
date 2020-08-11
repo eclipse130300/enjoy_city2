@@ -16,10 +16,10 @@
     }
     SubShader
     {
-        Tags {"Queue" = "Transparent" "RenderType" = "Opaque" }
+        Tags {"Queue" = "Transparent" "RenderType" = "Transparent" }
        // LOD 200
 
-        ZWrite Off
+        /*ZWrite Off*/
                  Blend SrcAlpha OneMinusSrcAlpha
                  ColorMask RGB
         CGPROGRAM

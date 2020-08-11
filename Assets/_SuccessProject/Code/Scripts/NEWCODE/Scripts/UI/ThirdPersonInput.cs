@@ -12,6 +12,8 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class ThirdPersonInput :MonoBehaviour, IPunObservable
 {
     [SerializeField] LayerMask noPlayerLayerMask;
+    [SerializeField] CMS.Config.MapConfig roomScene;
+
     public PhotonView photonView;
     [SerializeField] float groundCheckRadius;
 
@@ -202,8 +204,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         {
             LeftJoystick = FindObjectOfType<FloatingJoystick>();
             TouchField = FindObjectOfType<FixedTouchField>();
-
             hasReferencies = true;
+            if(!Loader.Instance.curentScene == roomScene)
+            {
+                JumpButton = FindObjectOfType<FixedButton>();
+            }
         }
     }
 

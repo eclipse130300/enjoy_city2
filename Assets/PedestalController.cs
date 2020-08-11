@@ -52,7 +52,6 @@ public class PedestalController : MonoBehaviourPunCallbacks
 
             //put on clothes from our field 
             skinsManager.PutOnClothes(player.clothesConfig);
-            Debug.Log("I PUT ON CLOSED CALLED :" + player.clothesConfig.ToString());
         }
     }
 
