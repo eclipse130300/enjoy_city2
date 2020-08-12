@@ -30,16 +30,14 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
         if (photon == null) return;
 
-        if ((/*photon == null || */photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        if ((photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             Messenger.AddListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.AddListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-/*            Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);*/
-            if (GetComponent<PreviewManager>() != null /*&& */) //ckeck if we are in character editor
+
+            if (GetComponent<PreviewManager>() != null) //ckeck if we are in character editor
             {
-
                 Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
-
             }
         }
         else 
@@ -198,22 +196,18 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
     private void OnDestroy()
     {
-    
+        if (photon == null) return;
+
         if (GetComponent<PreviewManager>() != null) //ckeck if this manager is prewiew skin manager
         {
-           // Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
             Messenger.RemoveListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
         }
 
-        if ((photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
+        if ((photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
         }
         Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
-/*        Messenger.AddListener<Transform>(GameEvents.BODY_CHANGED, OnBodyChanged);*/
-
-/*        if (Loader.Instance != null)
-        Loader.Instance.AllSceneLoaded -= InitializeSkins;*/
     }
 
     ClothesConfig LoadConf(Gender gender, GameMode gameMode)

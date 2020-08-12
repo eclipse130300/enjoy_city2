@@ -12,11 +12,11 @@ using UnityEngine;
 
 public class PaintBallRoom : MonoBehaviourPunCallbacks
 {
-    [SerializeField] string playerOrigin;
+/*    [SerializeField] string playerOrigin;*/
     const string roomPrefix = "Канал";
 
     [SerializeField]
-    string lobbyName = "City";
+    string lobbyName = "PaintBall";
 
     [SerializeField]
     byte maxPlayers = 8;
@@ -26,6 +26,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
     bool _connectAndReady = false;
 
     [SerializeField] PaintBallTeamManager paintBallTeamManager;
+    [SerializeField] StartPaintball startPaintball;
 
     public bool connected
     {
@@ -161,8 +162,6 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         {
             SpawnNewPlayerForClients(targetPlayer, changedProps);
         }
-        
-
     }
 
     private void SpawnNewPlayerForClients(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
@@ -211,6 +210,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         base.OnPlayerLeftRoom(otherPlayer);
 
         paintBallTeamManager.RemovePlayerFromGame(otherPlayer.ActorNumber.ToString()); //
+/*        startPaintball.ToggleStartButton(PhotonNetwork.CurrentRoom.PlayerCount);*/
 
         Debug.Log("PLAYERS IN ROOM! - " + PhotonNetwork.CurrentRoom.PlayerCount);
     }

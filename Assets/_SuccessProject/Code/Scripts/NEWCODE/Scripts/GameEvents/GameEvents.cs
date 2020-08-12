@@ -5,7 +5,7 @@ using UnityEngine;
 public static class GameEvents
 {
     //photon event-bytes
-    public const byte NEWPLAYER_CONNECTED_EVENT = 1;
+    public const byte PLAYER_IS_READY_PAINTBALL = 1;
 
 
     //city
