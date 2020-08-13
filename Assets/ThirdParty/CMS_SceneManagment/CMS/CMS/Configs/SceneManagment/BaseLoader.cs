@@ -129,7 +129,6 @@ public class BaseLoader : MonoBehaviourSingleton<BaseLoader>
     {
         if (Application.isPlaying)
         {
-            Debug.Log("UNLOAD SCENE :" + name); 
 
             if (!sceneToUnload.Contains(name) && (loadedScenes.Contains(name) || sceneToLoad.Contains(name)))
                 sceneToUnload.Add(name);

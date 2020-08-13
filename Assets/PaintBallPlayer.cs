@@ -10,7 +10,8 @@ public class PaintBallPlayer
     public string bodyConfigID;
     public ClothesConfig clothesConfig;
     public string nickName;
-    public string photonUserID;
+    public int photonActorNumber;
+    public TEAM playerTeam;
 
     public PaintBallPlayer (string bodyConfigId, ClothesConfig clothesConfig, string nickName/*, string photonUserID*/)
     {

@@ -86,6 +86,7 @@ public class BodyChangerUIController : MonoBehaviour
         //find config with current body
         /*List<BodyConfig>*/
         BodyConfig bodyConf = allBodyConfigs[previewingIndex]; /*ScriptableList<BodyConfig>.instance.list.Where(x => x.preview_body_prefab == spawnedPreviewBodies[previewingIndex]).FirstOrDefault();*/
+        Debug.Log("I PICKED BODY - " + bodyConf);
 /*        Debug.Log(bodyConf.gender.ToString());*/
         //add this config to savemanager
         SaveManager.Instance.SaveBody(bodyConf);

@@ -1,5 +1,6 @@
 ﻿using CMS.Config;
 using ExitGames.Client.Photon;
+using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
@@ -83,7 +84,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
             bool value = (bool)data[0];
             int senderKey = photonEvent.Sender;
 
-            Debug.Log("SENDER - " + senderKey + " VALUE - " + value);
+/*            Debug.Log("SENDER - " + senderKey + " VALUE - " + value);*/
 
             AddToReadyList(senderKey, value);
         }
@@ -97,7 +98,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 readyList.Remove(key);
                 //abrupt CD here?
-                photon.RPC("AbruptCountDown", RpcTarget.All);
+                photon.RPC("AbruptCountDown", RpcTarget.AllViaServer);
             }
         }
         readyList.Add(key, value);
@@ -110,7 +111,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
         if (AllPlayersReadyCheck())
         {
             //here we as master send RPC to start CD to allPlayers(including us)
-            photon.RPC("BeginCountDown", RpcTarget.All);
+            photon.RPC("BeginCountDown", RpcTarget.AllViaServer);
         }
     }
 
@@ -130,8 +131,19 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     private void StartGame()
     {
-        Debug.Log("I LOAD SCENE BOYZ!");
+/*
+        //master save in roomProperties final teams
+        if(PhotonNetwork.IsMasterClient)
+        {
+            ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+            customProperties.Add("teams", JsonConvert.SerializeObject(PaintBallTeamManager.teams));
+            PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
+        }*/
+
+        PhotonNetwork.IsMessageQueueRunning = false;
         Loader.Instance.LoadGameScene(paintBallGame);
+        Debug.LogError("I LOAD SCENE BOYZ!");
+/*        Destroy(this);*/
     }
 
 
@@ -150,12 +162,10 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
             yield return null;
         }
 
-
-
         //loadScene for everyone if everybody is in here
-        if(AllPlayersReadyCheck())
+        if(PhotonNetwork.IsMasterClient)
         {
-            photon.RPC("StartGame", RpcTarget.All);
+            photon.RPC("StartGame", RpcTarget.AllViaServer);
         }
         
     }
@@ -163,7 +173,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     private bool AllPlayersReadyCheck()
     {
         var readyListCount = readyList.Keys.Count;
-        Debug.Log("readyListCount = " + readyListCount);
+/*        Debug.Log("readyListCount = " + readyListCount);*/
         if (readyListCount != PhotonNetwork.CurrentRoom.PlayerCount) return false; //player didn't even press ready
 
         int readyCount = 0;
@@ -175,7 +185,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
             }
         }
 
-        Debug.Log("READY COUNT = " + readyCount);
+/*        Debug.Log("READY COUNT = " + readyCount);*/
         if(readyCount == readyListCount)
         {
             return true;

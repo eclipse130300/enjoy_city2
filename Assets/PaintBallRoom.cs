@@ -26,7 +26,6 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
     bool _connectAndReady = false;
 
     [SerializeField] PaintBallTeamManager paintBallTeamManager;
-    [SerializeField] StartPaintball startPaintball;
 
     public bool connected
     {
@@ -134,14 +133,6 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         _connectAndReady = false;
         PhotonNetwork.LeaveLobby();
     }
-/*    public override void OnDisconnected(DisconnectCause cause)
-    {
-        if (exitAfterDisconnect != null)
-        {
-          //  Loader.Instance.LoadGameScene(exitAfterDisconnect);
-
-        }
-    }*/
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
@@ -166,7 +157,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
 
     private void SpawnNewPlayerForClients(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (changedProps["newPlayerForClients"] != null && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber.ToString()))
+        if (changedProps["newPlayerForClients"] != null && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber/*.ToString()*/))
         {
             string playerJson = changedProps["newPlayerForClients"].ToString();
             PaintBallPlayer finalPlayer = JsonConvert.DeserializeObject<PaintBallPlayer>(playerJson);
@@ -178,7 +169,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
 
     private void SpawnNewPlayerForMaster(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (paintBallTeamManager.LookForEmptySlot() && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber.ToString())) //
+        if (paintBallTeamManager.LookForEmptySlot() && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber/*.ToString()*/)) //
         {
             string newPlayerJSON = changedProps["newPlayerToJoin"].ToString();
             PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayerJSON);
@@ -186,7 +177,9 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
             int teamToJoinIndex = paintBallTeamManager.PickTeam().teamIndex;
             changedProps.Add("teamIndex", teamToJoinIndex);
 
-            player.photonUserID = targetPlayer.ActorNumber.ToString(); //
+            //Master fills empty fields for new player
+            player.photonActorNumber = targetPlayer.ActorNumber;
+            player.playerTeam = paintBallTeamManager.PickTeam().teamName;
 
             string playerJSON = JsonConvert.SerializeObject(player);
             changedProps.Add("newPlayerForClients", playerJSON);
@@ -202,17 +195,16 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
 
         var pedestal = finalPlayer.GetTeamPedestal(newTeam);
         pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(finalPlayer);
-        Debug.Log("Player spawned");
+/*        Debug.Log("Player spawned");*/
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
 
-        paintBallTeamManager.RemovePlayerFromGame(otherPlayer.ActorNumber.ToString()); //
-/*        startPaintball.ToggleStartButton(PhotonNetwork.CurrentRoom.PlayerCount);*/
+        paintBallTeamManager.RemovePlayerFromGame(otherPlayer.ActorNumber);
 
-        Debug.Log("PLAYERS IN ROOM! - " + PhotonNetwork.CurrentRoom.PlayerCount);
+/*        Debug.Log("PLAYERS IN ROOM! - " + PhotonNetwork.CurrentRoom.PlayerCount);*/
     }
 
     public void OnClick_exitPaintball()

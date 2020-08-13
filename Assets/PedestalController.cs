@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 public class PedestalController : MonoBehaviourPunCallbacks
 {
+    //fill it in inspector to sort pedestals(from 0 to 7)
+    public int priorityIndex;
 
     public GameObject darkBody;
     public GameObject spawnPlaceHolder;

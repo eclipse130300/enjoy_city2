@@ -66,7 +66,7 @@ public class SaveManager : MonoBehaviourSingleton<SaveManager>
 
     public BodyConfig LoadBody()
     {
-        var body = ScriptableList<BodyConfig>.instance.GetItemByID(changableDataConfig.currentBodyConfigId);
+        BodyConfig body = ScriptableList<BodyConfig>.instance.GetItemByID(changableDataConfig.currentBodyConfigId);
 
         return body;
     }

@@ -8,13 +8,15 @@ public class PaintBallTeamManager : MonoBehaviour
 {
     private const int teamsAmount = 2;
 
-    [SerializeField] PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
+    public static PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
     [SerializeField] List<GameObject> pedestals = new List<GameObject>();
+
     [SerializeField] Color[] teamColors = new Color[teamsAmount];
     [SerializeField] int maxPlayersInTeam = 4;
 
     private void Start()
     {
+        InitializePedestals();
         InitializeTeams();
     }
 
@@ -28,6 +30,33 @@ public class PaintBallTeamManager : MonoBehaviour
             GameObject[] teamPedestals = new GameObject[maxPlayersInTeam];
             pedestals.CopyTo(maxPlayersInTeam * i, teamPedestals, 0, maxPlayersInTeam);
             teams[i] = new PaintBallTeam(teamColors[i], allTEams[i], maxPlayersInTeam, teamPedestals, i);
+        }
+    }
+
+    void InitializePedestals()
+    {
+        //if we find pedestals on the scene sort them by priority index
+        if(pedestals.Count == 0)
+        {
+            var allPedestals = FindObjectsOfType<PedestalController>().ToList();
+            int maxIterations = allPedestals.Count;
+
+            for (int i = 0; i < maxIterations; i++)
+            {
+                PedestalController itemToadd = null;
+                int minIndex = int.MaxValue;
+
+                foreach (PedestalController item in allPedestals)
+                {
+                    if (item.priorityIndex <= minIndex)
+                    {
+                        itemToadd = item;
+                        minIndex = item.priorityIndex;
+                    }
+                }
+                pedestals.Add(itemToadd.gameObject);
+                allPedestals.Remove(itemToadd);
+            }
         }
     }
 
@@ -62,13 +91,13 @@ public class PaintBallTeamManager : MonoBehaviour
         return teamToJoin;
     }
 
-    public bool PlayerIsInTeam(string userID)
+    public bool PlayerIsInTeam(int actorNum)
     {
         foreach (var team in teams)
         {
             foreach (PaintBallPlayer pl in team.playersInTeam)
             {
-                if (pl.photonUserID == userID)
+                if (pl.photonActorNumber == actorNum)
                 {
                     return true;
                 }
@@ -101,18 +130,18 @@ public class PaintBallTeamManager : MonoBehaviour
         }
     }
 
-    public void RemovePlayerFromGame(string UserId)
+    public void RemovePlayerFromGame(int actorNum)
     {
         foreach(var pedestal in pedestals)
         {
             var controller = pedestal.GetComponent<PedestalController>();
-            if(controller.currentPlayer.photonUserID == UserId)
+            if(controller.currentPlayer.photonActorNumber == actorNum)
             {
                 foreach(PaintBallTeam team in teams)
                 {
                     foreach(PaintBallPlayer player in team.playersInTeam.ToList())
                     {
-                        if(player.photonUserID == UserId)
+                        if(player.photonActorNumber == actorNum)
                         {
                             team.RemoveFromTeam(player);
                         }

@@ -11,32 +11,25 @@ public class BodyManager : MonoBehaviour
     private SaveManager saveManager;
     private SkinsManager skinsManager;
 
-    private bool bodyIsSpawned;
+    private bool IsSpawned { get { return currentBodyConfig != null; } }
+
     private void Awake()
     {
         saveManager = SaveManager.Instance;
         skinsManager = GetComponent<SkinsManager>();
 
-
-        Loader.Instance.AllSceneLoaded += Initialize;
     }
 
- 
-    // Start is called before the first frame update
-/*    void Start()
+
+    private void Start()
     {
         Initialize();
-    }*/
+    }
 
     private void Initialize()
     {
-        /*if (currentBodyConfig != null)
-            return;*/
-
-        /*currentBodyConfig = null;*/
-
         // loads config from save manager and applies it
-        if (saveManager.LoadBody() != null || !bodyIsSpawned)
+        if (saveManager.LoadBody() != null || !IsSpawned)
         {
             currentBodyConfig = saveManager.LoadBody();
             ApplyBodyConfig(currentBodyConfig);
@@ -60,6 +53,7 @@ public class BodyManager : MonoBehaviour
 
         //than instantiate pref
         var body = Instantiate(bodyCfg.game_body_prefab);
+
         body.transform.SetParent(gameObject.transform);
         body.transform.localPosition = Vector3.zero;
         body.transform.localRotation = Quaternion.identity;
@@ -76,12 +70,10 @@ public class BodyManager : MonoBehaviour
         skinsManager.skinHolder = body.transform;
         skinsManager.InitializeSkins();
 
-        bodyIsSpawned = true;
+        Debug.Log("I SPAWNED BODY!");
     }
 
     private void OnDestroy()
     {
-        if(Loader.Instance != null)
-        Loader.Instance.AllSceneLoaded -= Initialize;
     }
 }

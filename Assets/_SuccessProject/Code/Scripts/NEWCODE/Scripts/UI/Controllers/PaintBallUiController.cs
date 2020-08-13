@@ -24,7 +24,7 @@ public class PaintBallUiController : MonoBehaviour
 
     private void Awake()
     {
-        playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
 
         Messenger.AddListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
     }
@@ -38,7 +38,18 @@ public class PaintBallUiController : MonoBehaviour
     {
         ammoFill.fillAmount = 1;
 
+        StartCoroutine(TryFindPlayerCam());
         StartCoroutine(AutoShootEnemyCheck());
+    }
+
+    IEnumerator TryFindPlayerCam()
+    {
+        while(playerCamera == null)
+        {
+            playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
+            yield return null;
+        }
     }
 
     private void SetAmmoFill(float targetValue, float time)
@@ -73,6 +84,8 @@ public class PaintBallUiController : MonoBehaviour
 
     IEnumerator AutoShootEnemyCheck()
     {
+        if (playerCamera == null) yield return null;
+
         Ray ray = new Ray();
         while (true)
         {
@@ -123,9 +136,9 @@ public class PaintBallUiController : MonoBehaviour
         
     }
 
-    private void OnDrawGizmos()
+/*    private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(shotPoint, 1f);
-    }
+    }*/
 }
