@@ -103,7 +103,7 @@ public class SaveManager : MonoBehaviourSingleton<SaveManager>
         SaveChangableConfig();
     }
 
-    public ClothesConfig LoadClothesSet(string key)
+    public ClothesConfig LoadClothesSet(string key) //key is gender + gameMode
     {
         var clothes = changableDataConfig?.GetClothesConfig(key);
         return clothes;

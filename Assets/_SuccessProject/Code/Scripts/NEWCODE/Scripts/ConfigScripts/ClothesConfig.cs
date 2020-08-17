@@ -20,6 +20,7 @@ public class ClothesConfig
         {
             string[] strs = pair.Split('+');
             var it = ScriptableList<ItemConfig>.instance.GetItemByID(strs[0]);
+
             if(it.bodyPart == item.bodyPart)
             {
                 pickedItemsAndVariants.Remove(pair);
@@ -57,7 +58,7 @@ public class ClothesConfig
                     }
                 }
             }
-            return item.variants[0];
+            if(item.variants[0]!= null) return item.variants[0];
         }
             return null;
     }

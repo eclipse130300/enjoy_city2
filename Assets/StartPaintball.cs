@@ -23,9 +23,12 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     public PhotonView photon;
     public MapConfig paintBallGame;
 
+    [SerializeField] PaintBallUISwitcher UIswithcer;
+
     private void Awake()
     {
         photon = GetComponent<PhotonView>();
+        UIswithcer = FindObjectOfType<PaintBallUISwitcher>();
     }
 
     public override void OnEnable()
@@ -141,9 +144,11 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
         }*/
 
         PhotonNetwork.IsMessageQueueRunning = false;
+        UIswithcer.SwitchToGameUI();
         Loader.Instance.LoadGameScene(paintBallGame);
-        Debug.LogError("I LOAD SCENE BOYZ!");
 /*        Destroy(this);*/
+
+
     }
 
 

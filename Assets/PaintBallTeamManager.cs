@@ -1,36 +1,48 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallTeamManager : MonoBehaviour
+public class PaintBallTeamManager : MonoBehaviourPunCallbacks
 {
     private const int teamsAmount = 2;
 
-    public static PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
+    public PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
     [SerializeField] List<GameObject> pedestals = new List<GameObject>();
 
     [SerializeField] Color[] teamColors = new Color[teamsAmount];
     [SerializeField] int maxPlayersInTeam = 4;
 
-    private void Start()
+    private void Awake()
     {
         InitializePedestals();
         InitializeTeams();
     }
 
+/*    public void InitializeTeamsViaRoomProps()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.IsNullOrEmpty()) return;
+
+        var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
+        var teamsSTR = (string)roomProps["teams"];
+        teams = (PaintBallTeam[])JsonConvert.DeserializeObject(teamsSTR);
+    }*/
+
+
     void InitializeTeams()
     {
-        var allTEams = Enum.GetValues(typeof(TEAM)).Cast<TEAM>().ToList();
-        /*        int arrayIndex = 0;*/
+            var allTEams = Enum.GetValues(typeof(TEAM)).Cast<TEAM>().ToList();
+            /*        int arrayIndex = 0;*/
 
-        for (int i = 0; i < allTEams.Count; i++)
-        {
-            GameObject[] teamPedestals = new GameObject[maxPlayersInTeam];
-            pedestals.CopyTo(maxPlayersInTeam * i, teamPedestals, 0, maxPlayersInTeam);
-            teams[i] = new PaintBallTeam(teamColors[i], allTEams[i], maxPlayersInTeam, teamPedestals, i);
-        }
+            for (int i = 0; i < allTEams.Count; i++)
+            {
+                GameObject[] teamPedestals = new GameObject[maxPlayersInTeam];
+                pedestals.CopyTo(maxPlayersInTeam * i, teamPedestals, 0, maxPlayersInTeam);
+                teams[i] = new PaintBallTeam(teamColors[i], allTEams[i], maxPlayersInTeam, teamPedestals, i);
+            }
     }
 
     void InitializePedestals()

@@ -47,4 +47,6 @@ public static class GameEvents
     public const string RELOAD_PRESSED = "RELOAD_PRESSED";
     public const string SUPER_SHOT_PRESSED = "SUPER_SHOT_PRESSED";
     public const string PAINTBALL_POWER_UP_PRESSED = "PAINTBALL_POWER_UP_PRESSED";
+
+    public const string PAINTBALL_PLAYER_SPAWNED = "PAINTBALL_PLAYER_SPAWNED";
 }

@@ -19,6 +19,8 @@ public class TransformSynchronizer : MonoBehaviour
     void Start()
     {
         var parent = transform.parent;
+        int id = GetComponentInParent<MecanimWrapper>().GetInstanceID();
+
         while (parent.parent != null)
         {
             parent = parent.parent;
@@ -26,7 +28,7 @@ public class TransformSynchronizer : MonoBehaviour
         }
         if (key == "")
         {
-            key = parent.GetInstanceID() + gameObject.name;
+            key = id + gameObject.name;
         }
         if (addInRuntime)
         {

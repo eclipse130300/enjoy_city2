@@ -22,7 +22,7 @@ public class PedestalController : MonoBehaviourPunCallbacks
     private PhotonView photon;
     // current info
     public PaintBallPlayer currentPlayer;
-    private GameObject playerPref;
+    public GameObject playerPref;
     private GameObject playerInfo;
 
     private void Awake()
@@ -43,12 +43,9 @@ public class PedestalController : MonoBehaviourPunCallbacks
             darkBody.SetActive(false);
 
             //instattiate body from dobyConf
-            var bodyPref = ScriptableList<BodyConfig>.instance.GetItemByID(player.bodyConfigID).game_body_prefab;
+            GameObject bodyPref = ScriptableList<BodyConfig>.instance.GetItemByID(player.bodyConfigID).game_body_prefab;
 
-            /*            var nakedBody = PhotonNetwork.Instantiate(bodyPref.name, spawnPlaceHolder.transform.position, 
-                            spawnPlaceHolder.transform.rotation,0,null,spawnPlaceHolder.transform);*/
-
-            var nakedBody = Instantiate(bodyPref, spawnPlaceHolder.transform.position, spawnPlaceHolder.transform.rotation, spawnPlaceHolder.transform);
+            GameObject nakedBody = Instantiate(bodyPref, spawnPlaceHolder.transform.position, spawnPlaceHolder.transform.rotation, spawnPlaceHolder.transform);
 
             //add component SkinsManager
             var skinsManager = nakedBody.AddComponent<SkinsManager>();
@@ -61,6 +58,8 @@ public class PedestalController : MonoBehaviourPunCallbacks
 
             playerPref = nakedBody;
             currentPlayer = player;
+
+            Destroy(skinsManager);
         }
     }
 
@@ -71,14 +70,11 @@ public class PedestalController : MonoBehaviourPunCallbacks
 
         var newInfo = Instantiate(playerInfoRectPrefab, infoPlaceHolder.transform.position, Quaternion.identity, infoCanvas.transform);
 
-        AutorizationController autorization = new AutorizationController();
-        autorization.Login();
-        string playerID = autorization.profile.UserName;
-
         newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, player.nickName == SaveManager.Instance.GetNickName()); //we check if our player is target player
 
         playerInfo = newInfo;
     }
+
     public void DeletePlayerAndInfo()
     {
         currentPlayer = null;

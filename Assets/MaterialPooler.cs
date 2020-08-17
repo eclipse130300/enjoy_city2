@@ -84,7 +84,7 @@ public class MaterialPooler : MonoBehaviourSingleton<MaterialPooler>
             {
                 objMaterials.Remove(info.material);
                 i--;
-               Debug.Log("Materials are equal");
+/*               Debug.Log("Materials are equal");*/
             }
         }
 

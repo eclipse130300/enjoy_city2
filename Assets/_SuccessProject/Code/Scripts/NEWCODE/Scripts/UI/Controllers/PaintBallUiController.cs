@@ -16,7 +16,7 @@ public class PaintBallUiController : MonoBehaviour
     [SerializeField] float lerpSpeed;
     [SerializeField] RectTransform crosshairRect;
 
-    Camera playerCamera;
+    public GameObject playerCamera;
     public LayerMask noPlayerLayerMask;
 
     //test
@@ -24,32 +24,25 @@ public class PaintBallUiController : MonoBehaviour
 
     private void Awake()
     {
-
-
+        Messenger.AddListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
         Messenger.AddListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
     }
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill); 
+        Messenger.RemoveListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
+        Messenger.RemoveListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+    }
+
+    private void GetCam(GameObject camera)
+    {
+        playerCamera = camera;
+        StartCoroutine(AutoShootEnemyCheck());
     }
 
     private void Start()
     {
         ammoFill.fillAmount = 1;
-
-        StartCoroutine(TryFindPlayerCam());
-        StartCoroutine(AutoShootEnemyCheck());
-    }
-
-    IEnumerator TryFindPlayerCam()
-    {
-        while(playerCamera == null)
-        {
-            playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-
-            yield return null;
-        }
     }
 
     private void SetAmmoFill(float targetValue, float time)
@@ -71,9 +64,8 @@ public class PaintBallUiController : MonoBehaviour
 
         if(SuperShotButton.Pressed)
         {
-            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, GetHitPoint());
-
             shotPoint = GetHitPoint();
+            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, shotPoint);
         }
 
         if(powerUpButton.Pressed)

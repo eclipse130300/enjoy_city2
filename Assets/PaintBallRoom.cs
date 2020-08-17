@@ -43,14 +43,16 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
 
     private static Player myPlayer;
 
+    private PhotonView photon;
+
+    private void Awake()
+    {
+        photon = GetComponent<PhotonView>();
+    }
+
     private void Start()
     {
         Connect();
-    }
-
-    private void OnDestroy()
-    {
-        PhotonNetwork.Disconnect();
     }
 
     public void Connect()
@@ -99,6 +101,8 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         Debug.Log("PLAYERS IN ROOM! - " + PhotonNetwork.CurrentRoom.PlayerCount);
 
         SendLocalPlayerDataToMaster();
+
+        if(!PhotonNetwork.IsMasterClient)
         SpawnExistingPlayers();
     }
 
@@ -107,9 +111,21 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         List<Player> connectedPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
         foreach (Player player in connectedPlayers)
         {
-            OnPlayerPropertiesUpdate(player, player.CustomProperties);
+            if (player != PhotonNetwork.LocalPlayer) //meaning spawn everybody except us (we are already spawned)
+            {
+                /*OnPlayerPropertiesUpdate(player, player.CustomProperties);*/
+                //we take player custom props
+                var playerProps = player.CustomProperties;
+                //we deserialize player with team 
+                string playerSTR = playerProps["playerWithTeam"] as string;
+
+                // we callon player joins here???
+                OnNewPlayerJoins(playerSTR);
+            }
         }
     }
+
+
 
     void SendLocalPlayerDataToMaster()
     {
@@ -122,6 +138,8 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         customProperties.Add("newPlayerToJoin", JsonConvert.SerializeObject(newPlayerToJoin));
         PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
     }
+
+
 
     public override void OnLeftLobby()
     {
@@ -147,59 +165,93 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         if (changedProps["newPlayerToJoin"] != null)
         {
             if (PhotonNetwork.IsMasterClient)
-                SpawnNewPlayerForMaster(targetPlayer, changedProps);
+                PickTeamForNewPlayer(targetPlayer, changedProps);
         }
-        if (changedProps["newPlayerForClients"] != null)
-        {
-            SpawnNewPlayerForClients(targetPlayer, changedProps);
-        }
+        /*        if (changedProps["newPlayerWithTeam"] != null)
+                {
+                    if(!PhotonNetwork.IsMasterClient)
+                    SpawnNewPlayerForClients(targetPlayer, changedProps);
+                }*/
     }
 
-    private void SpawnNewPlayerForClients(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+/*    private void SpawnNewPlayerForClients(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (changedProps["newPlayerForClients"] != null && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber/*.ToString()*/))
+        if (!paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber*//*.ToString()*//*))
         {
-            string playerJson = changedProps["newPlayerForClients"].ToString();
+            string playerJson = changedProps["newPlayerWithTeam"].ToString();
             PaintBallPlayer finalPlayer = JsonConvert.DeserializeObject<PaintBallPlayer>(playerJson);
             int teamIndex = (int)changedProps["teamIndex"];
 
-            SpawnPlayer(finalPlayer, teamIndex);
+            OnNewPlayerJoins(finalPlayer, teamIndex);
         }
-    }
+    }*/
 
-    private void SpawnNewPlayerForMaster(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    private void PickTeamForNewPlayer(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (paintBallTeamManager.LookForEmptySlot() && !paintBallTeamManager.PlayerIsInTeam(targetPlayer.ActorNumber/*.ToString()*/)) //
         {
             string newPlayerJSON = changedProps["newPlayerToJoin"].ToString();
             PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayerJSON);
 
-            int teamToJoinIndex = paintBallTeamManager.PickTeam().teamIndex;
-            changedProps.Add("teamIndex", teamToJoinIndex);
+            player.SetTeam(paintBallTeamManager.PickTeam());
+
 
             //Master fills empty fields for new player
             player.photonActorNumber = targetPlayer.ActorNumber;
-            player.playerTeam = paintBallTeamManager.PickTeam().teamName;
 
-            string playerJSON = JsonConvert.SerializeObject(player);
-            changedProps.Add("newPlayerForClients", playerJSON);
+            string playerWithTeam = JsonConvert.SerializeObject(player);
 
-            SpawnPlayer(player, teamToJoinIndex);
+            changedProps.Add("playerWithTeam", playerWithTeam);
             targetPlayer.SetCustomProperties(changedProps);
+/*            SetTeamsToRoomProps();*/
+
+            photon.RPC("OnNewPlayerJoins", RpcTarget.All, playerWithTeam);
         }
     }
 
-    private void SpawnPlayer(PaintBallPlayer finalPlayer, int teamIndex)
+/*    private void SetTeamsToRoomProps()
     {
-        var newTeam = paintBallTeamManager.AddPlayerToTeam(teamIndex, finalPlayer);
+        //add teams to room props for spawning players later
+        var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
+        if (roomProps.ContainsKey("teams"))
+        {
+            roomProps.Remove("teams");
+        }
+        string teamsSTR = JsonConvert.SerializeObject(roomProps);
+        roomProps.Add("teams", teamsSTR);
 
-        var pedestal = finalPlayer.GetTeamPedestal(newTeam);
-        pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(finalPlayer);
-/*        Debug.Log("Player spawned");*/
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
+    }*/
+
+
+    [PunRPC]
+    private void OnNewPlayerJoins(string playerWithTeam)
+    {
+        PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(playerWithTeam);
+        var newTeam = paintBallTeamManager.AddPlayerToTeam(player.teamIndex, player);
+
+        var pedestal = player.GetTeamPedestal(newTeam);
+        pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(player);
+    }
+
+/*    private void SpawnOldPlayer(PaintBallPlayer player)
+    {
+        var newTeam = paintBallTeamManager.AddPlayerToTeam(player.teamIndex, player);
+
+        var pedestal = player.GetTeamPedestal(newTeam);
+        pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(player);
+    }*/
+
+    [PunRPC]
+    private void OnPlayerLeaves()
+    {
+
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        Debug.LogError("Player left room - :" + otherPlayer.NickName);
+
         base.OnPlayerLeftRoom(otherPlayer);
 
         paintBallTeamManager.RemovePlayerFromGame(otherPlayer.ActorNumber);
@@ -212,4 +264,11 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         PhotonNetwork.Disconnect();
         Loader.Instance.LoadGameScene(exitAfterDisconnect);
     }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        Debug.Log(cause);
+    }
+
 }

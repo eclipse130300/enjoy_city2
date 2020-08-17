@@ -61,11 +61,12 @@ public class BodyManager : MonoBehaviour
         //apply other stuff
         var animator = body.GetComponent<Animator>();
         if (animator == null) body.AddComponent<Animator>();
+
         animator.runtimeAnimatorController = bodyCfg.controller;
         animator.avatar = bodyCfg.avatar;
         animator.applyRootMotion = false;
 
-        GetComponent<MecanimWrapper>().animator = animator;
+        body.GetComponent<MecanimWrapper>().animator = animator;
 
         skinsManager.skinHolder = body.transform;
         skinsManager.InitializeSkins();

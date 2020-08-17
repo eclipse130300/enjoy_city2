@@ -11,7 +11,8 @@ public class PaintBallPlayer
     public ClothesConfig clothesConfig;
     public string nickName;
     public int photonActorNumber;
-    public TEAM playerTeam;
+    public TEAM teamName;
+    public int teamIndex;
 
     public PaintBallPlayer (string bodyConfigId, ClothesConfig clothesConfig, string nickName/*, string photonUserID*/)
     {
@@ -25,21 +26,12 @@ public class PaintBallPlayer
     {
         var myPedestal = team.teamPedestals[team.playersInTeam.Count - 1];
 
-/*        pedestalUI = myPedestal;*/
-
         return myPedestal;
     }
-/*
-    public static object Deserialize(byte[] data)
+      
+    public void SetTeam(PaintBallTeam team)
     {
-        var result = new PaintBallPlayer(data[0], ()data[1],) ;
-        result.Id = data[0];
-        return result;
+        teamIndex = team.teamIndex;
+        teamName = team.teamName;
     }
-
-    public static byte[] Serialize(object customType)
-    {
-        var c = (PaintBallPlayer)customType;
-        return new byte[] { (byte)c.bodyConfigID };
-    }*/
 }

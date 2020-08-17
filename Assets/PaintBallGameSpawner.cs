@@ -10,16 +10,18 @@ using UnityEngine;
 public class PaintBallGameSpawner : MonoBehaviour
 {
     public PaintBallSpawnPoint[] spawnPoints;
+    private PaintBallTeamManager paintBallTeamManager;
 
-    public MapConfig paintBallGameConfig;
-
-    public PaintBallTeam[] teams;
-
+/*    public PaintBallTeam[] teams;
+*/
     [SerializeField] PhotonView photon;
 
     private void Awake()
     {
         photon = GetComponent<PhotonView>();
+        paintBallTeamManager = FindObjectOfType<PaintBallTeamManager>();
+
+        if (spawnPoints.IsNullOrEmpty()) InitializeSpawnPoints();
 
         Loader.Instance.AllSceneLoaded += ResumeQueue;
     }
@@ -36,17 +38,13 @@ public class PaintBallGameSpawner : MonoBehaviour
 
     void ResumeQueue()
     {
-        if (Loader.Instance.curentScene != paintBallGameConfig) return;
-
-        InitializeSpawnPoints();
-
         //resumeQueue, we loaded everything
         PhotonNetwork.IsMessageQueueRunning = true;
 
         if(PhotonNetwork.IsMasterClient)
         {
             //lets send spawnpoints to everybody
-            foreach(PaintBallTeam team in PaintBallTeamManager.teams)
+            foreach(PaintBallTeam team in paintBallTeamManager.teams)
             {
                 foreach(PaintBallPlayer player in team.playersInTeam)
                 {
@@ -63,7 +61,7 @@ public class PaintBallGameSpawner : MonoBehaviour
     private Vector3 PickSpawnPoint(PaintBallPlayer player)
     {
         //get all avalilible points
-        List<PaintBallSpawnPoint> availiblePoints = spawnPoints.Where(x => x.team == player.playerTeam).Where(x => x.isOccupied == false).ToList();
+        List<PaintBallSpawnPoint> availiblePoints = spawnPoints.Where(x => x.team == player.teamName).Where(x => x.isOccupied == false).ToList();
         //pick random one
         int randomIndex = Random.Range(0, availiblePoints.Count);
         PaintBallSpawnPoint randomPoint = availiblePoints[randomIndex];
@@ -79,10 +77,13 @@ public class PaintBallGameSpawner : MonoBehaviour
         //foreach player in each team it send RPC to targetPlayer with spawn point
 
         //instantinate player
-        GameObject player = PhotonNetwork.Instantiate("Player", point, Quaternion.identity);
+        GameObject player = PhotonNetwork.Instantiate("PaintballPlayer", point, Quaternion.identity);
 
         //in skins manager change gameMode to paintball 
         player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
+        GameObject playerCam = player.GetComponentInChildren<PlayerCamera>().gameObject;
+
+        Messenger.Broadcast(GameEvents.PAINTBALL_PLAYER_SPAWNED, playerCam);
     }
 
 }

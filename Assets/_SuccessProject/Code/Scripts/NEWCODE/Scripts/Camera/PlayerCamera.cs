@@ -23,10 +23,10 @@ public class PlayerCamera : MonoBehaviour
     float maxYOfset = 1;
     float minYOfset = -1;
 
-    public void Awake()
+/*    public void Awake()
     {
         transform.SetParent(null);
-    }
+    }*/
     private void FixedUpdate()
     {
         if (target == null)

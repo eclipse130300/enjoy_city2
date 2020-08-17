@@ -36,8 +36,6 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     protected CapsuleCollider CapCollider;
 
     bool isGrounded;
-
-    private bool hasReferencies = false;
     public float targetJump;
 
     [SerializeField] PlayerCamera camera;
@@ -61,6 +59,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     Vector3 inertionMovement;
     // Use this for initialization
     [SerializeField] MecanimWrapper mecanim;
+
+    private bool IsSubscribedToUi
+    {
+        get { return LeftJoystick != null && TouchField != null; } 
+    }
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
@@ -106,14 +109,13 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
 
     private void FixedUpdate()
     {
-        Collider[] overlapColliders =  Physics.OverlapSphere(transform.localPosition, groundCheckRadius, noPlayerLayerMask);
+        if (mecanim == null) mecanim=GetComponentInChildren<MecanimWrapper>();
 
+        Collider[] overlapColliders =  Physics.OverlapSphere(transform.localPosition, groundCheckRadius, noPlayerLayerMask);
         isGrounded = overlapColliders.Length != 0 ? true : false;
 
         if (LeftJoystick != null && (photonView.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
-
-
             Hinput = Mathf.Clamp(LeftJoystick.input.x + Input.GetAxis("Horizontal"), -1, 1);
             Vinput = Mathf.Clamp(LeftJoystick.input.y + Input.GetAxis("Vertical"), -1, 1);
 
@@ -139,7 +141,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             }
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation),Time.fixedDeltaTime * learpSpeedf);
         }
-        if (isGrounded)
+        if (isGrounded && mecanim!= null)
         {
             // calculate camera relative direction to move:
             m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
@@ -177,6 +179,8 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     
     private void LateUpdate()
     {
+        if (!IsSubscribedToUi) SubscibeToUI();
+
         return;
         Vector3 rotation = Quaternion.LookRotation(cameraRotation - hips.transform.position , Vector3.up).eulerAngles;
         
@@ -204,11 +208,11 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
         {
             LeftJoystick = FindObjectOfType<FloatingJoystick>();
             TouchField = FindObjectOfType<FixedTouchField>();
-            hasReferencies = true;
-            if(!Loader.Instance.curentScene == roomScene)
+
+/*            if(!Loader.Instance.curentScene == roomScene)
             {
                 JumpButton = FindObjectOfType<FixedButton>();
-            }
+            }*/
         }
     }
 
