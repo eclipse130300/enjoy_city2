@@ -231,16 +231,15 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         var newTeam = paintBallTeamManager.AddPlayerToTeam(player.teamIndex, player);
 
         var pedestal = player.GetTeamPedestal(newTeam);
-        pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(player);
+
+        var pedestalController = pedestal.GetComponent<PedestalController>();
+
+        pedestalController.SpawnPlayerAndInfo(player);
+        player.myPedestalIndex = pedestalController.pedestalID;
+
+        //if the player who joined is ours, add this player as my player for future
+        if (player.photonActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)  paintBallTeamManager.myPlayer = player;
     }
-
-/*    private void SpawnOldPlayer(PaintBallPlayer player)
-    {
-        var newTeam = paintBallTeamManager.AddPlayerToTeam(player.teamIndex, player);
-
-        var pedestal = player.GetTeamPedestal(newTeam);
-        pedestal.GetComponent<PedestalController>().SpawnPlayerAndInfo(player);
-    }*/
 
     [PunRPC]
     private void OnPlayerLeaves()

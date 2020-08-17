@@ -19,7 +19,7 @@ public class TransformSynchronizer : MonoBehaviour
     void Start()
     {
         var parent = transform.parent;
-        int id = GetComponentInParent<MecanimWrapper>().GetInstanceID();
+        int id = GetComponentInParent<Animator>().GetInstanceID();
 
         while (parent.parent != null)
         {

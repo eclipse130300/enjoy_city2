@@ -1,4 +1,6 @@
 ﻿using CMS.Config;
+using Newtonsoft.Json;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,14 +12,16 @@ public class BodyManager : MonoBehaviour
     public BodyConfig currentBodyConfig;
     private SaveManager saveManager;
     private SkinsManager skinsManager;
-
-    private bool IsSpawned { get { return currentBodyConfig != null; } }
+    private PhotonView photon;
+/*
+    private bool IsSpawned { get { return currentBodyConfig != null; } }*/
 
     private void Awake()
     {
         saveManager = SaveManager.Instance;
         skinsManager = GetComponent<SkinsManager>();
 
+        photon = GetComponent<PhotonView>();
     }
 
 
@@ -28,18 +32,33 @@ public class BodyManager : MonoBehaviour
 
     private void Initialize()
     {
-        // loads config from save manager and applies it
-        if (saveManager.LoadBody() != null || !IsSpawned)
+        if(PhotonNetwork.IsConnectedAndReady)
+        {
+            if (photon.IsMine) //we spawn body for our player
+            {
+                currentBodyConfig = saveManager.LoadBody();
+                ApplyBodyConfig(currentBodyConfig);
+            }
+            else if (!photon.IsMine && photon.Owner != null) //we spawn other player bodies
+            {
+                var playerProps = photon.Owner.CustomProperties;
+                string PlayerBodySTR = playerProps["playerWithTeam"].ToString();
+                PaintBallPlayer player = JsonConvert.DeserializeObject<PaintBallPlayer>(PlayerBodySTR);
+                ApplyBodyConfig(player.bodyConfigID);
+            }
+        }
+        //we just spawn locally
+        else if(saveManager.LoadBody() != null)
         {
             currentBodyConfig = saveManager.LoadBody();
             ApplyBodyConfig(currentBodyConfig);
         }
-        else
-        {
-            Debug.LogError("Cannot find body_config in saveManager...");
-            // if cannot find one, add default config to save manager 
-            // applies default config
-        }
+    }
+
+    private void ApplyBodyConfig(string configID)
+    {
+        var body  = ScriptableList<BodyConfig>.instance.GetItemByID(configID);
+        ApplyBodyConfig(body);
     }
 
     private void ApplyBodyConfig(BodyConfig bodyCfg)
@@ -66,7 +85,7 @@ public class BodyManager : MonoBehaviour
         animator.avatar = bodyCfg.avatar;
         animator.applyRootMotion = false;
 
-        body.GetComponent<MecanimWrapper>().animator = animator;
+        if(body.GetComponent<MecanimWrapper>())  body.GetComponent<MecanimWrapper>().animator = animator;
 
         skinsManager.skinHolder = body.transform;
         skinsManager.InitializeSkins();

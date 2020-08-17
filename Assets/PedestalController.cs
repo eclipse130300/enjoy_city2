@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 
 public class PedestalController : MonoBehaviourPunCallbacks
 {
-    //fill it in inspector to sort pedestals(from 0 to 7)
-    public int priorityIndex;
+    //fill it in inspector to sort pedestal's priority(from 0 to 7)
+    public int pedestalID;
 
     public GameObject darkBody;
     public GameObject spawnPlaceHolder;
@@ -70,7 +70,7 @@ public class PedestalController : MonoBehaviourPunCallbacks
 
         var newInfo = Instantiate(playerInfoRectPrefab, infoPlaceHolder.transform.position, Quaternion.identity, infoCanvas.transform);
 
-        newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, player.nickName == SaveManager.Instance.GetNickName()); //we check if our player is target player
+        newInfo.GetComponent<InfoPlayer>().Initialize(player.nickName, player.nickName == SaveManager.Instance.GetNickName(), infoPlaceHolder); //we check if our player is target player
 
         playerInfo = newInfo;
     }

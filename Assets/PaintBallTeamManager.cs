@@ -11,12 +11,23 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
     private const int teamsAmount = 2;
 
     public PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
+    public PaintBallPlayer myPlayer;
     [SerializeField] List<GameObject> pedestals = new List<GameObject>();
 
     [SerializeField] Color[] teamColors = new Color[teamsAmount];
     [SerializeField] int maxPlayersInTeam = 4;
 
-    private void Awake()
+    public override void OnEnable()
+    {
+        Loader.Instance.AllSceneLoaded += InitializeEverything;
+    }
+
+    public override void OnDisable()
+    {
+        Loader.Instance.AllSceneLoaded -= InitializeEverything;
+    }
+
+    private void InitializeEverything()
     {
         InitializePedestals();
         InitializeTeams();
@@ -60,10 +71,10 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
 
                 foreach (PedestalController item in allPedestals)
                 {
-                    if (item.priorityIndex <= minIndex)
+                    if (item.pedestalID <= minIndex)
                     {
                         itemToadd = item;
-                        minIndex = item.priorityIndex;
+                        minIndex = item.pedestalID;
                     }
                 }
                 pedestals.Add(itemToadd.gameObject);

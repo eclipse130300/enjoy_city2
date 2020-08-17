@@ -81,7 +81,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     public void OnEvent(EventData photonEvent)
     {
         byte eventCode = photonEvent.Code;
-        if (eventCode == GameEvents.PLAYER_IS_READY_PAINTBALL)
+        if (eventCode == GameEvents.PLAYER_IS_READY_PAINTBALL_LOBBY)
         {
             object[] data = (object[])photonEvent.CustomData;
             bool value = (bool)data[0];

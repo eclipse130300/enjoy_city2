@@ -78,6 +78,7 @@ namespace Demo
 		/// <param name="shot"></param>
 		public void OnShotHit(HitData hitData, Color color)
 		{
+
 			//combine removing with adding
 			Vector3? hitToOverwrite = (!hitLimitReached)? (Vector3?)null : hits[hitIndex];
 

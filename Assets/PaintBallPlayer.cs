@@ -13,6 +13,7 @@ public class PaintBallPlayer
     public int photonActorNumber;
     public TEAM teamName;
     public int teamIndex;
+    public int myPedestalIndex;
 
     public PaintBallPlayer (string bodyConfigId, ClothesConfig clothesConfig, string nickName/*, string photonUserID*/)
     {
@@ -24,7 +25,11 @@ public class PaintBallPlayer
 
     public GameObject GetTeamPedestal(PaintBallTeam team)
     {
+        //we take empty team pedestal
         var myPedestal = team.teamPedestals[team.playersInTeam.Count - 1];
+
+        // we fill pedestalID for future spawn point
+        myPedestalIndex = myPedestal.GetComponent<PedestalController>().pedestalID;
 
         return myPedestal;
     }

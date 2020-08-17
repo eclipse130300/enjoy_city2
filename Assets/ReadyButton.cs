@@ -37,6 +37,6 @@ public class ReadyButton : MonoBehaviour
     {
             object[] content = new object[] { value };
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
-        PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL, content, raiseEventOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_LOBBY, content, raiseEventOptions, SendOptions.SendReliable);
     }
 }

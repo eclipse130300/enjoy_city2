@@ -21,7 +21,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
     public PhotonView photon;
 
     //public static Player =
-    private void Awake()
+    public override void OnEnable ()
     {
         _gameMode = Loader.Instance.curentScene.gameMode;
         photon =  PhotonView.Get(this);
@@ -194,7 +194,7 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
        
     }
 
-    private void OnDestroy()
+    public override void OnDisable()
     {
         if (photon == null) return;
 
@@ -206,8 +206,8 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         if ((photon.IsMine || !PhotonNetwork.IsConnectedAndReady))
         {
             Messenger.RemoveListener(GameEvents.ITEM_OPERATION_DONE, PutOnClothes);
+            Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
         }
-        Messenger.RemoveListener(GameEvents.CLOTHES_CHANGED, InitializeSkins);
     }
 
     ClothesConfig LoadConf(Gender gender, GameMode gameMode)

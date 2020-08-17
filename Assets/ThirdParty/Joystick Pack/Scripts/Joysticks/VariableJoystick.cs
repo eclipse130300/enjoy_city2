@@ -24,9 +24,8 @@ public class VariableJoystick : Joystick
             background.gameObject.SetActive(false);
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         fixedPosition = background.anchoredPosition;
         SetMode(joystickType);
     }
