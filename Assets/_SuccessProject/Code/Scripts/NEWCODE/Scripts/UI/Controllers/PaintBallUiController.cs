@@ -1,13 +1,17 @@
 ﻿using DG.Tweening;
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PaintBallUiController : MonoBehaviour
+public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 {
-/*    [SerializeField] FixedButton shootButton;*/
+    /*    [SerializeField] FixedButton shootButton;*/
     [SerializeField] FixedButton reloadButton;
     [SerializeField] FixedButton SuperShotButton;
     [SerializeField] FixedButton powerUpButton;
@@ -16,22 +20,58 @@ public class PaintBallUiController : MonoBehaviour
     [SerializeField] float lerpSpeed;
     [SerializeField] RectTransform crosshairRect;
 
+
+    public TextMeshProUGUI cdTimer;
     public GameObject playerCamera;
     public LayerMask noPlayerLayerMask;
 
     //test
     Vector3 shotPoint;
 
-    private void Awake()
+    private void OnEnable()
     {
         Messenger.AddListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
         Messenger.AddListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         Messenger.RemoveListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
         Messenger.RemoveListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    private void Start()
+    {
+        ammoFill.fillAmount = 1;
+    }
+
+    IEnumerator CDbeforeGameRoutine()
+    {
+        cdTimer.gameObject.SetActive(true);
+
+        cdTimer.text = "3";
+        yield return new WaitForSeconds(1);
+        cdTimer.text = "2";
+        yield return new WaitForSeconds(1);
+        cdTimer.text = "1";
+        yield return new WaitForSeconds(1);
+        cdTimer.text = "Go!";
+        yield return new WaitForSeconds(1);
+
+        cdTimer.gameObject.SetActive(false);
+
+        if (PhotonNetwork.IsMasterClient) CDends(); //if we master and time ends, let's start game for everybody!
+    }
+
+    private void CDends()
+    {
+        object[] content = new object[] { };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(GameEvents.START_GAME, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
     private void GetCam(GameObject camera)
@@ -40,14 +80,10 @@ public class PaintBallUiController : MonoBehaviour
         StartCoroutine(AutoShootEnemyCheck());
     }
 
-    private void Start()
-    {
-        ammoFill.fillAmount = 1;
-    }
 
     private void SetAmmoFill(float targetValue, float time)
     {
-        if(targetValue == 0)
+        if (targetValue == 0)
         {
             ammoFill.fillAmount = 0;
         }
@@ -57,18 +93,18 @@ public class PaintBallUiController : MonoBehaviour
 
     private void Update()
     {
-        if(reloadButton.Pressed)
+        if (reloadButton.Pressed)
         {
             Messenger.Broadcast(GameEvents.RELOAD_PRESSED);
         }
 
-        if(SuperShotButton.Pressed)
+        if (SuperShotButton.Pressed)
         {
             shotPoint = GetHitPoint();
             Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, shotPoint);
         }
 
-        if(powerUpButton.Pressed)
+        if (powerUpButton.Pressed)
         {
             Messenger.Broadcast(GameEvents.PAINTBALL_POWER_UP_PRESSED);
         }
@@ -98,16 +134,16 @@ public class PaintBallUiController : MonoBehaviour
 
     private Vector3 GetHitPoint()
     {
-        if(CrosshairAnyHitPointCheck() != Vector3.zero)
+        if (CrosshairAnyHitPointCheck() != Vector3.zero)
         {
             return CrosshairAnyHitPointCheck(); //if we find any point - use its hit point as a direction
         }
         else
         {
             Vector3 customHitpoint = playerCamera.transform.position + playerCamera.transform.forward * 30f;  //if no - use camera pos+direction* 30 as hitpoint
-            return customHitpoint;  
+            return customHitpoint;
         }
-         
+
     }
 
     private Vector3 CrosshairAnyHitPointCheck()
@@ -119,18 +155,24 @@ public class PaintBallUiController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(newRay, out hit, 100f, noPlayerLayerMask))
         {
-          return hit.point;
+            return hit.point;
         }
         else
         {
-          return Vector3.zero;
+            return Vector3.zero;
         }
-        
+
     }
 
-/*    private void OnDrawGizmos()
+    public void OnEvent(EventData photonEvent)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(shotPoint, 1f);
-    }*/
+        //we start timer for everybody as callback
+        byte eventCode = photonEvent.Code;
+        if (eventCode == GameEvents.START_CD_GAME_TIMER)
+        {
+            StartCoroutine(CDbeforeGameRoutine());
+        }
+
+    }
 }
+        

@@ -175,4 +175,22 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    public PaintBallTeam GetTeamByIndex(int teamIndex)
+    {
+        foreach(PaintBallTeam team in teams)
+        {
+            if(team.teamIndex == teamIndex)
+            {
+                return team;
+            }
+        }
+        return null;
+    }
+}
+
+public enum TEAM
+{
+    RED,
+    BLUE
 }

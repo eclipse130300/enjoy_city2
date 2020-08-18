@@ -14,13 +14,6 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
     private PaintBallTeamManager paintBallTeamManager;
     public string mySceneName;
 
-    public Dictionary<int, bool> readyList = new Dictionary<int, bool>();
-
-    private bool PlayersAreReady
-    {
-        get { return readyList.Keys.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
-    }
-
     [SerializeField] PhotonView photon;
 
     private void Awake()
@@ -41,7 +34,7 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
         Loader.Instance.AllSceneLoaded -= InstantinateOnScenesLoaded;
     }
 
-    private Vector3 PickSpawnPoint(PaintBallPlayer player)
+    private Vector3 PickStartSpawnPoint(PaintBallPlayer player)
     {
         //we take pedestal index as spawnpoint
         PaintBallSpawnPoint point = spawnPoints.Where(x => x.index == player.myPedestalIndex).ToList()[0];
@@ -59,63 +52,67 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
         //instantinate player
         GameObject player = PhotonNetwork.Instantiate("PaintballPlayer", point, Quaternion.identity);
 
+        InitializeNewPlayer(player);
+
+        GameObject playerCam = player.GetComponentInChildren<PlayerCamera>().gameObject;
+        Messenger.Broadcast(GameEvents.PAINTBALL_PLAYER_SPAWNED, playerCam);
+
+        NotifyMasterIamReady();
+    }
+
+    void InitializeNewPlayer(GameObject player)
+    {
         //in skins manager change gameMode to paintball 
         player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
-        GameObject playerCam = player.GetComponentInChildren<PlayerCamera>().gameObject;
 
-        Messenger.Broadcast(GameEvents.PAINTBALL_PLAYER_SPAWNED, playerCam);
+        var playerTeam = player.GetComponent<PlayerTeam>();
+        var myPlayer = paintBallTeamManager.myPlayer;
+        var myTeam = paintBallTeamManager.GetTeamByIndex(myPlayer.teamIndex);
+
+        playerTeam.InitializePlayerTeam(myPlayer.teamName, myTeam.hexColor);
     }
 
     void InstantinateOnScenesLoaded()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
 
-        InstantinatePlayer(PickSpawnPoint(paintBallTeamManager.myPlayer));
+        //initially we pick spawnPoint based on pedestal index num
+        InstantinatePlayer(PickStartSpawnPoint(paintBallTeamManager.myPlayer));
     }
 
+    private void NotifyMasterIamReady()
+    {
+        Debug.Log("I SEND EVENT!");
+        bool isReady = true;
+        object[] content = new object[] { isReady };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
+        PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
+    }
 
-    /*    void InitializeSpawnPoints()
+/*    void FindSpawnPointForEveryPlayer()
+    {
+        //lets send spawnpoints to everybody
+        foreach (PaintBallTeam team in paintBallTeamManager.teams)
         {
-            spawnPoints = FindObjectsOfType<PaintBallSpawnPoint>();
-        }*/
-
-/*    void StartReadyRoutine()
-    {
-        StartCoroutine(NotifyMasterIamReadyRoutine());
-    }
-
-
-    IEnumerator NotifyMasterIamReadyRoutine()
-    {
-        while (true) //let's notify master every one secound that we are ready(
-        {
-            Debug.Log("I SEND EVENT!");
-            bool isReady = true;
-            object[] content = new object[] { isReady };
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
-            PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
-
-            yield return new WaitForSeconds(1f);
-        }
-    }
-
-    void FindSpawnPointForEveryPlayer()
-    {
-            //lets send spawnpoints to everybody
-            foreach(PaintBallTeam team in paintBallTeamManager.teams)
+            foreach (PaintBallPlayer player in team.playersInTeam)
             {
-                foreach(PaintBallPlayer player in team.playersInTeam)
-                {
-                    //we find point
-                    Vector3 point = PickSpawnPoint(player);
-                    // and we send this point via RPC
-                    Player playerToSend = PhotonNetwork.CurrentRoom.GetPlayer(player.photonActorNumber);
-                    photon.RPC("InstantinatePlayer", playerToSend, point);
-                }
+                //we find point
+                Vector3 point = PickSpawnPoint(player);
+                // and we send this point via RPC
+                Player playerToSend = PhotonNetwork.CurrentRoom.GetPlayer(player.photonActorNumber);
+                photon.RPC("InstantinatePlayer", playerToSend, point);
             }
+        }
+    }*/
+
+    
+    public void ReSpawnPlayer(PaintBallPlayer playerIfno, GameObject playerModel)
+    {
+        var point = PickRandomSpawnPoint(playerIfno);
+        playerModel.transform.position = point;
     }
 
-    private Vector3 PickSpawnPoint(PaintBallPlayer player)
+    private Vector3 PickRandomSpawnPoint(PaintBallPlayer player)
     {
         //get all avalilible points
         List<PaintBallSpawnPoint> availiblePoints = spawnPoints.Where(x => x.team == player.teamName).Where(x => x.isOccupied == false).ToList();
@@ -128,42 +125,4 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
         return randomPoint.gameObject.transform.position;
     }
 
-
-    public void OnEvent(EventData photonEvent)
-    {
-        Debug.Log("I RECIEVE EVENT!");
-        //when master loads it recieves notifications creates and adds player to ready list
-        if (!PlayersAreReady)
-        {
-            byte eventCode = photonEvent.Code;
-            if (eventCode == GameEvents.PLAYER_IS_READY_PAINTBALL_GAME)
-            {
-                object[] data = (object[])photonEvent.CustomData;
-                bool value = (bool)data[0];
-                int senderKey = photonEvent.Sender;
-
-                *//*            Debug.Log("SENDER - " + senderKey + " VALUE - " + value);*//*
-
-                AddToReadyList(senderKey, value);
-                Debug.Log("I added - " + senderKey + value);
-            }
-        }
-    }
-
-    private void AddToReadyList(int key, bool value)
-    {
-        if(!readyList.Keys.ToList().Contains(key))
-        {
-            readyList.Add(key, value);
-            AllPlayersReadyCheck();
-        }       
-    }
-
-    void AllPlayersReadyCheck()
-    {
-        if(PlayersAreReady)
-        {
-            FindSpawnPointForEveryPlayer();
-        }
-    }*/
 }

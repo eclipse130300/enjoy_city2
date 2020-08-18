@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PaintBallSpawnPoint : MonoBehaviour
 {
-/*    public bool isOccupied = false;
-    public TEAM team;*/
+    public bool isOccupied = false;
+    public TEAM team;
     public int index;
 }
