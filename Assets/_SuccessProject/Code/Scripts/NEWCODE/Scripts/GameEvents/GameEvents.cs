@@ -8,7 +8,7 @@ public static class GameEvents
     public const byte PLAYER_IS_READY_PAINTBALL_LOBBY = 1;
     public const byte PLAYER_IS_READY_PAINTBALL_GAME = 2;
     public const byte START_CD_GAME_TIMER = 3;
-    public const byte START_GAME = 4;
+    public const byte START_PAINTBALL_GAME = 4;
 
 
     //city

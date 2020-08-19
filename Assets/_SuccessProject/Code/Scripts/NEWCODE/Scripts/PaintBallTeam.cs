@@ -13,6 +13,8 @@ public class PaintBallTeam
     public GameObject[] teamPedestals;
     public int teamIndex;
 
+    public int gamePoints;
+
     public PaintBallTeam(Color color, TEAM teamName, int playersMax, GameObject[] teamPedestals, int teamIndex)
     {
         this.hexColor = ColorUtility.ToHtmlStringRGB(color);

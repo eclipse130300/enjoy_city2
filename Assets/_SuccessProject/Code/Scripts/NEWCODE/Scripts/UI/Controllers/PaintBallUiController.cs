@@ -12,13 +12,25 @@ using UnityEngine.UI;
 public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 {
     /*    [SerializeField] FixedButton shootButton;*/
+    [Header("Interaction_Buttons")]
     [SerializeField] FixedButton reloadButton;
     [SerializeField] FixedButton SuperShotButton;
     [SerializeField] FixedButton powerUpButton;
 
+    [Header("Crosshair")]
     [SerializeField] Image ammoFill;
     [SerializeField] float lerpSpeed;
     [SerializeField] RectTransform crosshairRect;
+
+    [Header("Teams")]
+    [SerializeField] Image firstTeamFill;
+    [SerializeField] TextMeshProUGUI firstTeamScore;
+    [SerializeField] Image secoundTeamFill;
+    [SerializeField] TextMeshProUGUI secoundTeamScore;
+
+    [Header("Player")]
+    [SerializeField] Image playerHPfill;
+    [SerializeField] TextMeshProUGUI playerHPamount;
 
 
     public TextMeshProUGUI cdTimer;
@@ -46,11 +58,24 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 
     private void Start()
     {
+        InitializeUI();
+    }
+
+    void InitializeUI() //let's make ui empty
+    {
         ammoFill.fillAmount = 1;
+        firstTeamFill.fillAmount = 0;
+        firstTeamScore.text = "0";
+        secoundTeamFill.fillAmount = 0;
+        secoundTeamScore.text = "0";
+
+        playerHPfill.fillAmount = 1;
+        playerHPamount.text = "100";   //in case one will have exceeding hp(>100), make field in PaintBallPlayer "MaxHP" and use here through myPlayer
     }
 
     IEnumerator CDbeforeGameRoutine()
     {
+        yield return new WaitForSeconds(2);
         cdTimer.gameObject.SetActive(true);
 
         cdTimer.text = "3";
@@ -71,7 +96,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     {
         object[] content = new object[] { };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        PhotonNetwork.RaiseEvent(GameEvents.START_GAME, content, raiseEventOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(GameEvents.START_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
     private void GetCam(GameObject camera)
@@ -166,11 +191,15 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 
     public void OnEvent(EventData photonEvent)
     {
-        //we start timer for everybody as callback
         byte eventCode = photonEvent.Code;
         if (eventCode == GameEvents.START_CD_GAME_TIMER)
         {
+        //we start timer for everybody as callback
             StartCoroutine(CDbeforeGameRoutine());
+        }
+        if(eventCode == GameEvents.START_PAINTBALL_GAME)
+        {
+            InitializeUI();
         }
 
     }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallGameManager : MonoBehaviour, IOnEventCallback
+public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldown
 {
     public Dictionary<int, bool> readyList = new Dictionary<int, bool>();
 
@@ -14,9 +14,30 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback
         get { return readyList.Keys.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
     }
 
+    [Header("CdSystem")]
+    [SerializeField] int iD;
+
+    public int CoolDownId => iD;
+
+    public float CoolDownDuration
+    {
+        get { return minutes * 60 + secounds; }
+    }
+
+    [Header("Game time")]
+    [SerializeField] int minutes;
+    [SerializeField] int secounds;
+
+    [Header("PointsToWin")]
+    [SerializeField] int pointsToWin;
+
+    private PaintBallTeamManager paintBallTeamManager;
+    //field gamescore
+
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
+        paintBallTeamManager = FindObjectOfType<PaintBallTeamManager>();
     }
 
     private void OnDisable()
@@ -39,18 +60,48 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback
 
                     Debug.Log("SENDER - " + senderKey + " VALUE - " + value);
 
-                    AddToReadyList(senderKey, value);
+                    AddLoadedPlayerToReadyList(senderKey, value);
                     Debug.Log("I added - " + senderKey + value);
                 }
             }
         }
-        else if(eventCode == GameEvents.START_GAME)
+        else if(eventCode == GameEvents.START_PAINTBALL_GAME)
         {
             StartGame();
         }
     }
 
-    private void AddToReadyList(int key, bool value)
+    private void AddScoreToTeam(PaintBallTeam team, int pointsAmount)
+    {
+        team.gamePoints += pointsAmount;
+        GameFinishCheck();
+    }
+
+    void InitializeTeamScore()
+    {
+        foreach (PaintBallTeam team in paintBallTeamManager.teams)
+        {
+            team.gamePoints = 0;
+        }
+    }
+
+    void GameFinishCheck()
+    {
+        foreach(PaintBallTeam team in paintBallTeamManager.teams)
+        {
+            if(team.gamePoints >= pointsToWin)
+            {
+                GameFinishEvent(team);
+            }
+        }
+    }
+
+    void GameFinishEvent(PaintBallTeam team)
+    {
+
+    }
+
+    private void AddLoadedPlayerToReadyList(int key, bool value)
     {
         if (!readyList.Keys.ToList().Contains(key))
         {
@@ -64,11 +115,11 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback
         if (PlayersAreReady)
         {
             //timer ticks, and when ends, it sends us an event to start the game 
-            UIstartTimer();
+            UIstartTimerEvent();
         }
     }
 
-    void UIstartTimer()
+    void UIstartTimerEvent()
     {
         /*        uiController.StartGameTimer();*/
         object[] content = new object[] { };
@@ -79,5 +130,8 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback
     void StartGame()
     {
         Debug.Log("GAME STARTS!");
+        //initialize teams points to 0
+        InitializeTeamScore();
+
     }
 }
