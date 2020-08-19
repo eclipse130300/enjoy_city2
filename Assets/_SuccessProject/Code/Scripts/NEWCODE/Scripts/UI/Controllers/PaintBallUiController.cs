@@ -32,8 +32,11 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     [SerializeField] Image playerHPfill;
     [SerializeField] TextMeshProUGUI playerHPamount;
 
+    [Header("GameTimer")]
+    [SerializeField] TextMeshProUGUI gameTimer;
 
-    public TextMeshProUGUI cdTimer;
+
+    public TextMeshProUGUI startCD;
     public GameObject playerCamera;
     public LayerMask noPlayerLayerMask;
 
@@ -76,18 +79,18 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     IEnumerator CDbeforeGameRoutine()
     {
         yield return new WaitForSeconds(2);
-        cdTimer.gameObject.SetActive(true);
+        startCD.gameObject.SetActive(true);
 
-        cdTimer.text = "3";
+        startCD.text = "3";
         yield return new WaitForSeconds(1);
-        cdTimer.text = "2";
+        startCD.text = "2";
         yield return new WaitForSeconds(1);
-        cdTimer.text = "1";
+        startCD.text = "1";
         yield return new WaitForSeconds(1);
-        cdTimer.text = "Go!";
+        startCD.text = "Go!";
         yield return new WaitForSeconds(1);
 
-        cdTimer.gameObject.SetActive(false);
+        startCD.gameObject.SetActive(false);
 
         if (PhotonNetwork.IsMasterClient) CDends(); //if we master and time ends, let's start game for everybody!
     }
@@ -194,11 +197,13 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         byte eventCode = photonEvent.Code;
         if (eventCode == GameEvents.START_CD_GAME_TIMER)
         {
-        //we start timer for everybody as callback
+            //we start timer for everybody as callback
+            Debug.Log("start game CD event recieved!");
             StartCoroutine(CDbeforeGameRoutine());
         }
         if(eventCode == GameEvents.START_PAINTBALL_GAME)
         {
+            Debug.Log("UI initialize event recieved!");
             InitializeUI();
         }
 

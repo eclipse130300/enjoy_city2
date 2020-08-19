@@ -238,7 +238,7 @@ public class PaintBallRoom : MonoBehaviourPunCallbacks
         player.myPedestalIndex = pedestalController.pedestalID;
 
         //if the player who joined is ours, add this player as my player for future
-        if (player.photonActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)  paintBallTeamManager.myPlayer = player;
+        if (player.photonActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)  paintBallTeamManager.SetMyPlayerAndMyTeam(player, newTeam);
     }
 
     [PunRPC]

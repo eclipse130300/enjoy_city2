@@ -1,12 +1,14 @@
-﻿using Photon.Realtime;
+﻿using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using UnityEngine;
 using Utils;
 
-public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
+public class ShootAbility : MonoBehaviour , IHaveCooldown
 {
-    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] GameObject dmgBullet;
+    [SerializeField] GameObject fakeBullet;
 
     [SerializeField] GameObject shootingPoint;
     [SerializeField] float targetPointDistance;
@@ -28,11 +30,14 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
 
     [SerializeField] CoolDownSystem coolDownSystem;
     [SerializeField] int iD;
+
     private float cD;
 
     public int CoolDownId => iD;
 
     public float CoolDownDuration => cD;
+
+    private PhotonView photonView; 
 
     //test p
     public Ray ray = new Ray();
@@ -40,10 +45,14 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
     private void Awake()
     {
         playerInput = GetComponent<ThirdPersonInput>();
+        photonView = GetComponent<PhotonView>();
 
-        Messenger.AddListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
-        Messenger.AddListener(GameEvents.RELOAD_PRESSED, Reload);
-        Messenger.AddListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
+        if (photonView.IsMine && PhotonNetwork.IsConnectedAndReady)
+        {
+            Messenger.AddListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
+            Messenger.AddListener(GameEvents.RELOAD_PRESSED, Reload);
+            Messenger.AddListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
+        }
     }
 
     private void Start()
@@ -54,15 +63,20 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
-        Messenger.RemoveListener(GameEvents.RELOAD_PRESSED, Reload);
-        Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
+        if (photonView.IsMine && PhotonNetwork.IsConnectedAndReady)
+        {
+            Messenger.RemoveListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
+            Messenger.RemoveListener(GameEvents.RELOAD_PRESSED, Reload);
+            Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
+        }
     }
 
     void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
     {
-        SetBullet(shootDir, sprayMultiplier);
+        SetBullet(shootDir, sprayMultiplier, dmgBullet);
         DescreaseAmmo(1);
+
+        photonView.RPC("GlobalShoot", RpcTarget.Others, shootDir, sprayMultiplier);
     }
 
     private void DescreaseAmmo(int amount)
@@ -101,9 +115,9 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
         isReloading = false;
     }
 
-    private void SetBullet(Vector3 shootDir, float sprayMultiplier)
+    private void SetBullet(Vector3 shootDir, float sprayMultiplier, GameObject bulletTypePref)
     {
-        GameObject newBullet = GameObjectPooler.Instance.GetObject(bulletPrefab);
+        GameObject newBullet = GameObjectPooler.Instance.GetObject(bulletTypePref);
 
         //it's a main rotation
         shootingPoint.transform.rotation = Quaternion.LookRotation(shootDir, Vector3.up);
@@ -165,18 +179,21 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IHaveBullet
         {
             Shoot(shootDir, superShotSprayMultiplier);
         }
-
-/*        UnityEditor.EditorApplication.isPaused = true;*/
     }
 
-    public void InitializeBullet(GameObject bulletPref, Color bulletColor)
+    public void InitializeShooting()
     {
-        if(bulletPrefab != bulletPref)
-        {
-            bulletPrefab = bulletPref;
-        }
+        //get team color (we already initialized it)
+        var playerTeam = GetComponent<PlayerTeam>();
+        //we initialize our prefab
+        dmgBullet.GetComponent<PaintBallBullet>().InitializeBullet(playerTeam.teamColor, playerTeam.myTeamIndex);
+        fakeBullet.GetComponent<PaintBallBullet>().InitializeBullet(playerTeam.teamColor, playerTeam.myTeamIndex);
+    }
 
-        bulletPrefab.GetComponent<MeshRenderer>().sharedMaterial.color = bulletColor;
-        bulletPrefab.GetComponent<PaintBallBullet>().bulletColor = bulletColor;
+    [PunRPC]
+    public void GlobalShoot(Vector3 shootDir, float sprayMult)
+        //globally we shoot fake bullet - others do not need to know about dmg to enemy(if enemny's health is scynchronized)
+    {
+        SetBullet(shootDir, sprayMult, fakeBullet);
     }
 }

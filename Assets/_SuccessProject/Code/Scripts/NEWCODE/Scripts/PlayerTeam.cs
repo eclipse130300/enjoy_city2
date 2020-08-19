@@ -1,38 +1,62 @@
-﻿using System.Collections;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(IHaveBullet))]
-public class PlayerTeam : MonoBehaviour
+public class PlayerTeam : MonoBehaviour, IOnEventCallback
 {
-    public GameObject bulletPrefab;
-
     public TEAM currentTeam;
+    public int myTeamIndex;
     public Color teamColor;
-    private IHaveBullet bulletKeeper;
+
+    public string enemyTag = "Enemy";
 
     public PaintBallPlayer myPlayer;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        bulletKeeper = GetComponent<IHaveBullet>();
-
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    public void InitializePlayerTeam(TEAM team, string colorHex)
+    public void InitializePlayerTeam(int teamIndex, TEAM team, string colorHex)
     {
-        this.currentTeam = team;
+        myTeamIndex = teamIndex;
+        currentTeam = team;
         Color playerCol;
         if (ColorUtility.TryParseHtmlString(colorHex, out playerCol)) teamColor = playerCol;
 
-        bulletKeeper.InitializeBullet(bulletPrefab, teamColor);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        var eventCode = photonEvent.Code;
+
+        if (eventCode == GameEvents.START_PAINTBALL_GAME)
+        {
+            //at the pre-beginning of our game let's set tags
+            ApplyProperTagsToPlayers();
+        }
+    }
+
+    private void ApplyProperTagsToPlayers()
+    {
+        var allPlayers = FindObjectsOfType<PlayerTeam>();
+
+        foreach (PlayerTeam player in allPlayers)
+        {
+            if(player.myTeamIndex != this.myTeamIndex) //we check if players team isn't ours
+            {
+                player.gameObject.tag = enemyTag; //we apply enemy tag (for processing bullet)
+            }
+        }
     }
 }
 

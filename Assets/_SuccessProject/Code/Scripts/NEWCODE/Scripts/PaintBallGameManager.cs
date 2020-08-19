@@ -7,11 +7,11 @@ using UnityEngine;
 
 public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldown
 {
-    public Dictionary<int, bool> readyList = new Dictionary<int, bool>();
+    public List<int> readyList = new List<int>();
 
     private bool PlayersAreReady
     {
-        get { return readyList.Keys.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
+        get { return readyList.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
     }
 
     [Header("CdSystem")]
@@ -53,16 +53,9 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldo
             //when player initially spawns(gameSpawner) it sends notification to master, who adds player to ready list
             if (!PlayersAreReady)
             {
-                {
-                    object[] data = (object[])photonEvent.CustomData;
-                    bool value = (bool)data[0];
-                    int senderKey = photonEvent.Sender;
+                int senderKey = photonEvent.Sender;
+                AddLoadedPlayerToReadyList(senderKey);
 
-                    Debug.Log("SENDER - " + senderKey + " VALUE - " + value);
-
-                    AddLoadedPlayerToReadyList(senderKey, value);
-                    Debug.Log("I added - " + senderKey + value);
-                }
             }
         }
         else if(eventCode == GameEvents.START_PAINTBALL_GAME)
@@ -101,11 +94,11 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldo
 
     }
 
-    private void AddLoadedPlayerToReadyList(int key, bool value)
+    private void AddLoadedPlayerToReadyList(int key)
     {
-        if (!readyList.Keys.ToList().Contains(key))
+        if (!readyList.Contains(key))
         {
-            readyList.Add(key, value);
+            readyList.Add(key);
             AllPlayersReadyCheck();
         }
     }
@@ -121,11 +114,12 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldo
 
     void UIstartTimerEvent()
     {
-        /*        uiController.StartGameTimer();*/
         object[] content = new object[] { };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         PhotonNetwork.RaiseEvent(GameEvents.START_CD_GAME_TIMER, content, raiseEventOptions, SendOptions.SendReliable);
+        Debug.Log("start game CD event send!");
     }
+
 
     void StartGame()
     {

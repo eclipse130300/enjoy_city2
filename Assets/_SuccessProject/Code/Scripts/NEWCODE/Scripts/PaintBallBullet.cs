@@ -8,14 +8,19 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
 {
     [SerializeField] float speed;
     [Range(1f,10f)]
-    [SerializeField] float collisionTestOffset = 1f;
+    [SerializeField] float collisionOffset = 1f;
     [HideInInspector]
     public Vector3 targetPoint;
     [SerializeField] LayerMask noPlayerLayerMask;
 
     public Color bulletColor = Color.green;
+    [HideInInspector]
+    public int fromTeamIndex;
 
+    public string enemyTag = "Enemy";
 
+    [Header("is global bullet(no damage)?")]
+    public bool isFake = false;
 
     //Test
     public Ray ray;
@@ -83,6 +88,12 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         GetComponent<MeshRenderer>().material.color = bulletColor;
     }
 
+    public void InitializeBullet(Color color, int teamIndex)
+    {
+        bulletColor = color;
+        fromTeamIndex = teamIndex;
+    }
+
     private void OnEnable()
     {
         Invoke("ImmediateSelfDestroy", 3f);
@@ -129,11 +140,19 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         Ray ray = new Ray();
 
         ray.direction = collision.GetContact(0).point - hitDirection;
-        ray.origin = collision.GetContact(0).point + (-ray.direction.normalized * collisionTestOffset);
+        ray.origin = collision.GetContact(0).point + (-ray.direction.normalized * collisionOffset);
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
+            //if it's not a fake bullet - it damages enemy
+            var hitGO = hit.collider.gameObject;
+            if(hitGO.GetComponent<PlayerHealth>() && hitGO.CompareTag(enemyTag) && !isFake)
+            {
+                hitGO.GetComponent<PlayerHealth>().TakeDamage(1); //todo dmg amount only 1?
+            }
+
+            //otherwise we just explode it
             ExplodeBullet(hit.point, hit.collider.gameObject.GetComponent<Renderer>());
         }
     }
@@ -160,7 +179,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         ray.origin = transform.position;
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, speed * Time.fixedDeltaTime * collisionTestOffset, noPlayerLayerMask))
+        if (Physics.Raycast(ray, out hit, speed * Time.fixedDeltaTime * collisionOffset, noPlayerLayerMask))
         {
             ExplodeBullet(hit.point, hit.collider.gameObject.GetComponent<Renderer>());
         }

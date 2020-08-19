@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
+public class PaintBallGameSpawner : MonoBehaviour 
 {
     public PaintBallSpawnPoint[] spawnPoints;
     private PaintBallTeamManager paintBallTeamManager;
@@ -21,7 +21,6 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
         photon = GetComponent<PhotonView>();
 
         paintBallTeamManager = FindObjectOfType<PaintBallTeamManager>();
-/*        if (spawnPoints.IsNullOrEmpty()) InitializeSpawnPoints();*/
     }
 
     private void OnEnable()
@@ -43,7 +42,7 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
         return point.gameObject.transform.position;
     }
 
-    [PunRPC]
+/*    [PunRPC]*/
     private void InstantinatePlayer(Vector3 point)
     {
         //we stop sending ready messeges to master
@@ -67,9 +66,12 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
 
         var playerTeam = player.GetComponent<PlayerTeam>();
         var myPlayer = paintBallTeamManager.myPlayer;
-        var myTeam = paintBallTeamManager.GetTeamByIndex(myPlayer.teamIndex);
+        var myTeam = paintBallTeamManager.myTeam;
 
-        playerTeam.InitializePlayerTeam(myPlayer.teamName, myTeam.hexColor);
+        playerTeam.InitializePlayerTeam(myPlayer.teamIndex, myPlayer.teamName, myTeam.hexColor);
+
+        var playerShooting = player.GetComponent<ShootAbility>();
+        playerShooting.InitializeShooting();
     }
 
     void InstantinateOnScenesLoaded()
@@ -82,9 +84,8 @@ public class PaintBallGameSpawner : MonoBehaviour  /*, IOnEventCallback*/
 
     private void NotifyMasterIamReady()
     {
-        Debug.Log("I SEND EVENT!");
-        bool isReady = true;
-        object[] content = new object[] { isReady };
+        Debug.Log("player spawned Event sent!");
+        object[] content = new object[] { };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
     }

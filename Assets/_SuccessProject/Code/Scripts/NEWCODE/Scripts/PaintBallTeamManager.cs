@@ -11,11 +11,13 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
     private const int teamsAmount = 2;
 
     public PaintBallTeam[] teams = new PaintBallTeam[teamsAmount];
-    public PaintBallPlayer myPlayer;
     [SerializeField] List<GameObject> pedestals = new List<GameObject>();
 
     [SerializeField] Color[] teamColors = new Color[teamsAmount];
     [SerializeField] int maxPlayersInTeam = 4;
+
+    public PaintBallPlayer myPlayer;
+    public PaintBallTeam myTeam;
 
     public override void OnEnable()
     {
@@ -31,6 +33,12 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
     {
         InitializePedestals();
         InitializeTeams();
+    }
+
+    public void SetMyPlayerAndMyTeam(PaintBallPlayer player, PaintBallTeam team)
+    {
+        myPlayer = player;
+        myTeam = team;
     }
 
 /*    public void InitializeTeamsViaRoomProps()
