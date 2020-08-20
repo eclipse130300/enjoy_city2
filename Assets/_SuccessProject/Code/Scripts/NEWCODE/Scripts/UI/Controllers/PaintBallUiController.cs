@@ -23,10 +23,10 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     [SerializeField] RectTransform crosshairRect;
 
     [Header("Teams")]
-    [SerializeField] Image firstTeamFill;
-    [SerializeField] TextMeshProUGUI firstTeamScore;
-    [SerializeField] Image secoundTeamFill;
-    [SerializeField] TextMeshProUGUI secoundTeamScore;
+    [SerializeField] Image redTeamFill;
+    [SerializeField] TextMeshProUGUI redTeamScore;
+    [SerializeField] Image blueTeamFill;
+    [SerializeField] TextMeshProUGUI blueTeamScore;
 
     [Header("Player")]
     [SerializeField] Image playerHPfill;
@@ -40,6 +40,8 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     public GameObject playerCamera;
     public LayerMask noPlayerLayerMask;
 
+    private PaintBallTeamManager paintballTM;
+
     //test
     Vector3 shotPoint;
 
@@ -47,6 +49,8 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     {
         Messenger.AddListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
         Messenger.AddListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+
+        paintballTM = PaintBallTeamManager.Instance;
 
         PhotonNetwork.AddCallbackTarget(this);
     }
@@ -67,10 +71,10 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     void InitializeUI() //let's make ui empty
     {
         ammoFill.fillAmount = 1;
-        firstTeamFill.fillAmount = 0;
-        firstTeamScore.text = "0";
-        secoundTeamFill.fillAmount = 0;
-        secoundTeamScore.text = "0";
+        redTeamFill.fillAmount = 0;
+        redTeamScore.text = "0";
+        blueTeamFill.fillAmount = 0;
+        blueTeamScore.text = "0";
 
         playerHPfill.fillAmount = 1;
         playerHPamount.text = "100";   //in case one will have exceeding hp(>100), make field in PaintBallPlayer "MaxHP" and use here through myPlayer
@@ -153,6 +157,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             {
                 if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
+/*                    Debug.Log("It's enemy, I shoot!");*/
                     Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point);
                 }
             }
@@ -198,15 +203,57 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         if (eventCode == GameEvents.START_CD_GAME_TIMER)
         {
             //we start timer for everybody as callback
-            Debug.Log("start game CD event recieved!");
             StartCoroutine(CDbeforeGameRoutine());
         }
-        if(eventCode == GameEvents.START_PAINTBALL_GAME)
+        else if(eventCode == GameEvents.START_PAINTBALL_GAME)
         {
-            Debug.Log("UI initialize event recieved!");
             InitializeUI();
         }
+        else if(eventCode == GameEvents.HIT_RECIEVED)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            if (data.Length == 0) return;  //why smthing calls this event at the beggining of the game??
 
+            Debug.Log(data.Length);
+            int actorNum = (int)data[0];
+            int currentHP = (int)data[1];
+            int dmgAmount = (int)data[2];
+            int fromTeamId = (int)data[3];
+
+            if(PhotonNetwork.LocalPlayer.ActorNumber == actorNum)
+            UpdatePlayerHP(currentHP);
+
+            UpdateOverallScore(fromTeamId);
+        }
+
+    }
+
+    private void UpdatePlayerHP(int currentHP)
+    {
+        playerHPamount.text = currentHP.ToString();
+
+        playerHPfill.fillAmount = (float)currentHP / PlayerHealth.staticMaxHP;
+    }
+
+    private void UpdateOverallScore(int teamID)
+    {
+      var currentPoints = paintballTM.GetTeamPoints(teamID);
+      var maxPoints = PaintBallGameManager.Instance.pointsToWin;
+
+        switch(teamID)
+        {
+            case 0: //RED. todo use enum instead of teamIndex here...
+                redTeamScore.text = currentPoints.ToString();
+                redTeamFill.fillAmount = (float) currentPoints / maxPoints;
+                break;
+
+            case 1: //BLUE team
+                blueTeamScore.text = currentPoints.ToString();
+                blueTeamFill.fillAmount = (float)currentPoints / maxPoints;
+                break;
+        }
+
+         
     }
 }
         

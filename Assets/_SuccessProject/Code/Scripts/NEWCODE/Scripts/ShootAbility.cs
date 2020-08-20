@@ -145,9 +145,8 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         RaycastHit hit;
         if(Physics.Raycast(ray, out hit))
         {
-            if(hit.collider.CompareTag("Enemy"))
+            if(hit.collider.gameObject.CompareTag("Enemy"))
             {
-/*                Debug.Log("I checked obstacles!");*/
                 Shoot(shootDir, autoShotSprayMultiplier);
                 coolDownSystem.PutOnCooldown(this);
             }

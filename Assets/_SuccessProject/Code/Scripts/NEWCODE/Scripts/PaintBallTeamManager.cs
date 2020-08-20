@@ -1,12 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using ExitGames.Client.Photon;
+using Newtonsoft.Json;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallTeamManager : MonoBehaviourPunCallbacks
+public class PaintBallTeamManager : MonoBehaviourSingleton<PaintBallTeamManager>
 {
     private const int teamsAmount = 2;
 
@@ -19,18 +21,27 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
     public PaintBallPlayer myPlayer;
     public PaintBallTeam myTeam;
 
-    public override void OnEnable()
+/*    private PaintBallGameManager gm;*/
+
+    [Header("Game scene Where We Initialize Teams")]
+    public string sceneToInitialize = "Amient_Lobby";
+
+    public void OnEnable()
     {
         Loader.Instance.AllSceneLoaded += InitializeEverything;
     }
 
-    public override void OnDisable()
+    public void OnDisable()
     {
         Loader.Instance.AllSceneLoaded -= InitializeEverything;
     }
 
     private void InitializeEverything()
     {
+        //let's initialize pedestals only in case current game scene is lobby game scene
+        if (Loader.Instance.curentScene.SceneName != sceneToInitialize) return;
+
+/*        Debug.Log("I INITIALIZE TEAMS!");*/
         InitializePedestals();
         InitializeTeams();
     }
@@ -41,15 +52,14 @@ public class PaintBallTeamManager : MonoBehaviourPunCallbacks
         myTeam = team;
     }
 
-/*    public void InitializeTeamsViaRoomProps()
+    public int GetTeamPoints(int teamId)
     {
-        if (PhotonNetwork.CurrentRoom.CustomProperties.IsNullOrEmpty()) return;
-
-        var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
-        var teamsSTR = (string)roomProps["teams"];
-        teams = (PaintBallTeam[])JsonConvert.DeserializeObject(teamsSTR);
-    }*/
-
+        foreach (PaintBallTeam team in teams)
+        {
+            if (team.teamIndex == teamId) return team.gamePoints;
+        }
+        return 0;
+    }
 
     void InitializeTeams()
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldown
+public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>, IOnEventCallback, IHaveCooldown
 {
     public List<int> readyList = new List<int>();
 
@@ -29,15 +29,21 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldo
     [SerializeField] int secounds;
 
     [Header("PointsToWin")]
-    [SerializeField] int pointsToWin;
+    public int pointsToWin;
 
-    private PaintBallTeamManager paintBallTeamManager;
-    //field gamescore
+    PaintBallTeamManager paintballTM;
+
+    private void Awake()
+    {
+        if (PaintBallTeamManager.Instance != null)
+        {
+            paintballTM = PaintBallTeamManager.Instance;
+        }
+    }
 
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
-        paintBallTeamManager = FindObjectOfType<PaintBallTeamManager>();
     }
 
     private void OnDisable()
@@ -62,27 +68,38 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldo
         {
             StartGame();
         }
-    }
+        else if(eventCode == GameEvents.HIT_RECIEVED)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int actorNum = (int)data[0];
+            int currentHP = (int)data[1];
+            int dmgAmount = (int)data[2];
+            int fromTeamId = (int)data[3];
 
-    private void AddScoreToTeam(PaintBallTeam team, int pointsAmount)
-    {
-        team.gamePoints += pointsAmount;
-        GameFinishCheck();
+            AddScoreToTeam(fromTeamId, dmgAmount);
+        }
     }
 
     void InitializeTeamScore()
     {
-        foreach (PaintBallTeam team in paintBallTeamManager.teams)
+        foreach (PaintBallTeam team in paintballTM.teams)
         {
             team.gamePoints = 0;
         }
     }
 
+    private void AddScoreToTeam(int teamId, int pointsAmount)
+    {
+        var team = paintballTM.GetTeamByIndex(teamId);
+        team.gamePoints += pointsAmount;
+        GameFinishCheck();
+    }
+
     void GameFinishCheck()
     {
-        foreach(PaintBallTeam team in paintBallTeamManager.teams)
+        foreach (PaintBallTeam team in paintballTM.teams)
         {
-            if(team.gamePoints >= pointsToWin)
+            if (team.gamePoints >= pointsToWin)  //...teamManager knows about GM?
             {
                 GameFinishEvent(team);
             }
@@ -117,15 +134,12 @@ public class PaintBallGameManager : MonoBehaviour, IOnEventCallback, IHaveCooldo
         object[] content = new object[] { };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         PhotonNetwork.RaiseEvent(GameEvents.START_CD_GAME_TIMER, content, raiseEventOptions, SendOptions.SendReliable);
-        Debug.Log("start game CD event send!");
     }
 
 
     void StartGame()
     {
         Debug.Log("GAME STARTS!");
-        //initialize teams points to 0
         InitializeTeamScore();
-
     }
 }

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallGameSpawner : MonoBehaviour 
+public class PaintBallGameSpawner : MonoBehaviour
 {
     public PaintBallSpawnPoint[] spawnPoints;
     private PaintBallTeamManager paintBallTeamManager;
@@ -51,27 +51,13 @@ public class PaintBallGameSpawner : MonoBehaviour
         //instantinate player
         GameObject player = PhotonNetwork.Instantiate("PaintballPlayer", point, Quaternion.identity);
 
-        InitializeNewPlayer(player);
+        PhotonNetwork.LocalPlayer.TagObject = player;
 
+        //local stuff
         GameObject playerCam = player.GetComponentInChildren<PlayerCamera>().gameObject;
         Messenger.Broadcast(GameEvents.PAINTBALL_PLAYER_SPAWNED, playerCam);
 
         NotifyMasterIamReady();
-    }
-
-    void InitializeNewPlayer(GameObject player)
-    {
-        //in skins manager change gameMode to paintball 
-        player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
-
-        var playerTeam = player.GetComponent<PlayerTeam>();
-        var myPlayer = paintBallTeamManager.myPlayer;
-        var myTeam = paintBallTeamManager.myTeam;
-
-        playerTeam.InitializePlayerTeam(myPlayer.teamIndex, myPlayer.teamName, myTeam.hexColor);
-
-        var playerShooting = player.GetComponent<ShootAbility>();
-        playerShooting.InitializeShooting();
     }
 
     void InstantinateOnScenesLoaded()
@@ -84,7 +70,6 @@ public class PaintBallGameSpawner : MonoBehaviour
 
     private void NotifyMasterIamReady()
     {
-        Debug.Log("player spawned Event sent!");
         object[] content = new object[] { };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);

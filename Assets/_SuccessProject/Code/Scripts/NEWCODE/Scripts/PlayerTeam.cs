@@ -15,6 +15,12 @@ public class PlayerTeam : MonoBehaviour, IOnEventCallback
     public string enemyTag = "Enemy";
 
     public PaintBallPlayer myPlayer;
+    private PhotonView photon;
+
+    private void Awake()
+    {
+        photon = GetComponent<PhotonView>();
+    }
 
     private void OnEnable()
     {
@@ -26,12 +32,15 @@ public class PlayerTeam : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    public void InitializePlayerTeam(int teamIndex, TEAM team, string colorHex)
+    public void InitializePlayerTeam(PaintBallPlayer player, string playerTeamHexCol)
     {
-        myTeamIndex = teamIndex;
-        currentTeam = team;
+        myTeamIndex = player.teamIndex;
+        currentTeam = player.teamName;
         Color playerCol;
-        if (ColorUtility.TryParseHtmlString(colorHex, out playerCol)) teamColor = playerCol;
+        if (ColorUtility.TryParseHtmlString("#" + playerTeamHexCol, out playerCol))
+        {
+            teamColor = playerCol;
+        }
 
     }
 
@@ -48,14 +57,18 @@ public class PlayerTeam : MonoBehaviour, IOnEventCallback
 
     private void ApplyProperTagsToPlayers()
     {
+        if (!photon.IsMine) return;
+
         var allPlayers = FindObjectsOfType<PlayerTeam>();
 
         foreach (PlayerTeam player in allPlayers)
         {
-            if(player.myTeamIndex != this.myTeamIndex) //we check if players team isn't ours
+            if(player.myTeamIndex != myTeamIndex) //we check if players team isn't ours
             {
                 player.gameObject.tag = enemyTag; //we apply enemy tag (for processing bullet)
+                player.gameObject.layer = 0;
             }
+                //apply ally tag later?
         }
     }
 }

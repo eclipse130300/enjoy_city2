@@ -14,6 +14,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
     [SerializeField] LayerMask noPlayerLayerMask;
 
     public Color bulletColor = Color.green;
+
     [HideInInspector]
     public int fromTeamIndex;
 
@@ -149,7 +150,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
             var hitGO = hit.collider.gameObject;
             if(hitGO.GetComponent<PlayerHealth>() && hitGO.CompareTag(enemyTag) && !isFake)
             {
-                hitGO.GetComponent<PlayerHealth>().TakeDamage(1); //todo dmg amount only 1?
+                hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex); //todo dmg amount only 1?
             }
 
             //otherwise we just explode it

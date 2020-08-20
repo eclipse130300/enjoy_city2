@@ -89,8 +89,6 @@ public class BodyManager : MonoBehaviour
 
         skinsManager.skinHolder = body.transform;
         skinsManager.InitializeSkins();
-
-        Debug.Log("I SPAWNED BODY!");
     }
 
     private void OnDestroy()
