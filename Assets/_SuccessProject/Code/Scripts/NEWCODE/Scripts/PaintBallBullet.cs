@@ -15,13 +15,12 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
 
     public Color bulletColor = Color.green;
 
-    [HideInInspector]
     public int fromTeamIndex;
 
     public string enemyTag = "Enemy";
 
     [Header("is global bullet(no damage)?")]
-    public bool isFake = false;
+    public bool isFakeBullet = false;
 
     //Test
     public Ray ray;
@@ -148,9 +147,12 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         {
             //if it's not a fake bullet - it damages enemy
             var hitGO = hit.collider.gameObject;
-            if(hitGO.GetComponent<PlayerHealth>() && hitGO.CompareTag(enemyTag) && !isFake)
+            if (hitGO.GetComponent<PlayerHealth>() != null)
             {
-                hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex); //todo dmg amount only 1?
+                if (!hitGO.GetComponent<PlayerHealth>().isInvulnerable && hitGO.CompareTag(enemyTag) && !isFakeBullet)
+                {
+                    hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex); //todo dmg amount only 1?
+                }
             }
 
             //otherwise we just explode it
@@ -182,6 +184,16 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, speed * Time.fixedDeltaTime * collisionOffset, noPlayerLayerMask))
         {
+            var hitGO = hit.collider.gameObject;
+            //if it's not a fake bullet - it damages enemy
+            if (hitGO.GetComponent<PlayerHealth>() != null)
+            {
+                if (!hitGO.GetComponent<PlayerHealth>().isInvulnerable && hitGO.CompareTag(enemyTag) && !isFakeBullet)
+                {
+                    hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex); //todo dmg amount only 1?
+                }
+            }
+
             ExplodeBullet(hit.point, hit.collider.gameObject.GetComponent<Renderer>());
         }
 /*

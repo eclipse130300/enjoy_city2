@@ -209,6 +209,6 @@ public class PaintBallTeamManager : MonoBehaviourSingleton<PaintBallTeamManager>
 
 public enum TEAM
 {
-    RED,
-    BLUE
+    Red,
+    Blue
 }

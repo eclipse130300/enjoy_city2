@@ -6,5 +6,19 @@ public class PaintBallSpawnPoint : MonoBehaviour
 {
     public bool isOccupied = false;
     public TEAM team;
-    public int index;
+    public int startSpawnIndex;
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.GetComponent<PlayerHealth>())
+        {
+            isOccupied = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        isOccupied = false;
+    }
 }

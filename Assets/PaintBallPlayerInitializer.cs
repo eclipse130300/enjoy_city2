@@ -8,6 +8,9 @@ public class PaintBallPlayerInitializer : MonoBehaviour, IPunInstantiateMagicCal
 {
     private PaintBallTeamManager paintBallTeamManager;
 
+    //test - todo delete
+    public PaintBallPlayer PPplayer;
+
     private void Awake()
     {
         paintBallTeamManager = FindObjectOfType<PaintBallTeamManager>();
@@ -33,15 +36,21 @@ public class PaintBallPlayerInitializer : MonoBehaviour, IPunInstantiateMagicCal
 
     void InitializeSpawnedPlayer(GameObject player, PaintBallPlayer paintBallPlayer)
     {
+        PPplayer = paintBallPlayer;
+
         //in skins manager change gameMode to paintball 
         player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
 
         PlayerTeam playerTeam = player.GetComponent<PlayerTeam>();
-
         var myTeam = paintBallTeamManager.GetTeamByIndex(paintBallPlayer.teamIndex);
-        playerTeam.InitializePlayerTeam(paintBallPlayer, myTeam.hexColor);
 
-        var playerShooting = player.GetComponent<ShootAbility>();
-        playerShooting.InitializeShooting();
+        Color teamColor;
+        ColorUtility.TryParseHtmlString("#" + myTeam.hexColor, out teamColor);
+
+
+        playerTeam.InitializePlayerTeam(myTeam, teamColor);
+
+/*        var playerShooting = player.GetComponent<ShootAbility>();
+        playerShooting.InitializeShooting(teamColor, myTeam.teamIndex);*/
     }
 }

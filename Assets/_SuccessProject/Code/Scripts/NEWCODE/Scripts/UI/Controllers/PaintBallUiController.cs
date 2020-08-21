@@ -35,6 +35,8 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     [Header("GameTimer")]
     [SerializeField] TextMeshProUGUI gameTimer;
 
+    [Header("Result text")]
+    [SerializeField] TextMeshProUGUI resultText;
 
     public TextMeshProUGUI startCD;
     public GameObject playerCamera;
@@ -155,10 +157,15 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100f, noPlayerLayerMask))
             {
-                if (hit.collider.gameObject.CompareTag("Enemy"))
+                var hitGO = hit.collider.gameObject;
+
+/*                if(hitGO.CompareTag("Enemy") && hitGO.GetComponent<PlayerHealth>() == null)
                 {
-/*                    Debug.Log("It's enemy, I shoot!");*/
-                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point);
+                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point); //just for testing...we can shoot only enemies who has player health script
+                }*/
+                if (hitGO.CompareTag("Enemy") && !hitGO.GetComponent<PlayerHealth>().isInvulnerable)
+                {
+                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point); 
                 }
             }
             yield return null;
@@ -212,9 +219,6 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         else if(eventCode == GameEvents.HIT_RECIEVED)
         {
             object[] data = (object[])photonEvent.CustomData;
-            if (data.Length == 0) return;  //why smthing calls this event at the beggining of the game??
-
-            Debug.Log(data.Length);
             int actorNum = (int)data[0];
             int currentHP = (int)data[1];
             int dmgAmount = (int)data[2];
@@ -224,6 +228,16 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             UpdatePlayerHP(currentHP);
 
             UpdateOverallScore(fromTeamId);
+        }
+        else if(eventCode == GameEvents.PAINTBALL_GAME_FINISHED)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int wonTeamID = (int)data[0];
+
+            PaintBallTeam wonTeam = paintballTM.GetTeamByIndex(wonTeamID);
+
+            resultText.gameObject.SetActive(true);
+            resultText.text = wonTeam.teamName.ToString() + " team wins!";
         }
 
     }

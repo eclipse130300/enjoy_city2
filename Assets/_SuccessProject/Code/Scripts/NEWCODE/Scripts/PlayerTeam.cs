@@ -13,8 +13,6 @@ public class PlayerTeam : MonoBehaviour, IOnEventCallback
     public Color teamColor;
 
     public string enemyTag = "Enemy";
-
-    public PaintBallPlayer myPlayer;
     private PhotonView photon;
 
     private void Awake()
@@ -32,16 +30,11 @@ public class PlayerTeam : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    public void InitializePlayerTeam(PaintBallPlayer player, string playerTeamHexCol)
+    public void InitializePlayerTeam(PaintBallTeam team, Color teamCol)
     {
-        myTeamIndex = player.teamIndex;
-        currentTeam = player.teamName;
-        Color playerCol;
-        if (ColorUtility.TryParseHtmlString("#" + playerTeamHexCol, out playerCol))
-        {
-            teamColor = playerCol;
-        }
-
+        myTeamIndex = team.teamIndex;
+        currentTeam = team.teamName;
+        teamColor = teamCol;
     }
 
     public void OnEvent(EventData photonEvent)

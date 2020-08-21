@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallGameSpawner : MonoBehaviour
+public class PaintBallGameSpawner : MonoBehaviourSingleton<PaintBallGameSpawner>
 {
     public PaintBallSpawnPoint[] spawnPoints;
     private PaintBallTeamManager paintBallTeamManager;
@@ -36,7 +36,7 @@ public class PaintBallGameSpawner : MonoBehaviour
     private Vector3 PickStartSpawnPoint(PaintBallPlayer player)
     {
         //we take pedestal index as spawnpoint
-        PaintBallSpawnPoint point = spawnPoints.Where(x => x.index == player.myPedestalIndex).ToList()[0];
+        PaintBallSpawnPoint point = spawnPoints.Where(x => x.startSpawnIndex == player.myPedestalIndex).ToList()[0];
         //pick random one
 
         return point.gameObject.transform.position;
@@ -75,33 +75,10 @@ public class PaintBallGameSpawner : MonoBehaviour
         PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-/*    void FindSpawnPointForEveryPlayer()
-    {
-        //lets send spawnpoints to everybody
-        foreach (PaintBallTeam team in paintBallTeamManager.teams)
-        {
-            foreach (PaintBallPlayer player in team.playersInTeam)
-            {
-                //we find point
-                Vector3 point = PickSpawnPoint(player);
-                // and we send this point via RPC
-                Player playerToSend = PhotonNetwork.CurrentRoom.GetPlayer(player.photonActorNumber);
-                photon.RPC("InstantinatePlayer", playerToSend, point);
-            }
-        }
-    }*/
-
-    
-    public void ReSpawnPlayer(PaintBallPlayer playerIfno, GameObject playerModel)
-    {
-        var point = PickRandomSpawnPoint(playerIfno);
-        playerModel.transform.position = point;
-    }
-
-    private Vector3 PickRandomSpawnPoint(PaintBallPlayer player)
+    private Vector3 PickRandomSpawnPoint(TEAM playerTeam)
     {
         //get all avalilible points
-        List<PaintBallSpawnPoint> availiblePoints = spawnPoints.Where(x => x.team == player.teamName).Where(x => x.isOccupied == false).ToList();
+        List<PaintBallSpawnPoint> availiblePoints = spawnPoints.Where(x => x.team == playerTeam).Where(x => x.isOccupied == false).ToList();
         //pick random one
         int randomIndex = Random.Range(0, availiblePoints.Count);
         PaintBallSpawnPoint randomPoint = availiblePoints[randomIndex];
@@ -109,6 +86,12 @@ public class PaintBallGameSpawner : MonoBehaviour
         randomPoint.isOccupied = true;
 
         return randomPoint.gameObject.transform.position;
+    }
+
+    public void RespawnPlayer(GameObject player, TEAM playerTeam)
+    {
+        var point = PickRandomSpawnPoint(playerTeam);
+        player.transform.position = point;
     }
 
 }

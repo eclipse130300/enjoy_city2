@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PaintBallUISwitcher : MonoBehaviour
+public class PaintBallUISwitcher : MonoBehaviourSingleton<PaintBallUISwitcher>
 {
     public GameObject lobbyUI;
     public GameObject gameUI;

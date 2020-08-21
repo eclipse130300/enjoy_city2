@@ -37,15 +37,17 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     public float CoolDownDuration => cD;
 
-    private PhotonView photonView; 
+    private PhotonView photonView;
+    private PlayerTeam myTeam;
 
     //test p
     public Ray ray = new Ray();
 
-    private void Awake()
+    private void OnEnable()
     {
         playerInput = GetComponent<ThirdPersonInput>();
         photonView = GetComponent<PhotonView>();
+        myTeam = GetComponent<PlayerTeam>();
 
         if (photonView.IsMine && PhotonNetwork.IsConnectedAndReady)
         {
@@ -55,13 +57,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         }
     }
 
-    private void Start()
-    {
-        currentAmmo = maxAmmo;
-        cD = shootingDelay;
-    }
-
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (photonView.IsMine && PhotonNetwork.IsConnectedAndReady)
         {
@@ -69,6 +65,12 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
             Messenger.RemoveListener(GameEvents.RELOAD_PRESSED, Reload);
             Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
         }
+    }
+
+    private void Start()
+    {
+        currentAmmo = maxAmmo;
+        cD = shootingDelay;
     }
 
     void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
@@ -117,6 +119,8 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     private void SetBullet(Vector3 shootDir, float sprayMultiplier, GameObject bulletTypePref)
     {
+        InitializeShooting(myTeam.teamColor, myTeam.myTeamIndex);
+
         GameObject newBullet = GameObjectPooler.Instance.GetObject(bulletTypePref);
 
         //it's a main rotation
@@ -180,13 +184,11 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         }
     }
 
-    public void InitializeShooting()
+    public void InitializeShooting(Color teamCol, int teamIndex)
     {
-        //get team color (we already initialized it)
-        var playerTeam = GetComponent<PlayerTeam>();
         //we initialize our prefab
-        dmgBullet.GetComponent<PaintBallBullet>().InitializeBullet(playerTeam.teamColor, playerTeam.myTeamIndex);
-        fakeBullet.GetComponent<PaintBallBullet>().InitializeBullet(playerTeam.teamColor, playerTeam.myTeamIndex);
+        dmgBullet.GetComponent<PaintBallBullet>().InitializeBullet(teamCol, teamIndex);
+        fakeBullet.GetComponent<PaintBallBullet>().InitializeBullet(teamCol, teamIndex);
     }
 
     [PunRPC]

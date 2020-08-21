@@ -1,6 +1,8 @@
-﻿using ExitGames.Client.Photon;
+﻿using CMS.Config;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,6 +33,8 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
     [Header("PointsToWin")]
     public int pointsToWin;
 
+    [SerializeField] int gameEndsDelay = 5; //in secounds
+    [SerializeField] MapConfig gameFinishedScene;
     PaintBallTeamManager paintballTM;
 
     private void Awake()
@@ -70,14 +74,40 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
         }
         else if(eventCode == GameEvents.HIT_RECIEVED)
         {
-            object[] data = (object[])photonEvent.CustomData;
-            int actorNum = (int)data[0];
-            int currentHP = (int)data[1];
-            int dmgAmount = (int)data[2];
-            int fromTeamId = (int)data[3];
+            if (PhotonNetwork.IsMasterClient)
+            {
+                object[] data = (object[])photonEvent.CustomData;
+                int actorNum = (int)data[0];
+                int currentHP = (int)data[1];
+                int dmgAmount = (int)data[2];
+                int fromTeamId = (int)data[3];
 
-            AddScoreToTeam(fromTeamId, dmgAmount);
+                AddScoreToTeam(fromTeamId, dmgAmount);
+            }
         }
+        else if(eventCode == GameEvents.PAINTBALL_GAME_FINISHED)
+        {
+            if(PhotonNetwork.IsMasterClient)
+            {
+                //here we write results to room / player props
+                //todo make awards count?
+                var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
+            }
+
+            Time.timeScale = 0;
+            StartCoroutine(AfterGameDelay(gameEndsDelay));
+        }
+    }
+
+    private IEnumerator AfterGameDelay(int delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Time.timeScale = 1;
+
+        PhotonNetwork.IsMessageQueueRunning = false;
+        PaintBallUISwitcher.Instance.SwitchToLobbyUI();
+        Loader.Instance.LoadGameScene(gameFinishedScene);
     }
 
     void InitializeTeamScore()
@@ -99,7 +129,7 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
     {
         foreach (PaintBallTeam team in paintballTM.teams)
         {
-            if (team.gamePoints >= pointsToWin)  //...teamManager knows about GM?
+            if (team.gamePoints >= pointsToWin) 
             {
                 GameFinishEvent(team);
             }
@@ -108,7 +138,11 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
 
     void GameFinishEvent(PaintBallTeam team)
     {
+        Debug.Log("Game finished! winning team is: " + team.teamName.ToString() + " !");
 
+        object[] content = new object[] { team.teamIndex };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(GameEvents.PAINTBALL_GAME_FINISHED, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
     private void AddLoadedPlayerToReadyList(int key)
