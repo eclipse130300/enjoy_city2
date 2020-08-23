@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Utils
 {
-
-
     public interface IUpdateManager
     {
         void Register(IUpdatable obj);
@@ -131,15 +129,14 @@ namespace Utils
                 item.Value = 0;
             }
 
-            while (count>0 && num < _count && num < MaxCallsPerFrame && totalNum <= _count)
+            while (count > 0 && num < _count && num < MaxCallsPerFrame && totalNum <= _count)
             {
                 if (_lastIndex >= count)
                     _lastIndex = 0;
                 var obj = _objects[_lastIndex];
                 if (obj?.Item != null)
                 {
-                   
-                   
+
                     if (obj.MaxPerFrame == 0)
                     {
                         ++num;
@@ -159,6 +156,7 @@ namespace Utils
                     else
                     {
                         ++num;
+
                         if (obj.FramesSkiped >= obj.SkipFrames)
                         {
                             obj.Item.OnUpdate(Time.realtimeSinceStartup - obj.LastUpdate);

@@ -10,7 +10,11 @@ public static class GameEvents
     public const byte START_CD_GAME_TIMER = 3;
     public const byte START_PAINTBALL_GAME = 4;
     public const byte HIT_RECIEVED = 5;
-    public const byte PAINTBALL_GAME_FINISHED = 6;
+    public const byte UPDATE_SCORE = 6;
+    public const byte PAINTBALL_GAME_FINISHED = 7;
+    public const byte PLAYER_DEATH = 8;
+    public const byte START_GAME_TIMER = 9;
+    public const byte PLAYER_RESPAWNED = 10;
 
 
     //city

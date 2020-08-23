@@ -7,28 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>, IOnEventCallback, IHaveCooldown
+public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>, IOnEventCallback
 {
     public List<int> readyList = new List<int>();
+
+    private bool gameIsActive;
 
     private bool PlayersAreReady
     {
         get { return readyList.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
     }
-
-    [Header("CdSystem")]
-    [SerializeField] int iD;
-
-    public int CoolDownId => iD;
-
-    public float CoolDownDuration
-    {
-        get { return minutes * 60 + secounds; }
-    }
-
-    [Header("Game time")]
-    [SerializeField] int minutes;
-    [SerializeField] int secounds;
 
     [Header("PointsToWin")]
     public int pointsToWin;
@@ -74,8 +62,6 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
         }
         else if(eventCode == GameEvents.HIT_RECIEVED)
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
                 object[] data = (object[])photonEvent.CustomData;
                 int actorNum = (int)data[0];
                 int currentHP = (int)data[1];
@@ -83,7 +69,6 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
                 int fromTeamId = (int)data[3];
 
                 AddScoreToTeam(fromTeamId, dmgAmount);
-            }
         }
         else if(eventCode == GameEvents.PAINTBALL_GAME_FINISHED)
         {
@@ -93,8 +78,6 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
                 //todo make awards count?
                 var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
             }
-
-            Time.timeScale = 0;
             StartCoroutine(AfterGameDelay(gameEndsDelay));
         }
     }
@@ -103,10 +86,8 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
     {
         yield return new WaitForSeconds(delay);
 
-        Time.timeScale = 1;
-
         PhotonNetwork.IsMessageQueueRunning = false;
-        PaintBallUISwitcher.Instance.SwitchToLobbyUI();
+        PaintBallUISwitcher.Instance.SwitchToFinishLobbyUI();
         Loader.Instance.LoadGameScene(gameFinishedScene);
     }
 
@@ -122,15 +103,42 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
     {
         var team = paintballTM.GetTeamByIndex(teamId);
         team.gamePoints += pointsAmount;
+        Debug.Log("I Add " + pointsAmount + " to team " + team.teamName.ToString() + "now points are :" + team.gamePoints);
+
         GameFinishCheck();
     }
+
+    public PaintBallTeam WhichTeamHasWon()
+    {
+        var allTeams = PaintBallTeamManager.Instance.teams;
+        int maxPTS = 0;
+        PaintBallTeam winnerTeam = null;
+
+        foreach (PaintBallTeam team in allTeams)
+        {
+            if(team.gamePoints >= maxPTS)
+            {
+                maxPTS = team.gamePoints;
+                winnerTeam = team;
+            }
+        }
+        return winnerTeam;
+    }
+
+/*    void UpdateScoreEvent(int newScore)
+    {
+        object[] content = new object[] { newScore };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(GameEvents.PAINTBALL_GAME_FINISHED, content, raiseEventOptions, SendOptions.SendReliable);
+    }*/
 
     void GameFinishCheck()
     {
         foreach (PaintBallTeam team in paintballTM.teams)
         {
-            if (team.gamePoints >= pointsToWin) 
+            if (team.gamePoints >= pointsToWin && gameIsActive) 
             {
+                gameIsActive = false;
                 GameFinishEvent(team);
             }
         }
@@ -170,10 +178,12 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
         PhotonNetwork.RaiseEvent(GameEvents.START_CD_GAME_TIMER, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-
     void StartGame()
     {
         Debug.Log("GAME STARTS!");
         InitializeTeamScore();
+        gameIsActive = true;
+
+
     }
 }

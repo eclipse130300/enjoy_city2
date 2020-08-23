@@ -13,8 +13,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] int spawnSecounds;
 
     private PlayerTeam teamScript;
-    private ThirdPersonInput input;
-    private ShootAbility shooting;
+    PaintBallPlayerManipulator manipulator;
 
 
     private PhotonView photon;
@@ -28,13 +27,11 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         photon = GetComponent<PhotonView>();
-
+        manipulator = GetComponent<PaintBallPlayerManipulator>();
         //test!!! todo smthing with it!
         staticMaxHP = MaxHp;
 
         teamScript = GetComponent<PlayerTeam>();
-        input = GetComponent<ThirdPersonInput>();
-        shooting = GetComponent<ShootAbility>();
     }
 
     private void OnEnable()
@@ -85,9 +82,7 @@ public class PlayerHealth : MonoBehaviour
         //we disable shooting in dead player
         isInvulnerable = true;
         //let's disable components we don't need during respawn routine
-        input.enabled = false;
-        shooting.enabled = false;
-
+        manipulator.DisablePlayer();
         //start respawn CD
         StartCoroutine(RespawnRoutine());
     }
@@ -106,16 +101,22 @@ public class PlayerHealth : MonoBehaviour
         }
         worldTimer.gameObject.SetActive(false);
 
+        //at the end set animator to normal state, endable shooting, find spawnPoint and put player there
         PaintBallGameSpawner.Instance.RespawnPlayer(gameObject, teamScript.currentTeam);
 
-        //at the end set animator to normal state, endable shooting, find spawnPoint and put player there
         isInvulnerable = false;
-        //let's disable components we don't need during respawn routine
-        input.enabled = true;
-        shooting.enabled = true;
+        manipulator.EnablePlayer();
 
 
         RecoverHP();
+        PlayerRespawnedEvent();
+    }
+
+    void PlayerRespawnedEvent()
+    {
+        object[] content = new object[] { currentHP };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(GameEvents.PLAYER_RESPAWNED, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
 }

@@ -23,6 +23,12 @@ public class ReadyButton : MonoBehaviour
         buttonImg.color = unReadyColor;
     }
 
+    private void OnEnable()
+    {
+        //every time we turn on this script we
+        SetButtonToUnreadyState();
+    }
+
     public void OnClick()
     {
         playerIsReady = !playerIsReady;
@@ -38,5 +44,12 @@ public class ReadyButton : MonoBehaviour
             object[] content = new object[] { value };
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_LOBBY, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    void SetButtonToUnreadyState()
+    {
+        playerIsReady = false;
+        buttonImg.color = unReadyColor;
+        PlayerIsReadyEvent(playerIsReady);
     }
 }

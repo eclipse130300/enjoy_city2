@@ -11,7 +11,8 @@ using UnityEngine.UI;
 
 public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 {
-    /*    [SerializeField] FixedButton shootButton;*/
+    #region Fields
+
     [Header("Interaction_Buttons")]
     [SerializeField] FixedButton reloadButton;
     [SerializeField] FixedButton SuperShotButton;
@@ -38,14 +39,35 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     [Header("Result text")]
     [SerializeField] TextMeshProUGUI resultText;
 
+/*    [Header("CdSystem")]
+    [SerializeField] CoolDownSystem cdSystem;
+    [SerializeField] int iD;
+
+    public int CoolDownId => iD;*/
+
+    public int GameOverallDuration
+    {
+        get { return minutes * 60 + secounds; }
+    }
+
+    [Header("Game time")]
+    [SerializeField] int minutes;
+    [SerializeField] int secounds;
+    private float timeToEndGame = 0f;
+    private float timeElapsed;
+
     public TextMeshProUGUI startCD;
     public GameObject playerCamera;
     public LayerMask noPlayerLayerMask;
 
     private PaintBallTeamManager paintballTM;
 
-    //test
     Vector3 shotPoint;
+    private bool gameIsActive;
+
+    #endregion
+
+    #region Unity_events
 
     private void OnEnable()
     {
@@ -70,6 +92,115 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         InitializeUI();
     }
 
+    private void Update()
+    {
+        if (reloadButton.Pressed)
+        {
+            Messenger.Broadcast(GameEvents.RELOAD_PRESSED);
+        }
+
+        if (SuperShotButton.Pressed)
+        {
+            shotPoint = GetHitPoint();
+            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, shotPoint);
+        }
+
+        if (powerUpButton.Pressed)
+        {
+            Messenger.Broadcast(GameEvents.PAINTBALL_POWER_UP_PRESSED);
+        }
+        //game timer tick
+        if(timeToEndGame > 0 && gameIsActive)
+        {
+            var remainingTime =  Mathf.Max(timeToEndGame - timeElapsed, 0);
+            timeElapsed += Time.deltaTime;
+            int minutes = Mathf.RoundToInt(remainingTime) / 60;
+            var secounds = Mathf.RoundToInt(remainingTime - minutes*60);
+            gameTimer.text = string.Format("{0:00}:{1:00}", minutes, secounds);
+            if(remainingTime <= 0)
+            {
+                GameFinishEvent();
+                gameIsActive = false;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Photon
+
+    void GameFinishEvent()
+    {
+        Debug.Log("Game finished by time!");
+
+        object[] content = new object[] { };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        PhotonNetwork.RaiseEvent(GameEvents.PAINTBALL_GAME_FINISHED, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == GameEvents.START_CD_GAME_TIMER)
+        {
+            //we start timer for everybody as callback
+            StartCoroutine(CDbeforeGameRoutine());
+        }
+        else if (eventCode == GameEvents.START_PAINTBALL_GAME)
+        {
+            InitializeUI();
+            gameIsActive = true;
+            StartGameTimer();
+        }
+        else if (eventCode == GameEvents.HIT_RECIEVED)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int actorNum = (int)data[0];
+            int currentHP = (int)data[1];
+/*            int dmgAmount = (int)data[2];*/
+            int fromTeamId = (int)data[3];
+
+            if (PhotonNetwork.LocalPlayer.ActorNumber == actorNum)
+            {
+                UpdatePlayerHP(currentHP);
+            }
+
+            UpdateOverallScore(fromTeamId);
+        }
+        else if (eventCode == GameEvents.PAINTBALL_GAME_FINISHED)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            PaintBallTeam winnerTEam = null;
+
+            //TODO - DRAW!?!
+            if (data.IsNullOrEmpty()) //meaning the time is up(no team hit the final shot)!we need to know whitch team has won...
+            {
+                winnerTEam = PaintBallGameManager.Instance.WhichTeamHasWon();
+            }
+            else //we know the team who first earned necessary pts
+            {
+                int wonTeamID = (int)data[0];
+                winnerTEam = paintballTM.GetTeamByIndex(wonTeamID);
+            }
+            resultText.gameObject.SetActive(true);
+            resultText.text = winnerTEam.teamName.ToString() + " team wins!";
+
+            gameIsActive = false;
+        }
+        else if(eventCode == GameEvents.PLAYER_RESPAWNED)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int currentHP = (int)data[0];
+            //full heal player
+            UpdatePlayerHP(currentHP);
+        }
+
+    }
+
+    #endregion
+
+    #region Custom_funcs
+
     void InitializeUI() //let's make ui empty
     {
         ammoFill.fillAmount = 1;
@@ -79,7 +210,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         blueTeamScore.text = "0";
 
         playerHPfill.fillAmount = 1;
-        playerHPamount.text = "100";   //in case one will have exceeding hp(>100), make field in PaintBallPlayer "MaxHP" and use here through myPlayer
+        playerHPamount.text = PlayerHealth.staticMaxHP.ToString();   //refactor in case one will have starting exceeding hp(>100)
     }
 
     IEnumerator CDbeforeGameRoutine()
@@ -108,12 +239,16 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RaiseEvent(GameEvents.START_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
+    private void StartGameTimer()
+    {
+        timeToEndGame = GameOverallDuration;
+    }
+
     private void GetCam(GameObject camera)
     {
         playerCamera = camera;
         StartCoroutine(AutoShootEnemyCheck());
     }
-
 
     private void SetAmmoFill(float targetValue, float time)
     {
@@ -123,25 +258,6 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         }
 
         ammoFill.DOFillAmount(targetValue, time);
-    }
-
-    private void Update()
-    {
-        if (reloadButton.Pressed)
-        {
-            Messenger.Broadcast(GameEvents.RELOAD_PRESSED);
-        }
-
-        if (SuperShotButton.Pressed)
-        {
-            shotPoint = GetHitPoint();
-            Messenger.Broadcast(GameEvents.SUPER_SHOT_PRESSED, shotPoint);
-        }
-
-        if (powerUpButton.Pressed)
-        {
-            Messenger.Broadcast(GameEvents.PAINTBALL_POWER_UP_PRESSED);
-        }
     }
 
     IEnumerator AutoShootEnemyCheck()
@@ -159,10 +275,6 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             {
                 var hitGO = hit.collider.gameObject;
 
-/*                if(hitGO.CompareTag("Enemy") && hitGO.GetComponent<PlayerHealth>() == null)
-                {
-                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point); //just for testing...we can shoot only enemies who has player health script
-                }*/
                 if (hitGO.CompareTag("Enemy") && !hitGO.GetComponent<PlayerHealth>().isInvulnerable)
                 {
                     Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point); 
@@ -183,7 +295,6 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             Vector3 customHitpoint = playerCamera.transform.position + playerCamera.transform.forward * 30f;  //if no - use camera pos+direction* 30 as hitpoint
             return customHitpoint;
         }
-
     }
 
     private Vector3 CrosshairAnyHitPointCheck()
@@ -204,57 +315,20 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 
     }
 
-    public void OnEvent(EventData photonEvent)
-    {
-        byte eventCode = photonEvent.Code;
-        if (eventCode == GameEvents.START_CD_GAME_TIMER)
-        {
-            //we start timer for everybody as callback
-            StartCoroutine(CDbeforeGameRoutine());
-        }
-        else if(eventCode == GameEvents.START_PAINTBALL_GAME)
-        {
-            InitializeUI();
-        }
-        else if(eventCode == GameEvents.HIT_RECIEVED)
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            int actorNum = (int)data[0];
-            int currentHP = (int)data[1];
-            int dmgAmount = (int)data[2];
-            int fromTeamId = (int)data[3];
-
-            if(PhotonNetwork.LocalPlayer.ActorNumber == actorNum)
-            UpdatePlayerHP(currentHP);
-
-            UpdateOverallScore(fromTeamId);
-        }
-        else if(eventCode == GameEvents.PAINTBALL_GAME_FINISHED)
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            int wonTeamID = (int)data[0];
-
-            PaintBallTeam wonTeam = paintballTM.GetTeamByIndex(wonTeamID);
-
-            resultText.gameObject.SetActive(true);
-            resultText.text = wonTeam.teamName.ToString() + " team wins!";
-        }
-
-    }
-
     private void UpdatePlayerHP(int currentHP)
     {
         playerHPamount.text = currentHP.ToString();
-
         playerHPfill.fillAmount = (float)currentHP / PlayerHealth.staticMaxHP;
     }
 
     private void UpdateOverallScore(int teamID)
     {
-      var currentPoints = paintballTM.GetTeamPoints(teamID);
+      var currentPoints = paintballTM.GetTeamPoints(teamID)  + 1;
       var maxPoints = PaintBallGameManager.Instance.pointsToWin;
 
-        switch(teamID)
+        Debug.Log("I update UI. current hp - " + currentPoints);
+
+        switch (teamID)
         {
             case 0: //RED. todo use enum instead of teamIndex here...
                 redTeamScore.text = currentPoints.ToString();
@@ -265,9 +339,10 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
                 blueTeamScore.text = currentPoints.ToString();
                 blueTeamFill.fillAmount = (float)currentPoints / maxPoints;
                 break;
-        }
-
-         
+        } 
     }
+    #endregion
 }
-        
+
+
+

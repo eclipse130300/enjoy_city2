@@ -3,17 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Newtonsoft.Json;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class PaintBallPlayerInitializer : MonoBehaviour, IPunInstantiateMagicCallback
+public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCallback, IOnEventCallback
 {
-    private PaintBallTeamManager paintBallTeamManager;
-
-    //test - todo delete
-    public PaintBallPlayer PPplayer;
+    ThirdPersonInput input;
+    ShootAbility shootAbility;
 
     private void Awake()
     {
-        paintBallTeamManager = FindObjectOfType<PaintBallTeamManager>();
+        input = GetComponent<ThirdPersonInput>();
+        shootAbility = GetComponent<ShootAbility>();
+    }
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
@@ -29,28 +40,41 @@ public class PaintBallPlayerInitializer : MonoBehaviour, IPunInstantiateMagicCal
         {
             Debug.LogError("Dont have key [playerWithTeam] in custom props");
         }
-
-/*        GameObject spawnedPlayerGO = (GameObject)info.Sender.TagObject;*/
-        
     }
 
     void InitializeSpawnedPlayer(GameObject player, PaintBallPlayer paintBallPlayer)
     {
-        PPplayer = paintBallPlayer;
-
         //in skins manager change gameMode to paintball 
         player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
 
         PlayerTeam playerTeam = player.GetComponent<PlayerTeam>();
-        var myTeam = paintBallTeamManager.GetTeamByIndex(paintBallPlayer.teamIndex);
+        var myTeam = PaintBallTeamManager.Instance.GetTeamByIndex(paintBallPlayer.teamIndex);
 
         Color teamColor;
         ColorUtility.TryParseHtmlString("#" + myTeam.hexColor, out teamColor);
 
 
         playerTeam.InitializePlayerTeam(myTeam, teamColor);
+    }
 
-/*        var playerShooting = player.GetComponent<ShootAbility>();
-        playerShooting.InitializeShooting(teamColor, myTeam.teamIndex);*/
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == GameEvents.PAINTBALL_GAME_FINISHED) //just turn off components to disable our player 
+        {
+            DisablePlayer();
+        }
+    }
+
+    public void DisablePlayer()
+    {
+        input.enabled = false;
+        shootAbility.enabled = false;
+    }
+
+    public void EnablePlayer()
+    {
+        input.enabled = true;
+        shootAbility.enabled = true;
     }
 }
