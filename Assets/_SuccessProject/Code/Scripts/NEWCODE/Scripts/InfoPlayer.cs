@@ -10,19 +10,20 @@ public class InfoPlayer : MonoBehaviour
     public TextMeshProUGUI nickTxt;
     public GameObject addFriendsButton;
 
+    Vector2 myAncoredPos;
+
     public void Initialize(string text, bool isMyPlayer, GameObject clampTogameobject)
     {
         nickTxt.text = text;
         addFriendsButton.SetActive(!isMyPlayer);
         gameObjectToClamp = clampTogameobject;
+
+        myAncoredPos = (transform as RectTransform).anchoredPosition;
     }
 
-    private void Update()
+/*    private void Update()
     {
-        if(gameObjectToClamp!= null)
-        {
-            transform.position = gameObjectToClamp.transform.position;
-        }
-    }
+        (transform as RectTransform).anchoredPosition = myAncoredPos;
+    }*/
 
 }

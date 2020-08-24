@@ -16,7 +16,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
     public Color bulletColor = Color.green;
 
     public int fromTeamIndex;
-
+    public int ownerActorNum;
     public string enemyTag = "Enemy";
 
     [Header("is global bullet(no damage)?")]
@@ -88,10 +88,11 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         GetComponent<MeshRenderer>().material.color = bulletColor;
     }
 
-    public void InitializeBullet(Color color, int teamIndex)
+    public void InitializeBullet(Color color, int teamIndex, int myActorNum)
     {
         bulletColor = color;
         fromTeamIndex = teamIndex;
+        ownerActorNum = myActorNum;
     }
 
     private void OnEnable()
@@ -151,7 +152,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
             {
                 if (!hitGO.GetComponent<PlayerHealth>().isInvulnerable && hitGO.CompareTag(enemyTag) && !isFakeBullet)
                 {
-                    hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex); //todo dmg amount only 1?
+                    hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex, ownerActorNum); //todo dmg amount only 1?
                 }
             }
 
@@ -190,7 +191,7 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
             {
                 if (!hitGO.GetComponent<PlayerHealth>().isInvulnerable && hitGO.CompareTag(enemyTag) && !isFakeBullet)
                 {
-                    hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex); //todo dmg amount only 1?
+                    hitGO.GetComponent<PlayerHealth>().TakeDamage(1, fromTeamIndex, ownerActorNum); //todo dmg amount only 1?
                 }
             }
 

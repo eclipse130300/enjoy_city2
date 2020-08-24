@@ -28,6 +28,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     private ThirdPersonInput playerInput;
 
+    
     [SerializeField] CoolDownSystem coolDownSystem;
     [SerializeField] int iD;
 
@@ -119,8 +120,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     private void SetBullet(Vector3 shootDir, float sprayMultiplier, GameObject bulletTypePref)
     {
-        InitializeShooting(myTeam.teamColor, myTeam.myTeamIndex);
-
+        InitializeBullets(myTeam.teamColor, myTeam.myTeamIndex, PhotonNetwork.LocalPlayer.ActorNumber);
         GameObject newBullet = GameObjectPooler.Instance.GetObject(bulletTypePref);
 
         //it's a main rotation
@@ -184,11 +184,11 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         }
     }
 
-    public void InitializeShooting(Color teamCol, int teamIndex)
+    public void InitializeBullets(Color teamCol, int teamIndex, int damagerActorNum)
     {
-        //we initialize our prefab
-        dmgBullet.GetComponent<PaintBallBullet>().InitializeBullet(teamCol, teamIndex);
-        fakeBullet.GetComponent<PaintBallBullet>().InitializeBullet(teamCol, teamIndex);
+        //we initialize our prefabs
+        dmgBullet.GetComponent<PaintBallBullet>().InitializeBullet(teamCol, teamIndex, damagerActorNum);
+        fakeBullet.GetComponent<PaintBallBullet>().InitializeBullet(teamCol, teamIndex, damagerActorNum);
     }
 
     [PunRPC]

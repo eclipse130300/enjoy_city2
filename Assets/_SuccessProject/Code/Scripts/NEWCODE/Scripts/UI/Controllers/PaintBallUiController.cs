@@ -187,7 +187,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 
             gameIsActive = false;
         }
-        else if(eventCode == GameEvents.PLAYER_RESPAWNED)
+        else if(eventCode == GameEvents.PLAYER_RESPAWNED) //we use heal ui only to our player
         {
             object[] data = (object[])photonEvent.CustomData;
             int currentHP = (int)data[0];
@@ -323,10 +323,10 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 
     private void UpdateOverallScore(int teamID)
     {
-      var currentPoints = paintballTM.GetTeamPoints(teamID)  + 1;
+      var currentPoints = paintballTM.GetTeamPoints(teamID)  + 1; //+1 here because game manager hasn't updated score yet...toDO script execution?
       var maxPoints = PaintBallGameManager.Instance.pointsToWin;
 
-        Debug.Log("I update UI. current hp - " + currentPoints);
+/*        Debug.Log("I update UI. current team points - " + currentPoints);*/
 
         switch (teamID)
         {

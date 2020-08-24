@@ -103,7 +103,7 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
     {
         var team = paintballTM.GetTeamByIndex(teamId);
         team.gamePoints += pointsAmount;
-        Debug.Log("I Add " + pointsAmount + " to team " + team.teamName.ToString() + "now points are :" + team.gamePoints);
+/*        Debug.Log("I Add " + pointsAmount + " to team " + team.teamName.ToString() + "now points are :" + team.gamePoints);*/
 
         GameFinishCheck();
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CoolDownSystem : MonoBehaviour
 {
-    public readonly List<CoolDownData> coolDowns = new List<CoolDownData>();
+    public List<CoolDownData> coolDowns = new List<CoolDownData>();
 
     private void Update()
     {
@@ -54,6 +54,11 @@ public class CoolDownSystem : MonoBehaviour
         coolDowns.Add(new CoolDownData(cooldown));
     }
 
+    public void PutOnCooldown(CoolDownData data)
+    {
+        coolDowns.Add(data);
+    }
+
 }
 
 [System.Serializable]
@@ -67,6 +72,11 @@ public class CoolDownData
         Id = cooldown.CoolDownId;
         RemainingTime = cooldown.CoolDownDuration;
     }
+    public CoolDownData(int iD, float timeToTick)
+    {
+        Id = iD;
+        RemainingTime = timeToTick;
+    }
 
     public bool DecrementCooldown(float deltaTime)
     {
@@ -74,3 +84,18 @@ public class CoolDownData
         return RemainingTime == 0f;
     }
 }
+
+/*[System.Serializable]
+public class ComplexCoolDownSystem
+{
+    public List<CoolDownSystem> systems;
+
+    public void PutOnCoolDown(int cDSystemID)
+    {
+
+    }
+}*/
+
+
+
+
