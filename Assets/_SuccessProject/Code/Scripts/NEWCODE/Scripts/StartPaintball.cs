@@ -28,6 +28,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Awake()
     {
         photon = GetComponent<PhotonView>();
+/*        PhotonNetwork.IsMessageQueueRunning = true; //if we return to lobby from game - turn it on here*/
     }
 
     public override void OnEnable()
@@ -143,8 +144,6 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
         }*/
 
         PhotonNetwork.IsMessageQueueRunning = false;
-
-        PaintBallUISwitcher.Instance.SwitchToGameUI();
         Loader.Instance.LoadGameScene(paintBallGame);
 /*        Destroy(this);*/
 
@@ -162,7 +161,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             //tickTimer
             float timeLeft = Mathf.Max(targetTime - (float)PhotonNetwork.Time, 0f);
-            timerText.text = Mathf.Floor(timeLeft).ToString();
+            timerText.text = Mathf.FloorToInt(timeLeft).ToString();
 
             yield return null;
         }
@@ -179,7 +178,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         var readyListCount = readyList.Keys.Count;
 /*        Debug.Log("readyListCount = " + readyListCount);*/
-        if (readyListCount != PhotonNetwork.CurrentRoom.PlayerCount) return false; //player didn't even press ready
+        if (readyListCount != PhotonNetwork.CurrentRoom.PlayerCount) return false; //all players didn't even press ready
 
         int readyCount = 0;
         foreach(bool value in readyList.Values)

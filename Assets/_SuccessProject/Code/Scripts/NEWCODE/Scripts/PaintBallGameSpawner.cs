@@ -42,8 +42,7 @@ public class PaintBallGameSpawner : MonoBehaviourSingleton<PaintBallGameSpawner>
         return point.gameObject.transform.position;
     }
 
-/*    [PunRPC]*/
-    private void InstantinatePlayer(Vector3 point)
+    private void InstantinatePlayer(Vector3 point) //localfunc
     {
         //we stop sending ready messeges to master
         StopAllCoroutines();

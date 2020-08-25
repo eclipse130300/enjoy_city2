@@ -21,27 +21,15 @@ public class PaintBallTeamManager : MonoBehaviourSingleton<PaintBallTeamManager>
     public PaintBallPlayer myPlayer;
     public PaintBallTeam myTeam;
 
-/*    private PaintBallGameManager gm;*/
+    private bool isInitialized = false;
 
-    [Header("Game scene Where We Initialize Teams")]
-    public string sceneToInitialize = "Amient_Lobby";
-
-    public void OnEnable()
+    private void Awake()
     {
-        Loader.Instance.AllSceneLoaded += InitializeEverything;
-    }
-
-    public void OnDisable()
-    {
-        Loader.Instance.AllSceneLoaded -= InitializeEverything;
+        if (!isInitialized) InitializeEverything();
     }
 
     private void InitializeEverything()
     {
-        //let's initialize pedestals only in case current game scene is lobby game scene
-        if (Loader.Instance.curentScene.SceneName != sceneToInitialize) return;
-
-/*        Debug.Log("I INITIALIZE TEAMS!");*/
         InitializePedestals();
         InitializeTeams();
     }

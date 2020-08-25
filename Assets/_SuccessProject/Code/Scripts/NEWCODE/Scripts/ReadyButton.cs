@@ -25,8 +25,13 @@ public class ReadyButton : MonoBehaviour
 
     private void OnEnable()
     {
-        //every time we turn on this script we
-        SetButtonToUnreadyState();
+        //every time we load this script we
+        Loader.Instance.AllSceneLoaded += SetButtonToUnreadyState;
+    }
+
+    private void OnDisable()
+    {
+        Loader.Instance.AllSceneLoaded -= SetButtonToUnreadyState;
     }
 
     public void OnClick()

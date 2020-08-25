@@ -33,17 +33,15 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     [SerializeField] Image playerHPfill;
     [SerializeField] TextMeshProUGUI playerHPamount;
 
+    [SerializeField] Image superShotfill;
+    [SerializeField] Image powerUpfill;
+
     [Header("GameTimer")]
     [SerializeField] TextMeshProUGUI gameTimer;
 
     [Header("Result text")]
     [SerializeField] TextMeshProUGUI resultText;
 
-/*    [Header("CdSystem")]
-    [SerializeField] CoolDownSystem cdSystem;
-    [SerializeField] int iD;
-
-    public int CoolDownId => iD;*/
 
     public int GameOverallDuration
     {
@@ -73,6 +71,8 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     {
         Messenger.AddListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
         Messenger.AddListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+        Messenger.AddListener<float>(GameEvents.SUPER_SHOT_CD, SuperShotReload);
+        Messenger.AddListener<float>(GameEvents.PAINTBALL_POWER_UP_CD, PowerUPReload);
 
         paintballTM = PaintBallTeamManager.Instance;
 
@@ -83,6 +83,8 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
     {
         Messenger.RemoveListener<GameObject>(GameEvents.PAINTBALL_PLAYER_SPAWNED, GetCam);
         Messenger.RemoveListener<float, float>(GameEvents.AMMO_UPDATED, SetAmmoFill);
+        Messenger.RemoveListener<float>(GameEvents.SUPER_SHOT_CD, SuperShotReload);
+        Messenger.RemoveListener<float>(GameEvents.PAINTBALL_POWER_UP_CD, PowerUPReload);
 
         PhotonNetwork.RemoveCallbackTarget(this);
     }
@@ -186,6 +188,8 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             resultText.text = winnerTEam.teamName.ToString() + " team wins!";
 
             gameIsActive = false;
+
+            Destroy(this); //let's destroy this, we no longer need it
         }
         else if(eventCode == GameEvents.PLAYER_RESPAWNED) //we use heal ui only to our player
         {
@@ -260,13 +264,28 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         ammoFill.DOFillAmount(targetValue, time);
     }
 
+    private void SuperShotReload(float time)
+    {
+        superShotfill.fillAmount = 0;
+
+        superShotfill.DOFillAmount(1, time);
+    }
+
+    private void PowerUPReload(float time)
+    {
+        powerUpfill.fillAmount = 0;
+        powerUpfill.DOFillAmount(1, time);
+    }
+
     IEnumerator AutoShootEnemyCheck()
     {
-        if (playerCamera == null) yield return null;
+        if (playerCamera == null) yield return null; //we try to find camera before game
 
         Ray ray = new Ray();
         while (true)
         {
+            if (playerCamera == null) Destroy(this); //if camera has been destroyed just before this on sceneload, we should'nt check anymore 
+
             ray.origin = playerCamera.transform.position;
             ray.direction = playerCamera.transform.forward;
 
@@ -323,7 +342,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
 
     private void UpdateOverallScore(int teamID)
     {
-      var currentPoints = paintballTM.GetTeamPoints(teamID)  + 1; //+1 here because game manager hasn't updated score yet...toDO script execution?
+      var currentPoints = paintballTM.GetTeamPoints(teamID) /* + 1*/; //+1 here because game manager hasn't updated score yet...toDO script execution?
       var maxPoints = PaintBallGameManager.Instance.pointsToWin;
 
 /*        Debug.Log("I update UI. current team points - " + currentPoints);*/

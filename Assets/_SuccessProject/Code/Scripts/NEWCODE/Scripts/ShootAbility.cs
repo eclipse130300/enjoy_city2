@@ -10,7 +10,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     [SerializeField] GameObject dmgBullet;
     [SerializeField] GameObject fakeBullet;
 
-    [SerializeField] GameObject shootingPoint;
+    public GameObject shootingPoint;
     [SerializeField] float targetPointDistance;
 
     [Header("Ammo")]
@@ -19,11 +19,9 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     [SerializeField] float reloadTime;
     [Header("More value is the bigger range is!")]
     [Range(1f, 10f)]
-    [SerializeField] float superShotSprayMultiplier = 1f;
-    [Range(1f, 10f)]
     [SerializeField] float autoShotSprayMultiplier = 1f;
 
-    private int currentAmmo;
+    public int currentAmmo;
     private bool isReloading = false;
 
     private ThirdPersonInput playerInput;
@@ -54,7 +52,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         {
             Messenger.AddListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
             Messenger.AddListener(GameEvents.RELOAD_PRESSED, Reload);
-            Messenger.AddListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
         }
     }
 
@@ -64,7 +61,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         {
             Messenger.RemoveListener<Vector3>(GameEvents.AUTO_SHOOT, CheckObstacles);
             Messenger.RemoveListener(GameEvents.RELOAD_PRESSED, Reload);
-            Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, SuperShot);
         }
     }
 
@@ -74,7 +70,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         cD = shootingDelay;
     }
 
-    void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
+    public void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
     {
         SetBullet(shootDir, sprayMultiplier, dmgBullet);
         DescreaseAmmo(1);
@@ -172,16 +168,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         dirDisplacementVector *= randomMultiplier * absInputMultyplier * sprayMultiplier;  
 
         shootingPoint.transform.Rotate(dirDisplacementVector.x, dirDisplacementVector.y, 0); //take current rotation and change it based on offset vec
-    }
-
-    private void SuperShot(Vector3 hitpoint)
-    {
-        Vector3 shootDir = (hitpoint - shootingPoint.transform.position).normalized;
-
-        while (currentAmmo > 0)
-        {
-            Shoot(shootDir, superShotSprayMultiplier);
-        }
     }
 
     public void InitializeBullets(Color teamCol, int teamIndex, int damagerActorNum)

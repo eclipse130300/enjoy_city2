@@ -42,8 +42,8 @@ public class PaintBallPowerUp : MonoBehaviour, IHaveCooldown
         if (!coolDownSystem.IsOnCoolDown(iD))
         {
             StartCoroutine(PowerUpEffect());
-            Debug.Log("POWER-UP STARTED");
             coolDownSystem.PutOnCooldown(this);
+            Messenger.Broadcast(GameEvents.PAINTBALL_POWER_UP_CD, cD);
         }
     }
 

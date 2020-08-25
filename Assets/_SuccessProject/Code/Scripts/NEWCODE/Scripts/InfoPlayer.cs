@@ -16,14 +16,6 @@ public class InfoPlayer : MonoBehaviour
     {
         nickTxt.text = text;
         addFriendsButton.SetActive(!isMyPlayer);
-        gameObjectToClamp = clampTogameobject;
-
-        myAncoredPos = (transform as RectTransform).anchoredPosition;
+        transform.position = clampTogameobject.transform.position;
     }
-
-/*    private void Update()
-    {
-        (transform as RectTransform).anchoredPosition = myAncoredPos;
-    }*/
-
 }
