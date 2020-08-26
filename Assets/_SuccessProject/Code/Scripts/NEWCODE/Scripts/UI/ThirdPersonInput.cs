@@ -25,6 +25,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
     public float JumpForce = 5f;
     public float jumpHeight;
     public float rotateSpeed = 5f;
+    [Range(0,1)]
     public float cameraYSpeed = 5f;
     public float learpSpeedf =  1;
     public float distanceToForceTP = 1;
@@ -122,7 +123,7 @@ public class ThirdPersonInput :MonoBehaviour, IPunObservable
             if (JumpButton != null)
                 m_Jump = (Input.GetKeyDown(KeyCode.Space) || JumpButton.Pressed);
 
-            camera.MoveTo(TouchField.TouchDist.y * Time.fixedDeltaTime * -1);
+            camera.MoveTo(TouchField.TouchDist.y * cameraYSpeed * Time.fixedDeltaTime * -1);
 
             cameraRotation = new Vector3((transform.forward * 5 + transform.position).x, (transform.forward * 5 + transform.position).y + (camera.transform.forward * 5).y, (transform.forward * 5 + transform.position).z) + Vector3.up;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + Vector3.up * TouchField.TouchDist.x * rotateSpeed * Time.fixedDeltaTime);

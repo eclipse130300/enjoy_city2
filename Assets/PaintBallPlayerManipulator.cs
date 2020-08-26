@@ -8,6 +8,9 @@ using ExitGames.Client.Photon;
 
 public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCallback, IOnEventCallback
 {
+    //test
+    public bool isDummy;
+
     ThirdPersonInput input;
     ShootAbility shootAbility;
 
@@ -68,12 +71,16 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
     public void DisablePlayer()
     {
+        if (isDummy) return;
+
         input.enabled = false;
         shootAbility.enabled = false;
     }
 
     public void EnablePlayer()
     {
+        if (isDummy) return;
+
         input.enabled = true;
         shootAbility.enabled = true;
     }

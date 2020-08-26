@@ -15,6 +15,7 @@ public static class GameEvents
     public const byte PLAYER_DEATH = 8;
     public const byte START_GAME_TIMER = 9;
     public const byte PLAYER_RESPAWNED = 10;
+    public const byte PAINTBALL_FINISHED = 11;
 
 
     //city
@@ -26,6 +27,8 @@ public static class GameEvents
     public const string LVL_CHANGED = "LVL_CHANGED";
     public const string EXP_CHANGED = "EXP_CHANGED";
 
+    public const string CURRENCY_UPDATED = "CURRENCY_UPDATED";
+
     //items(room and clothes)
     public const string ITEM_PRESSED = "ITEM_PRESSED";
 
@@ -35,7 +38,6 @@ public static class GameEvents
     public const string CLOTHES_CHANGED = "CLOTHES_CHANGED";
 
     public const string ITEM_VARIANT_CHANGED = "ITEM_VARIANT_CHANGED";
-    public const string REFRESH_SANDBOX_UI = "REFRESH_SANDBOX_UI";
 
 
     public const string INVENTORY_GAME_MODE_CHANGED = "INVENTORY_GAME_MODE_CHANGED";

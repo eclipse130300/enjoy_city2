@@ -43,7 +43,7 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Start()
     {
-        startButton.SetActive(false);
+            startButton.SetActive(false);
     }
 
     public void ToggleStartButton(int currentPlayers)
@@ -87,9 +87,11 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
             bool value = (bool)data[0];
             int senderKey = photonEvent.Sender;
 
-/*            Debug.Log("SENDER - " + senderKey + " VALUE - " + value);*/
-
             AddToReadyList(senderKey, value);
+        }
+        else if (eventCode == GameEvents.PAINTBALL_FINISHED)
+        {
+            ToggleStartButton(PhotonNetwork.CurrentRoom.PlayerCount);
         }
     }
 
@@ -134,20 +136,10 @@ public class StartPaintball : MonoBehaviourPunCallbacks, IOnEventCallback
     [PunRPC]
     private void StartGame()
     {
-/*
-        //master save in roomProperties final teams
-        if(PhotonNetwork.IsMasterClient)
-        {
-            ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
-            customProperties.Add("teams", JsonConvert.SerializeObject(PaintBallTeamManager.teams));
-            PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
-        }*/
+        PhotonNetwork.CurrentRoom.IsOpen = false;
 
         PhotonNetwork.IsMessageQueueRunning = false;
         Loader.Instance.LoadGameScene(paintBallGame);
-/*        Destroy(this);*/
-
-
     }
 
 

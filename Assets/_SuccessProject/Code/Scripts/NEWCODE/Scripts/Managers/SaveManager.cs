@@ -136,14 +136,44 @@ public class SaveManager : MonoBehaviourSingleton<SaveManager>
         return importantDataConfig.hardCurrency;
     }
 
-    public void SetSoftCurrency(int amount)
+    private void SetSoftCurrency(int amount)
     {
         importantDataConfig.softCurrency = amount;
+        Messenger.Broadcast(GameEvents.CURRENCY_UPDATED);
     }
 
-    public void SetHardCurrency(int amount)
+    private void SetHardCurrency(int amount)
     {
         importantDataConfig.hardCurrency = amount;
+        Messenger.Broadcast(GameEvents.CURRENCY_UPDATED);
+    }
+
+    public void AddSoftCurrency(int amount)
+    {
+        int currentSoft = GetSoftCurrency();
+        currentSoft += amount;
+        SetSoftCurrency(currentSoft);
+    }
+
+    public void AddHardCurrency(int amount)
+    {
+        int currentHard = GetHardCurrency();
+        currentHard += amount;
+        SetHardCurrency(currentHard);
+    }
+
+    public void SpendSoftCurrency(int amount)
+    {
+        int currentSoft = GetSoftCurrency();
+        currentSoft -= amount;
+        SetSoftCurrency(currentSoft);
+    }
+
+    public void SpendHardCurrency(int amount)
+    {
+        int currentHard = GetHardCurrency();
+        currentHard -= amount;
+        SetHardCurrency(currentHard);
     }
 
     public void Add3DItemToShopList(ItemConfig conf, ItemVariant activeVar)

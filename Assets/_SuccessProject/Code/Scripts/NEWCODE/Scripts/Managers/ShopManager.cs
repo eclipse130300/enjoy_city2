@@ -37,11 +37,11 @@ public class ShopManager : MonoBehaviourSingleton<ShopManager>
         switch(type)
         {
             case CurrencyType.HARD:
-                SaveManager.Instance.importantDataConfig.hardCurrency += amount;
+                SaveManager.Instance.AddHardCurrency(amount);
                 break;
 
             case CurrencyType.SOFT:
-                SaveManager.Instance.importantDataConfig.softCurrency += amount;
+                SaveManager.Instance.AddSoftCurrency(amount);
                 break;
         }
         SaveManager.Instance.SaveImportantConfig();
@@ -53,14 +53,10 @@ public class ShopManager : MonoBehaviourSingleton<ShopManager>
         switch (type)
         {
             case CurrencyType.SOFT:
-                var Scurrency = saveManager.GetSoftCurrency();
-                Scurrency -= cost;
-                saveManager.SetSoftCurrency(Scurrency);
+                saveManager.SpendSoftCurrency(cost);
                 break;
             case CurrencyType.HARD:
-                var Hcurrency = saveManager.GetHardCurrency();
-                Hcurrency -= cost;
-                saveManager.SetHardCurrency(Hcurrency);
+                saveManager.SpendHardCurrency(cost);
                 break;
         }
         saveManager.Add3DItemToShopList(cfg, varitant);
@@ -71,14 +67,10 @@ public class ShopManager : MonoBehaviourSingleton<ShopManager>
         switch (type)
         {
             case CurrencyType.SOFT:
-                var Scurrency = saveManager.GetSoftCurrency();
-                Scurrency -= cost;
-                saveManager.SetSoftCurrency(Scurrency);
+                saveManager.SpendSoftCurrency(cost);
                 break;
             case CurrencyType.HARD:
-                var Hcurrency = saveManager.GetHardCurrency();
-                Hcurrency -= cost;
-                saveManager.SetHardCurrency(Hcurrency);
+                saveManager.SpendHardCurrency(cost);
                 break;
         }
         saveManager.AddRoomItemToShopList(cfg, varitant);

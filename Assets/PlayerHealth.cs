@@ -76,7 +76,16 @@ public class PlayerHealth : MonoBehaviour
     {
         photon.RPC("SaveDamager", RpcTarget.AllViaServer, damagerNum);
 
-        var actorNumber = photon.Owner.ActorNumber; //who was damaged
+        int actorNumber = 0;
+
+        if (photon.Owner != null)
+        {
+            actorNumber = photon.Owner.ActorNumber; //who was damaged via photon
+        }
+        else
+        {
+            actorNumber = gameObject.GetInstanceID(); //if we spawn enemy manually
+        }
 
         object[] content = new object[] { actorNumber, currentHP, dmgAmount, fromTeamID, damagerNum };  //TODO optimize it...send byte instead of int??
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
@@ -86,7 +95,6 @@ public class PlayerHealth : MonoBehaviour
     [PunRPC]
     private void DeathPlayerSequence()
     {
-
         //play death animation
         Debug.Log("I am dead!Death animation has to be here...");
         //we disable shooting in dead player
@@ -131,26 +139,27 @@ public class PlayerHealth : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
         worldTimer.gameObject.SetActive(false);
-
-        //at the end set animator to normal state, endable shooting, find spawnPoint and put player there
-        PaintBallGameSpawner.Instance.RespawnPlayer(gameObject, teamScript.currentTeam);
-
-        manipulator.EnablePlayer();
-        isInvulnerable = false;
-        RecoverHP();
         if (photon.IsMine) //if it's ours photon, let's update UI
         {
             PlayerRespawnedEvent();
+            //at the end set animator to normal state, endable shooting, find spawnPoint and put player there
+            PaintBallGameSpawner.Instance.RespawnPlayer(gameObject, teamScript.currentTeam);
         }
+        manipulator.EnablePlayer();
+        isInvulnerable = false;
+        RecoverHP();
     }
 
     void PlayerRespawnedEvent()
     {
-        object[] content = new object[] { currentHP };
+        if (photon.Owner != null)
+        {
+            object[] content = new object[] { currentHP };
 
-        int[] actorsTosend = new int[] { photon.Owner.ActorNumber };
-        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { TargetActors = actorsTosend };
-        PhotonNetwork.RaiseEvent(GameEvents.PLAYER_RESPAWNED, content, raiseEventOptions, SendOptions.SendReliable);
+            int[] actorsTosend = new int[] { photon.Owner.ActorNumber };
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { TargetActors = actorsTosend };
+            PhotonNetwork.RaiseEvent(GameEvents.PLAYER_RESPAWNED, content, raiseEventOptions, SendOptions.SendReliable);
+        }
     }
 
     [PunRPC]

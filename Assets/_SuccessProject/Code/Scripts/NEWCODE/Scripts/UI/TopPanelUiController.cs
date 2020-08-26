@@ -23,11 +23,16 @@ public class TopPanelUiController : MonoBehaviour
 
         Messenger.AddListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
         Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
-        Messenger.AddListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
-        Messenger.AddListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, UpdateCur);
-        Messenger.AddListener(GameEvents.REFRESH_SANDBOX_UI, Refresh);
+        Messenger.AddListener(GameEvents.CURRENCY_UPDATED, UpdateCurrency);
 
         Refresh();
+    }
+
+    private void OnDestroy()
+    {
+        Messenger.RemoveListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged);
+        Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
+        Messenger.RemoveListener(GameEvents.CURRENCY_UPDATED, UpdateCurrency);
     }
 
     private void Start()
@@ -35,12 +40,6 @@ public class TopPanelUiController : MonoBehaviour
         AutorizationController autorization = new AutorizationController();
         autorization.Login();
         NickName.text = autorization.profile.UserName;
-    }
-
-    private void UpdateCur(RoomItemConfig arg1, ItemVariant arg2)
-    {
-        softCurrency.text = saveManager.GetSoftCurrency().ToString();
-        hardCurrency.text = saveManager.GetHardCurrency().ToString();
     }
 
     private void Refresh()
@@ -53,7 +52,7 @@ public class TopPanelUiController : MonoBehaviour
         hardCurrency.text = saveManager.GetHardCurrency().ToString();
     }
 
-    private void UpdateCurrency(ItemConfig cfg, ItemVariant var) //TODO cfg && var is unnecessary
+    private void UpdateCurrency()
     {
         softCurrency.text = saveManager.GetSoftCurrency().ToString();
         hardCurrency.text = saveManager.GetHardCurrency().ToString();
@@ -72,14 +71,5 @@ public class TopPanelUiController : MonoBehaviour
     private float NormilizeExperienceForUI(int exp, int expToNextLvl)
     {
         return (float)exp / expToNextLvl;
-    }
-
-    private void OnDestroy()
-    {
-        Messenger.RemoveListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged);
-        Messenger.RemoveListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
-        Messenger.RemoveListener<ItemConfig, ItemVariant>(GameEvents.ITEM_BOUGHT, UpdateCurrency);
-        Messenger.RemoveListener<RoomItemConfig, ItemVariant>(GameEvents.ROOM_ITEM_BOUGHT, UpdateCur);
-        Messenger.RemoveListener(GameEvents.REFRESH_SANDBOX_UI, Refresh);
     }
 }

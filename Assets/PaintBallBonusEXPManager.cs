@@ -101,22 +101,27 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
         if (killStreakCount == 1)
         {
             AddToPlayerProps(EXPFORSINGLEKILL);
+            Debug.Log("1 kill");
         }
         else if (killStreakCount == 2)
         {
             AddToPlayerProps(EXPFORDOUBLEKILL);
+            Debug.Log("2 kill");
         }
         else if(killStreakCount == 3)
         {
             AddToPlayerProps(EXPFORTRIPPLEKILL);
+            Debug.Log("3 kill");
         }
         else if(killStreakCount == 4)
         {
             AddToPlayerProps(EXPFORULTRAKILL);
+            Debug.Log("4 kill");
         }
         else if(killStreakCount >= 5)
         {
             AddToPlayerProps(EXPFORRAMPAGE);
+            Debug.Log("5 kill");
         }
 
         yield return new WaitForSeconds(killStreakTime);
@@ -180,22 +185,27 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
         if(teamPTS == 1/*00*/)
         {
             AddToRoomProps(fromTeamID, EXP_FOR_100_TEAM_DMG);
+            Debug.Log("Team dmg :" + teamPTS);
         }
         else if(teamPTS == 5)
         {
             AddToRoomProps(fromTeamID, EXP_FOR_500_TEAM_DMG);
+            Debug.Log("Team dmg :" + teamPTS);
         }
         else if(teamPTS == 10)
         {
             AddToRoomProps(fromTeamID , EXP_FOR_1000_TEAM_DMG);
+            Debug.Log("Team dmg :" + teamPTS);
         }
         else if (teamPTS == 20)
         {
             AddToRoomProps(fromTeamID, EXP_FOR_2000_TEAM_DMG);
+            Debug.Log("Team dmg :" + teamPTS);
         }
         else if (teamPTS == 30)
         {
             AddToRoomProps(fromTeamID, EXP_FOR_3000_TEAM_DMG);
+            Debug.Log("Team dmg :" + teamPTS);
         }
     }
 }

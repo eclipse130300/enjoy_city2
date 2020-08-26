@@ -86,7 +86,7 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
     {
         yield return new WaitForSeconds(delay);
 
-        PhotonNetwork.IsMessageQueueRunning = false;
+/*        PhotonNetwork.IsMessageQueueRunning = false;*/
         Loader.Instance.LoadGameScene(gameFinishedScene);
     }
 

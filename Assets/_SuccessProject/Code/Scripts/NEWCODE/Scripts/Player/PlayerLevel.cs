@@ -7,8 +7,8 @@ using UnityEngine;
 public class PlayerLevel : MonoBehaviour
 {
     public int level;
-    [SerializeField] private int experience; //dbug
-    [SerializeField] private int expreienceToNextLevel = 100; //dbug
+    [SerializeField] private int experience;
+    [SerializeField] private int expreienceToNextLevel = 100; 
 
     [SerializeField] int lvlDifficultyDenominator = 5;
     [SerializeField] int difficultyMultiplier =2;
@@ -74,10 +74,4 @@ public class PlayerLevel : MonoBehaviour
         saveManager.SaveLevelData(experience, expreienceToNextLevel, level);
 /*        Debug.Log("SAVED WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);*/
     }
-
-/*    private void OnApplicationQuit()
-    {
-        SaveData();
-    }*/
-
 }
