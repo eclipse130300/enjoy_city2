@@ -68,7 +68,9 @@ public class PlayerHealth : MonoBehaviour
 
             OnDeathEvent(potentialKillerNum); //this is killer for other managers (data)
 
-            photon.RPC("DeathPlayerSequence", RpcTarget.AllViaServer); //this is for vfx player logic
+            double respawnTime = PhotonNetwork.Time + spawnSecounds;
+
+            photon.RPC("DeathPlayerSequence", RpcTarget.AllViaServer, respawnTime); //this is for vfx player logic
         }
     }
 
@@ -93,16 +95,18 @@ public class PlayerHealth : MonoBehaviour
     }
 
     [PunRPC]
-    private void DeathPlayerSequence()
+    private void DeathPlayerSequence(double respawnTime)
     {
         //play death animation
-        Debug.Log("I am dead!Death animation has to be here...");
+
         //we disable shooting in dead player
         isInvulnerable = true;
         //let's disable components we don't need during respawn routine
         manipulator.DisablePlayer();
+
+
         //start respawn CD
-        StartCoroutine(RespawnRoutine());
+        StartCoroutine(RespawnRoutine(respawnTime));
     }
 
     private void OnDeathEvent(int killerNum)
@@ -126,28 +130,34 @@ public class PlayerHealth : MonoBehaviour
         PhotonNetwork.RaiseEvent(GameEvents.PLAYER_DEATH, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    IEnumerator RespawnRoutine()
+    IEnumerator RespawnRoutine(double timeToStop)
     {
         worldTimer.gameObject.SetActive(true);
 
-        int currentTime = spawnSecounds;
-        for (int i = 0; i < spawnSecounds; i++)
+        while (PhotonNetwork.Time < timeToStop)
         {
-            worldTimer.text = currentTime.ToString();
+            double timeLeft = timeToStop - PhotonNetwork.Time;
 
-            currentTime--;
-            yield return new WaitForSeconds(1f);
+            var roundedTime = Mathf.RoundToInt((float)timeLeft);
+
+            worldTimer.text = roundedTime.ToString();
+
+            yield return null;
         }
         worldTimer.gameObject.SetActive(false);
+        RecoverHP();
+
         if (photon.IsMine) //if it's ours photon, let's update UI
         {
             PlayerRespawnedEvent();
             //at the end set animator to normal state, endable shooting, find spawnPoint and put player there
             PaintBallGameSpawner.Instance.RespawnPlayer(gameObject, teamScript.currentTeam);
         }
+
+        yield return new WaitForSeconds(1f);  //let's wait a little longer to prevent async shooting
+
         manipulator.EnablePlayer();
         isInvulnerable = false;
-        RecoverHP();
     }
 
     void PlayerRespawnedEvent()

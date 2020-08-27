@@ -24,8 +24,6 @@ public class TopPanelUiController : MonoBehaviour
         Messenger.AddListener<int, int>(GameEvents.EXP_CHANGED, OnExpChanged); //playerLvl events
         Messenger.AddListener<int>(GameEvents.LVL_CHANGED, OnLvlChanged);
         Messenger.AddListener(GameEvents.CURRENCY_UPDATED, UpdateCurrency);
-
-        Refresh();
     }
 
     private void OnDestroy()
@@ -37,6 +35,8 @@ public class TopPanelUiController : MonoBehaviour
 
     private void Start()
     {
+        Refresh();
+
         AutorizationController autorization = new AutorizationController();
         autorization.Login();
         NickName.text = autorization.profile.UserName;

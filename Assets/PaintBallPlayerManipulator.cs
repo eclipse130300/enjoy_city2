@@ -13,11 +13,13 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
     ThirdPersonInput input;
     ShootAbility shootAbility;
+    private PhotonView photon;
 
     private void Awake()
     {
         input = GetComponent<ThirdPersonInput>();
         shootAbility = GetComponent<ShootAbility>();
+        photon = GetComponent<PhotonView>();
     }
 
     private void OnEnable()
@@ -32,21 +34,28 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        var customProps = info.Sender.CustomProperties;
-        if (customProps["playerWithTeam"] != null)
-        {
-            string newPlayer = customProps["playerWithTeam"].ToString();
-            PaintBallPlayer spawnedPlayer = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayer);
-            InitializeSpawnedPlayer(gameObject, spawnedPlayer);
-        }
-        else
-        {
-            Debug.LogError("Dont have key [playerWithTeam] in custom props");
-        }
+            var customProps = info.Sender.CustomProperties;
+            if (customProps["playerWithTeam"] != null)
+            {
+                string newPlayer = customProps["playerWithTeam"].ToString();
+                PaintBallPlayer spawnedPlayer = JsonConvert.DeserializeObject<PaintBallPlayer>(newPlayer);
+                InitializeSpawnedPlayer(gameObject, spawnedPlayer);
+            }
+            else
+            {
+                Debug.LogError("Dont have key [playerWithTeam] in custom props");
+            }
     }
 
     void InitializeSpawnedPlayer(GameObject player, PaintBallPlayer paintBallPlayer)
     {
+        if(!photon.IsMine) //if photon isnot ours, disable cam
+        {
+            GameObject playerCam = player.GetComponentInChildren<PlayerCamera>().gameObject;
+            playerCam.SetActive(false);
+        }
+
+
         //in skins manager change gameMode to paintball 
         player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
 
@@ -58,6 +67,8 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
 
         playerTeam.InitializePlayerTeam(myTeam, teamColor);
+
+        DisablePlayer(); //don't move and shoot before start
     }
 
     public void OnEvent(EventData photonEvent)
@@ -66,6 +77,10 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
         if (eventCode == GameEvents.PAINTBALL_GAME_FINISHED) //just turn off components to disable our player 
         {
             DisablePlayer();
+        }
+        else if(eventCode == GameEvents.START_PAINTBALL_GAME)
+        {
+            EnablePlayer();
         }
     }
 

@@ -107,21 +107,32 @@ public class PaintBallGameManager : MonoBehaviourSingleton<PaintBallGameManager>
         GameFinishCheck();
     }
 
-    public PaintBallTeam WhichTeamHasWon()
+    public PaintBallTeam GameResult()
     {
         var allTeams = PaintBallTeamManager.Instance.teams;
         int maxPTS = 0;
+
         PaintBallTeam winnerTeam = null;
 
-        foreach (PaintBallTeam team in allTeams)
+        var firstTeamGamePTS = allTeams[0].gamePoints;
+
+        if (allTeams.All(x => x.gamePoints == firstTeamGamePTS))  //if all our teams have the same pts
         {
-            if(team.gamePoints >= maxPTS)
-            {
-                maxPTS = team.gamePoints;
-                winnerTeam = team;
-            }
+            /*            return "Tie!";*/
+            return null;
         }
-        return winnerTeam;
+        else
+        {
+            foreach (PaintBallTeam team in allTeams)
+            {
+                if (team.gamePoints >= maxPTS)
+                {
+                    maxPTS = team.gamePoints;
+                    winnerTeam = team;
+                }
+            }
+            return winnerTeam;
+        }
     }
 
 /*    void UpdateScoreEvent(int newScore)

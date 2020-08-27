@@ -46,26 +46,26 @@ public class FinishPaintBall : MonoBehaviour, IOnEventCallback
             else
             {
                 //we add final bonus exp here
-                //add team exp
-                var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
                 int finalEXP = 0;
+                var playerProps = PhotonNetwork.LocalPlayer.CustomProperties;
 
-                if (roomProps.ContainsKey("Team" + myTeamID.ToString()))
+                //add team exp
+                if (playerProps.ContainsKey("Team" + myTeamID.ToString()))
                 {
-                    int teamEXP = (int)roomProps["Team" + myTeamID.ToString()];
+                    int teamEXP = (int)playerProps["Team" + myTeamID.ToString()];
                     finalEXP += teamEXP;
                     Debug.Log("FINAL_TEAM_EXP :" + teamEXP);
                 }
-                //add player exp
-                var playerProps = PhotonNetwork.LocalPlayer.CustomProperties;
 
+                //add player exp
                 if (playerProps.ContainsKey("playerEXP"))
                 {
                     int playerEXP = (int)playerProps["playerEXP"];
                     finalEXP += playerEXP;
                     Debug.Log("FINAL_PLAYER_EXP :" + playerEXP);
                 }
-                //add exp
+
+                //add final exp
                 playerLevel.AddExperience(finalEXP);
                 Debug.Log("I ADDED EXP FOR PAINTBALL. AMOUNT - " + finalEXP);
 
@@ -77,11 +77,7 @@ public class FinishPaintBall : MonoBehaviour, IOnEventCallback
                 //show everything above to our player
                 resultsPanel.SetActive(true);
                 resultsPanel.GetComponent<PaintBallPointsPanel>().SetResult(finalEXP, finalSoft);
-                //
             }
-
-
-
         }
     }
 
@@ -94,22 +90,13 @@ public class FinishPaintBall : MonoBehaviour, IOnEventCallback
             {
                 //master opens room again for other users
                 PhotonNetwork.CurrentRoom.IsOpen = true;
-                ClearRoomProps();
             }
-
-            ClearPlayerProps();
+            //clean-up props for another game
+            ClearProps();
         }
     }
 
-    void ClearRoomProps()
-    {
-        var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
-        roomProps.Clear();
-
-        Debug.Log("RoomProps removed!");
-    }
-
-    void ClearPlayerProps()
+    void ClearProps()
     {
         //we just need to save the player info for future game, and delete everything else
         var playerProps = PhotonNetwork.LocalPlayer.CustomProperties;

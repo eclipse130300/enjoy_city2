@@ -172,21 +172,36 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
         else if (eventCode == GameEvents.PAINTBALL_GAME_FINISHED)
         {
             object[] data = (object[])photonEvent.CustomData;
-            PaintBallTeam winnerTEam = null;
 
+            resultText.gameObject.SetActive(true);
+
+
+            PaintBallTeam wonTeam = PaintBallGameManager.Instance.GameResult();
+            if(wonTeam != null)
+            {
+                resultText.text = wonTeam.teamName.ToString() + " team wins!";
+                resultText.color = wonTeam.GetTeamColor();
+            }
+            else if(wonTeam == null)
+            {
+                resultText.text = "Tie!";
+                resultText.color = Color.green; // other color?
+            }
+
+/*
             //TODO - DRAW!?!
             if (data.IsNullOrEmpty()) //meaning the time is up(no team hit the final shot)!we need to know whitch team has won...
             {
-                winnerTEam = PaintBallGameManager.Instance.WhichTeamHasWon();
+                string gameResult = PaintBallGameManager.Instance.StringGameResult();
+
+                resultText.text = gameResult;
             }
             else //we know the team who first earned necessary pts
             {
                 int wonTeamID = (int)data[0];
-                winnerTEam = paintballTM.GetTeamByIndex(wonTeamID);
+                resultText.text = paintballTM.GetTeamByIndex(wonTeamID).teamName.ToString() + " team wins!";
             }
-            resultText.gameObject.SetActive(true);
-            resultText.text = winnerTEam.teamName.ToString() + " team wins!";
-
+*/
             gameIsActive = false;
 
             Destroy(this); //let's destroy this, we no longer need it

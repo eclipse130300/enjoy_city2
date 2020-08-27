@@ -17,6 +17,8 @@ public static class GameEvents
     public const byte PLAYER_RESPAWNED = 10;
     public const byte PAINTBALL_FINISHED = 11;
 
+    public const byte DIRTY_HIT_RECIEVED = 12;
+
 
     //city
     public const string ENTRY_POINT_ENTERED = "ENTRY_POINT_ENTERED";

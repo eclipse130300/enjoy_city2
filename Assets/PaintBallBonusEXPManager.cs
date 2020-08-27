@@ -38,6 +38,13 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
+    private int myTeamIndex;
+
+    private void Start()
+    {
+        myTeamIndex = PaintBallTeamManager.Instance.myTeam.teamIndex;
+    }
+
     public void OnEvent(EventData photonEvent)
     {
         byte eventCode = photonEvent.Code;
@@ -47,21 +54,21 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
             int killerNum = (int)data[0];
             int[] damagers = (int[])data[1];
 
-            Debug.Log("SOME PLAYER SEEMS TO BE DEAD... killer :" + killerNum + " damagersLength " + damagers.Length);
+/*            Debug.Log("SOME PLAYER SEEMS TO BE DEAD... killer :" + killerNum + " damagersLength " + damagers.Length);*/
 
             CheckForAssist(damagers);
             CheckForKill(killerNum);
         }
         else if (eventCode == GameEvents.HIT_RECIEVED)
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
                 object[] data = (object[])photonEvent.CustomData;
 /*                int actorNum = (int)data[0];
                 int currentHP = (int)data[1];
                 int dmgAmount = (int)data[2];*/
                 int fromTeamId = (int)data[3];
 
+            if (fromTeamId == myTeamIndex)
+            {
                 AddBonusTeamEXP(fromTeamId);
             }
         }
@@ -73,8 +80,7 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
         {
             if(PhotonNetwork.LocalPlayer.ActorNumber == damagerActorNum)
             {
-                
-                AddToPlayerProps(EXPFORASSIST);
+                AddPlayerEXP(EXPFORASSIST);
             }
         }
     }
@@ -83,7 +89,7 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
      {
         if (PhotonNetwork.LocalPlayer.ActorNumber == killerNum)
         {
-            Debug.Log("I am killer! I have to take pts...");
+/*            Debug.Log("I am killer! I have to take pts...");*/
             if (killStreakRoutine == null)
             {
                killStreakCount = 1;
@@ -100,27 +106,27 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
     {
         if (killStreakCount == 1)
         {
-            AddToPlayerProps(EXPFORSINGLEKILL);
+            AddPlayerEXP(EXPFORSINGLEKILL);
             Debug.Log("1 kill");
         }
         else if (killStreakCount == 2)
         {
-            AddToPlayerProps(EXPFORDOUBLEKILL);
+            AddPlayerEXP(EXPFORDOUBLEKILL);
             Debug.Log("2 kill");
         }
         else if(killStreakCount == 3)
         {
-            AddToPlayerProps(EXPFORTRIPPLEKILL);
+            AddPlayerEXP(EXPFORTRIPPLEKILL);
             Debug.Log("3 kill");
         }
         else if(killStreakCount == 4)
         {
-            AddToPlayerProps(EXPFORULTRAKILL);
+            AddPlayerEXP(EXPFORULTRAKILL);
             Debug.Log("4 kill");
         }
         else if(killStreakCount >= 5)
         {
-            AddToPlayerProps(EXPFORRAMPAGE);
+            AddPlayerEXP(EXPFORRAMPAGE);
             Debug.Log("5 kill");
         }
 
@@ -136,13 +142,15 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
         killStreakRoutine = StartCoroutine(KillStreakRoutine());
     }
 
-    private void AddToPlayerProps(int amount)
+    private void AddPlayerEXP(int amount)
     {
         var playerProps = PhotonNetwork.LocalPlayer.CustomProperties;
         if(playerProps.ContainsKey("playerEXP"))
         {
             int overallExp = (int)playerProps["playerEXP"];
             overallExp += amount;
+
+            Debug.Log("PlayerEXP is now:" + overallExp);
 
             playerProps.Remove("playerEXP");
 
@@ -152,30 +160,37 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
         else
         {
             playerProps.Add("playerEXP", amount);
+
+            Debug.Log("Initialize player EPX with amount:" + amount);
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
         }
     }
 
-    private void AddToRoomProps(int teamId, int amount)
+    private void AddTeamEXP(int teamId, int amount)
     {
-        var roomProps = PhotonNetwork.CurrentRoom.CustomProperties;
-        if (roomProps.ContainsKey("Team" + teamId.ToString()))
+        var playerProps = PhotonNetwork.LocalPlayer.CustomProperties;
+        if (playerProps.ContainsKey("Team" + teamId.ToString()))
         {
-            int overallExp = (int)roomProps["Team" + teamId.ToString()];
+            int overallExp = (int)playerProps["Team" + teamId.ToString()];
             overallExp += amount;
 
-            roomProps.Remove("Team" + teamId.ToString());
+            playerProps.Remove("Team" + teamId.ToString());
 
-            roomProps.Add("Team" + teamId.ToString(), overallExp);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(roomProps);
+            Debug.Log("Team " + teamId.ToString() + "exp is now :" + overallExp);
+
+            playerProps.Add("Team" + teamId.ToString(), overallExp);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
         }
         else
         {
-            roomProps.Add("Team" + teamId.ToString(), amount);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(roomProps);
+            playerProps.Add("Team" + teamId.ToString(), amount);
+
+            Debug.Log("I initialize Team " + teamId.ToString() + "exp with amount :" + amount);
+
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
         }
     }
-
 
 
     void AddBonusTeamEXP(int fromTeamID)
@@ -184,28 +199,28 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
 
         if(teamPTS == 1/*00*/)
         {
-            AddToRoomProps(fromTeamID, EXP_FOR_100_TEAM_DMG);
-            Debug.Log("Team dmg :" + teamPTS);
+            AddTeamEXP(fromTeamID, EXP_FOR_100_TEAM_DMG);
+ /*           Debug.Log("Team dmg :" + teamPTS);*/
         }
         else if(teamPTS == 5)
         {
-            AddToRoomProps(fromTeamID, EXP_FOR_500_TEAM_DMG);
-            Debug.Log("Team dmg :" + teamPTS);
+            AddTeamEXP(fromTeamID, EXP_FOR_500_TEAM_DMG);
+/*            Debug.Log("Team dmg :" + teamPTS);*/
         }
         else if(teamPTS == 10)
         {
-            AddToRoomProps(fromTeamID , EXP_FOR_1000_TEAM_DMG);
-            Debug.Log("Team dmg :" + teamPTS);
+            AddTeamEXP(fromTeamID , EXP_FOR_1000_TEAM_DMG);
+/*            Debug.Log("Team dmg :" + teamPTS);*/
         }
         else if (teamPTS == 20)
         {
-            AddToRoomProps(fromTeamID, EXP_FOR_2000_TEAM_DMG);
-            Debug.Log("Team dmg :" + teamPTS);
+            AddTeamEXP(fromTeamID, EXP_FOR_2000_TEAM_DMG);
+/*            Debug.Log("Team dmg :" + teamPTS);*/
         }
         else if (teamPTS == 30)
         {
-            AddToRoomProps(fromTeamID, EXP_FOR_3000_TEAM_DMG);
-            Debug.Log("Team dmg :" + teamPTS);
+            AddTeamEXP(fromTeamID, EXP_FOR_3000_TEAM_DMG);
+/*            Debug.Log("Team dmg :" + teamPTS);*/
         }
     }
 }

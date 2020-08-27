@@ -11,11 +11,6 @@ public class ImportantDataConfig : IDataConfig
    public int expToNextLvl = 100;
    public int lvl = 1;
 
-    public ImportantDataConfig()
-    {
-        lvl = 1;
-    }
-
     public void SetHardCurrency(int hardC)
     {
         hardCurrency = hardC;
