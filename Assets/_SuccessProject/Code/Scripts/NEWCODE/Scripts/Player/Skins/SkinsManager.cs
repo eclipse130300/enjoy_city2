@@ -86,19 +86,19 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
     // puts on real model
 
-    private void PutOnClothes()
+    public void PutOnClothes()
         {
         
             if (photon == null || photon.IsMine || !PhotonNetwork.IsConnectedAndReady)
             {
-                currentConfig = LoadConf(_characterSex, _gameMode); //ERROR HERE!
+                currentConfig = LoadConf(_characterSex, _gameMode); 
                 PutOnClothes(currentConfig);
             } 
-            else
+            else if(!photon.IsMine)
             {
                // Debug.Log("   Other         " + photon.Owner.UserId + " "+photon.Owner.CustomProperties["skin"].ToString());
-               if(photon.Owner.CustomProperties["skin"] != null)
-                PutOnClothes(photon.Owner.CustomProperties["skin"].ToString());
+               if(photon.Owner.CustomProperties["skin" + _gameMode.ToString()] != null)
+                PutOnClothes(photon.Owner.CustomProperties["skin" + _gameMode.ToString()].ToString());
             }
 
         }
@@ -113,25 +113,44 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
 
 /*        Debug.Log("OnPlayerPropertiesUpdate" + changedProps["skin"]);*/
         if (targetPlayer == photon.Owner && !photon.IsMine)
-            PutOnClothes(changedProps["skin"].ToString());
+            PutOnClothes(changedProps["skin" + _gameMode.ToString()].ToString());
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);  
-
     }
+
     public void PutOnItem(ItemConfig config,ItemVariant variant) {
         if (config.itemObject != null)
         {
             if (skinHolder == null) return;
 
+            var parentAnimator = skinHolder.GetComponent<Animator>();
+
             var bodyTransform = skinHolder?.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
 
             var newBodyPart = GameObject.Instantiate(config.itemObject, skinHolder);
+
             newBodyPart.name = bodyTransform.name;
+
+/*            newBodyPart.GetComponent<BodyPartsAnimator>().AnimateBodyParts(parentAnimator);*/
+
+            var newAnimator = newBodyPart.GetComponent<Animator>();
+
+            newAnimator.runtimeAnimatorController = parentAnimator.runtimeAnimatorController;
+            newAnimator.avatar = parentAnimator.avatar;
+
             GameObject.DestroyImmediate(bodyTransform.gameObject);
+
+/*            GameObject.Destroy(bodyTransform.gameObject);*/
+
+
+            
 
 /*            if (config.mesh != null)
             newBodyPart.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh = config.mesh;*/
 
             newBodyPart.GetComponentInChildren<SkinnedMeshRenderer>().material.color = variant.color;
+
+
+
             //and we disable
             DisableBodyParts(config.partsToDisable);
         }
@@ -187,9 +206,8 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         if (photon != null && photon.IsMine && photon.Owner != null)
         {
             ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
-            customProperties.Add("skin", JsonConvert.SerializeObject(config));
+            customProperties.Add("skin" + _gameMode.ToString(), JsonConvert.SerializeObject(config));
             photon.Owner.SetCustomProperties(customProperties);
-           
         }
        
     }

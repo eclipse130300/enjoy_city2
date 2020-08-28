@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraHorizontalMover : MonoBehaviour
 {
     [SerializeField] float offsetZ;
-    [Range(0f,1f)]
+    [Range(0f,10f)]
     [SerializeField] float lerpSpeed;
     private Camera cameraHor;
     public float diffeneceX;
@@ -28,8 +28,8 @@ public class CameraHorizontalMover : MonoBehaviour
     }
 
     public Vector3 getOffset(RectTransform bodyRect) {
-        Vector3 vect = cameraHor.ScreenToWorldPoint(new Vector3(bodyRect.position.x, bodyRect.position.y, cameraHor.transform.position.z));
-        return new Vector3(transform.position.x - vect.x, transform.position.y - vect.y, transform.position.z - vect.z);
+        Vector3 worldRectPos = cameraHor.ScreenToWorldPoint(new Vector3(bodyRect.position.x, bodyRect.position.y, cameraHor.transform.position.z));
+        return new Vector3(transform.position.x - worldRectPos.x, transform.position.y - worldRectPos.y, transform.position.z - worldRectPos.z);
     }
 
     public void SnapTo(Vector3 targetPos, RectTransform bodyRect)
@@ -45,15 +45,10 @@ public class CameraHorizontalMover : MonoBehaviour
 
         while (diffeneceX >= 0.01f)
         {
-            transform.position = Vector3.Lerp(transform.position, desiredPos, lerpSpeed);
+            transform.position = Vector3.Lerp(transform.position, desiredPos, lerpSpeed * Time.deltaTime);
             diffeneceX = Mathf.Abs(Mathf.Abs(desiredPos.x) - Mathf.Abs(transform.position.x));
             yield return null;
         }
         transform.position = desiredPos;
-    }
-
-    private void OnDestroy()
-    {
-        
     }
 }

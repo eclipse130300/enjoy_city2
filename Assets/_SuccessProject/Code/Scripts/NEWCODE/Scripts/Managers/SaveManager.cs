@@ -22,6 +22,7 @@ public class SaveManager : MonoBehaviourSingleton<SaveManager>
 
     public override void OnDestroy()
     {
+        SaveAllConfigs();
      //   Loader.Instance.AllSceneLoaded -= SaveAllConfigs;
     }
 #if UNITY_EDITOR

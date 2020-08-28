@@ -88,7 +88,7 @@ public class BodyManager : MonoBehaviour
         if(body.GetComponent<MecanimWrapper>())  body.GetComponent<MecanimWrapper>().animator = animator;
 
         skinsManager.skinHolder = body.transform;
-        skinsManager.InitializeSkins();
+        skinsManager.PutOnClothes();
     }
 
     private void OnDestroy()

@@ -20,7 +20,7 @@ public class ItemDisplay : MonoBehaviour, IItemHandler
     public GameObject activeItemTick;
 
     private ShopManager shopManager;
-    bool isPreviewing;
+    public bool isClicked;
 
     private void Awake()
     {
@@ -49,7 +49,7 @@ public class ItemDisplay : MonoBehaviour, IItemHandler
     private void OnItemDone()
     {
         frameIMG.color = startFrameColor;
-        isPreviewing = false;
+        isClicked = false;
     }
 
     private void OnItemPicked(ItemConfig itemConfig)
@@ -87,9 +87,9 @@ public class ItemDisplay : MonoBehaviour, IItemHandler
 
     private void ClearIfOtherItem(GameObject item)
     {
-        if (this == item.GetComponent<RoomItemDisplay>()) return;
+        if (gameObject == item) return;
         frameIMG.color = startFrameColor;
-        isPreviewing = false;
+        isClicked = false;
     }
 
     public void SetItem(Sprite inventoryIMG, Color frameCol, bool isActiveItem)
@@ -102,9 +102,9 @@ public class ItemDisplay : MonoBehaviour, IItemHandler
 
     public void ItemPressed()
     {
-        if (!isPreviewing)
+        if (!isClicked)
         {
-            isPreviewing = true;
+            isClicked = true;
             Messenger.Broadcast(GameEvents.ITEM_PRESSED, gameObject);
             frameIMG.color = previewFrameColor;
         }

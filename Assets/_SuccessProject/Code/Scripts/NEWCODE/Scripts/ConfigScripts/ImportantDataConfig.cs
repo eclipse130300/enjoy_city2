@@ -8,8 +8,8 @@ public class ImportantDataConfig : IDataConfig
    public int softCurrency = 100;
    public int hardCurrency = 100;
    public int exp = 0;
-   public int expToNextLvl = 100;
    public int lvl = 1;
+   public int expToNextLvl = 100;
 
     public void SetHardCurrency(int hardC)
     {

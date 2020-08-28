@@ -24,22 +24,34 @@ public class PreviewManager : MonoBehaviour
 
     private ShopManager shopManager;
 
-    private BodyManager bodyManager;
+    private SkinsManager skinsManager;
 
 
     private void Awake()
     {
         shopManager = ShopManager.Instance;
-        bodyManager = GetComponent<BodyManager>();
+        skinsManager = GetComponent<SkinsManager>();
         previewingCharSex = SaveManager.Instance.LoadBody().gender;
 
         Messenger.AddListener<GameObject>(GameEvents.ITEM_PRESSED, OnItemPressed);
 /*        Messenger.AddListener<ItemDisplay>(GameEvents.ITEM_PICKED, OnItemPicked);*/
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
-        LoadConf();
 
-        TryAddDefaultItems();
+        TryBuyAllDefaultItems(); //in case it is our 1rst launch, lets buy all default items!
+
+        OnGameModeChanged(GameMode.SandBox);
+    }
+
+    private void TryBuyAllDefaultItems()
+    {
+        var allGameModes = Enum.GetValues(typeof(GameMode));
+        foreach (GameMode mode in allGameModes)
+        {
+            previewingGameMode = mode;
+            LoadConf();
+            TryAddDefaultItems();
+        }
     }
 
     public string GetCurrentKey()
@@ -53,7 +65,7 @@ public class PreviewManager : MonoBehaviour
     {
         if (previewingClothesConfig.pickedItemsAndVariants.Count != 0) return;
 
-        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).Where(t => t.gender == previewingCharSex).ToList();
+        var allDefaultItems = ScriptableList<ItemConfig>.instance.list.Where(t => t.isDefault).Where(t => t.gender == previewingCharSex).Where(t => t.gameMode == previewingGameMode).ToList();
 
         foreach (ItemConfig defaultItem in allDefaultItems)
         {
@@ -71,6 +83,9 @@ public class PreviewManager : MonoBehaviour
     {
         previewingGameMode = gameMode;
         LoadConf();
+        TryAddDefaultItems();
+
+        skinsManager.PutOnClothes(previewingClothesConfig);
     }
 
     void LoadConf()

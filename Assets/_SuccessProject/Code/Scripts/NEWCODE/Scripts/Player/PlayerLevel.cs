@@ -16,17 +16,19 @@ public class PlayerLevel : MonoBehaviour
     private Loader loader;
     private SaveManager saveManager;
 
+    private bool isInitialized = false;
+
     private void Awake()
     {
         loader = Loader.Instance;
         saveManager = SaveManager.Instance;
         loader.AllSceneLoaded += Initialize;
-        loader.AllSceneUnloaded += SaveData;
+/*        loader.AllSceneUnloaded += SaveData;*/
     }
     private void OnDestroy()
     {
         loader.AllSceneLoaded -= Initialize;
-        loader.AllSceneUnloaded -= SaveData;
+/*        loader.AllSceneUnloaded -= SaveData;*/
     }
 /*    private void Start()
     {
@@ -39,11 +41,14 @@ public class PlayerLevel : MonoBehaviour
         experience = saveManager.GetExp();
         expreienceToNextLevel = saveManager.GetExpToNextLevel();
 
+        isInitialized = true;
 /*        Debug.Log("INITIALIZE WITH : " + "LEVEL :" + level + "EXP :" + experience + "expTOnextLVL :" + expreienceToNextLevel);*/
     }
 
     public void AddExperience(int amount)
     {
+        if (!isInitialized) Initialize();
+
         experience += amount;
 
 

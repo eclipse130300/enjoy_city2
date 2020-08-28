@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,13 +20,21 @@ public class TransformSynchronizer : MonoBehaviour
     void Start()
     {
         var parent = transform.parent;
-        int id = GetComponentInParent<Animator>().GetInstanceID();
 
         while (parent.parent != null)
         {
             parent = parent.parent;
-
         }
+
+        int additionalNum = 0;
+        //we need randomUniqe num for everything to work correctly
+        if(PhotonNetwork.IsConnectedAndReady)
+        {
+            additionalNum = GetComponentInParent<PhotonView>().ViewID;
+        }
+
+        int id = /*parent.GetComponent<Transform>().GetInstanceID() + additionalNum*/ additionalNum;
+
         if (key == "")
         {
             key = id + gameObject.name;

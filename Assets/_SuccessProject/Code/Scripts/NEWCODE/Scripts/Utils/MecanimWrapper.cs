@@ -6,7 +6,6 @@ using UnityEngine;
 public class MecanimWrapper : MonoBehaviour
 {
 
-    
     public Animator animator;
     public Transform lookTarget;
     public Transform rightLeg;
