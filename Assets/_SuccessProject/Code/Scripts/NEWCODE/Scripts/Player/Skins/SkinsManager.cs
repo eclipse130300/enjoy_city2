@@ -122,15 +122,13 @@ public class SkinsManager :  MonoBehaviourPunCallbacks, IPunObservable//TODO MAK
         {
             if (skinHolder == null) return;
 
-            var parentAnimator = skinHolder.GetComponent<Animator>();
+            var parentAnimator = GetComponent<Animator>();
 
             var bodyTransform = skinHolder?.Find(config.bodyPart.ToString()); //IF YOU WANT RENAME 3DMODEL PARTS - RENAME ENUM BODY_PART
 
             var newBodyPart = GameObject.Instantiate(config.itemObject, skinHolder);
 
             newBodyPart.name = bodyTransform.name;
-
-/*            newBodyPart.GetComponent<BodyPartsAnimator>().AnimateBodyParts(parentAnimator);*/
 
             var newAnimator = newBodyPart.GetComponent<Animator>();
 

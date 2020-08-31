@@ -13,6 +13,7 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
     ThirdPersonInput input;
     ShootAbility shootAbility;
+    Animator animator;
     private PhotonView photon;
 
     private void Awake()
@@ -20,6 +21,7 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
         input = GetComponent<ThirdPersonInput>();
         shootAbility = GetComponent<ShootAbility>();
         photon = GetComponent<PhotonView>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -30,6 +32,11 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
     private void OnDisable()
     {
         PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    private void Start()
+    {
+        animator.SetLayerWeight(2, 1f);
     }
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)

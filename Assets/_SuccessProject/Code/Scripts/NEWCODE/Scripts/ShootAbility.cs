@@ -25,6 +25,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     private bool isReloading = false;
 
     private ThirdPersonInput playerInput;
+    private Animator animator;
 
     
     [SerializeField] CoolDownSystem coolDownSystem;
@@ -47,6 +48,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         playerInput = GetComponent<ThirdPersonInput>();
         photonView = GetComponent<PhotonView>();
         myTeam = GetComponent<PlayerTeam>();
+        animator = GetComponent<Animator>();
 
         if (photonView.IsMine && PhotonNetwork.IsConnectedAndReady)
         {
@@ -74,6 +76,8 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     {
         SetBullet(shootDir, sprayMultiplier, dmgBullet);
         DescreaseAmmo(1);
+
+        animator.SetTrigger("Fire");
 
         photonView.RPC("GlobalShoot", RpcTarget.Others, shootDir, sprayMultiplier);
     }
@@ -182,5 +186,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         //globally we shoot fake bullet - others do not need to know about dmg to enemy(if enemny's health is scynchronized)
     {
         SetBullet(shootDir, sprayMult, fakeBullet);
+        animator.SetTrigger("Fire");
     }
 }

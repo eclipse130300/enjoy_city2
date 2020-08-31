@@ -22,12 +22,14 @@ public class BodyManager : MonoBehaviour
         skinsManager = GetComponent<SkinsManager>();
 
         photon = GetComponent<PhotonView>();
+
+        Initialize();
     }
 
 
     private void Start()
     {
-        Initialize();
+        skinsManager.PutOnClothes();
     }
 
     private void Initialize()
@@ -77,9 +79,14 @@ public class BodyManager : MonoBehaviour
         body.transform.localPosition = Vector3.zero;
         body.transform.localRotation = Quaternion.identity;
 
+        if (body.GetComponent<Animator>() != null)
+        {
+            Destroy(body.GetComponent<Animator>());  //cleanUp animator if we have one
+        }
+
         //apply other stuff
-        var animator = body.GetComponent<Animator>();
-        if (animator == null) body.AddComponent<Animator>();
+        var animator = GetComponent<Animator>();
+/*        if (animator == null) body.transform.parent.gameObject.AddComponent<Animator>();*/
 
         animator.runtimeAnimatorController = bodyCfg.controller;
         animator.avatar = bodyCfg.avatar;
@@ -88,7 +95,7 @@ public class BodyManager : MonoBehaviour
         if(body.GetComponent<MecanimWrapper>())  body.GetComponent<MecanimWrapper>().animator = animator;
 
         skinsManager.skinHolder = body.transform;
-        skinsManager.PutOnClothes();
+/*        skinsManager.PutOnClothes();*/
     }
 
     private void OnDestroy()

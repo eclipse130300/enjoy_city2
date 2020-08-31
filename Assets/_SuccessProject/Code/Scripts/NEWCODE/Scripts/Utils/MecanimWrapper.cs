@@ -66,13 +66,12 @@ public class MecanimWrapper : MonoBehaviour
             /*if (newAnimator != animator)*/ newAnimator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
             
         }
-/*        Debug.Log(value);*/
+
         animator.SetBool("Jumping", value);
         
 
         animator.SetLayerWeight(0, value ? 0 : 1);
         animator.SetLayerWeight(1, value ? 1 : 0);
-        /*        SetBoolParameterForAllChildren("Jump", value, animators);*/
     }
 
     public void SetFloatParameterForAllChildren(string parameterName, float value, Animator[] children)
