@@ -23,7 +23,7 @@ public class BodyManager : MonoBehaviour
 
         photon = GetComponent<PhotonView>();
 
-        Initialize();
+        Initialize(); // we spawn body on awake, to grab mechainm on start!
     }
 
 

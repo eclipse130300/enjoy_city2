@@ -188,20 +188,6 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
                 resultText.color = Color.green; // other color?
             }
 
-/*
-            //TODO - DRAW!?!
-            if (data.IsNullOrEmpty()) //meaning the time is up(no team hit the final shot)!we need to know whitch team has won...
-            {
-                string gameResult = PaintBallGameManager.Instance.StringGameResult();
-
-                resultText.text = gameResult;
-            }
-            else //we know the team who first earned necessary pts
-            {
-                int wonTeamID = (int)data[0];
-                resultText.text = paintballTM.GetTeamByIndex(wonTeamID).teamName.ToString() + " team wins!";
-            }
-*/
             gameIsActive = false;
 
             Destroy(this); //let's destroy this, we no longer need it
@@ -212,6 +198,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
             int currentHP = (int)data[0];
             //full heal player
             UpdatePlayerHP(currentHP);
+            ammoFill.fillAmount = 1f; //fill ammo at the same time?
         }
 
     }
@@ -313,6 +300,14 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
                 {
                     Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point); 
                 }
+                else if(!hitGO.CompareTag("Enemy"))
+                {
+                    Messenger.Broadcast(GameEvents.AUTO_SHOOT, Vector3.zero); //meaning we didn't hit anything - terrible code, but works...
+                }
+            }
+            else
+            {
+                Messenger.Broadcast(GameEvents.AUTO_SHOOT, Vector3.zero); //meaning we didn't hit anything - terrible code, but works...
             }
             yield return null;
         }

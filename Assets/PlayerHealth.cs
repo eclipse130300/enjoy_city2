@@ -15,7 +15,7 @@ public class PlayerHealth : MonoBehaviour
 
     private PlayerTeam teamScript;
     PaintBallPlayerManipulator manipulator;
-    Animator animator;
+    MecanimWrapper mechanim;
 
 
     private PhotonView photon;
@@ -36,11 +36,15 @@ public class PlayerHealth : MonoBehaviour
     {
         photon = GetComponent<PhotonView>();
         manipulator = GetComponent<PaintBallPlayerManipulator>();
-        animator = GetComponent<Animator>();
         //test!!! todo smthing with it!
         staticMaxHP = MaxHp;
 
         teamScript = GetComponent<PlayerTeam>();
+    }
+
+    private void Start()
+    {
+        mechanim = GetComponentInChildren<MecanimWrapper>();
     }
 
     private void OnEnable()
@@ -100,8 +104,7 @@ public class PlayerHealth : MonoBehaviour
     private void DeathPlayerSequence(double respawnTime)
     {
         //play death animation
-        animator.SetLayerWeight(2, 0f);
-        animator.SetTrigger("isDead");
+        mechanim.SetDeadState(true);
 
         //we disable shooting in dead player
         isInvulnerable = true;
@@ -152,8 +155,7 @@ public class PlayerHealth : MonoBehaviour
         RecoverHP();
 
         //let's play resp animation
-        animator.SetTrigger("isAlive");
-        animator.SetLayerWeight(2, 1f);
+        mechanim.SetDeadState(false);
 
         if (photon.IsMine) //if it's ours photon, let's update UI
         {
@@ -164,8 +166,10 @@ public class PlayerHealth : MonoBehaviour
 
         yield return new WaitForSeconds(1f);  //let's wait a little longer to prevent async shooting
 
+        mechanim.SetLayerWeight(1, 0f);
 
-        manipulator.EnablePlayer();
+        manipulator.EnablePlayer(true);
+
         isInvulnerable = false;
     }
 

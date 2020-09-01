@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class MecanimWrapper : MonoBehaviour
+public class MecanimWrapper : MonoBehaviour, IOnEventCallback
 {
 
     public Animator animator;
@@ -68,10 +70,33 @@ public class MecanimWrapper : MonoBehaviour
         }
 
         animator.SetBool("Jumping", value);
-        
+
 
         animator.SetLayerWeight(0, value ? 0 : 1);
         animator.SetLayerWeight(1, value ? 1 : 0);
+    }
+
+    public void SetDeadState(bool value)
+    {
+        animator.SetLayerWeight(2, value == true ? 0f : 1f);
+        animator.SetLayerWeight(1, value ? 1f : 0f);
+
+        animator.SetBool("isDead", value);
+    }
+
+    public void StartFire() //todo refactor as soon as we have animations
+    {
+        animator.SetBool("isFiring", true);
+    }
+
+    public void EndFire()
+    {
+        animator.SetBool("isFiring", false);
+    }
+
+    public void SetLayerWeight(int layer, float value)
+    {
+        animator.SetLayerWeight(layer, value);
     }
 
     public void SetFloatParameterForAllChildren(string parameterName, float value, Animator[] children)
@@ -139,5 +164,14 @@ public class MecanimWrapper : MonoBehaviour
         }
         return Vector3.zero;
 
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == GameEvents.PLAYER_RESPAWNED)
+        {
+            animator.SetLayerWeight(2, 0f);
+        }
     }
 }

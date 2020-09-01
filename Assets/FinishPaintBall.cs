@@ -38,7 +38,7 @@ public class FinishPaintBall : MonoBehaviour, IOnEventCallback
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            if (PhotonNetwork.CurrentRoom.CustomProperties.IsNullOrEmpty() && PhotonNetwork.LocalPlayer.CustomProperties.IsNullOrEmpty())
+            if (PhotonNetwork.CurrentRoom.CustomProperties.IsNullOrEmpty() && PhotonNetwork.LocalPlayer.CustomProperties.IsNullOrEmpty()) //sometimes null here?
             {
                 Debug.LogError("We have nothing to add or game isn't player yet.. return");
                 return;

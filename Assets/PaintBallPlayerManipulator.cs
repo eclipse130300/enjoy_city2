@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 
-public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCallback, IOnEventCallback
+public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCallback, IOnEventCallback //this is local manipulator, and pun instantiation initializer
 {
     //test
     public bool isDummy;
@@ -14,7 +14,13 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
     ThirdPersonInput input;
     ShootAbility shootAbility;
     Animator animator;
+
+    [SerializeField] GameObject teamCanvasGO;
+
     private PhotonView photon;
+
+    private PaintBallPlayer myPlayer;
+    private Color teamCol;
 
     private void Awake()
     {
@@ -37,6 +43,7 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
     private void Start()
     {
         animator.SetLayerWeight(2, 1f);
+        animator.SetLayerWeight(1, 1f);
     }
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
@@ -56,12 +63,13 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
     void InitializeSpawnedPlayer(GameObject player, PaintBallPlayer paintBallPlayer)
     {
-        if(!photon.IsMine) //if photon isnot ours, disable cam
+        myPlayer = paintBallPlayer; //save for later
+
+        if (!photon.IsMine) //if photon isnot ours, disable cam
         {
             GameObject playerCam = player.GetComponentInChildren<PlayerCamera>().gameObject;
             playerCam.SetActive(false);
         }
-
 
         //in skins manager change gameMode to paintball 
         player.GetComponent<SkinsManager>()._gameMode = GameMode.Paintball;
@@ -71,11 +79,20 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
         Color teamColor;
         ColorUtility.TryParseHtmlString("#" + myTeam.hexColor, out teamColor);
-
+        teamCol = teamColor;
 
         playerTeam.InitializePlayerTeam(myTeam, teamColor);
 
         DisablePlayer(); //don't move and shoot before start
+    }
+
+    void SetPlayerTeamAndNickName(PaintBallPlayer player, Color teamCol)
+    {
+        teamCanvasGO.SetActive(true);
+
+        var playerTMinfo = teamCanvasGO.GetComponent<PlayerTeamInfo>();
+
+        playerTMinfo.Initialize(player.nickName, teamCol);
     }
 
     public void OnEvent(EventData photonEvent)
@@ -88,6 +105,11 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
         else if(eventCode == GameEvents.START_PAINTBALL_GAME)
         {
             EnablePlayer();
+
+            if (!photon.IsMine) //don't turn on player nick - it gets in the way
+            {
+                SetPlayerTeamAndNickName(myPlayer, teamCol);
+            }
         }
     }
 
@@ -99,11 +121,16 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
         shootAbility.enabled = false;
     }
 
-    public void EnablePlayer()
+    public void EnablePlayer(bool setMaxAmmo = false)
     {
         if (isDummy) return;
 
         input.enabled = true;
         shootAbility.enabled = true;
+
+        if(setMaxAmmo)
+        {
+            shootAbility.SetMaxAmmo();
+        }
     }
 }

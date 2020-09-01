@@ -22,6 +22,8 @@ public class RotateToTheLocalPlayerCam : MonoBehaviour
 
         Quaternion rotation = Quaternion.LookRotation(reversedToCamVec, Vector3.up);
 
+        rotation.eulerAngles = new Vector3(0, rotation.eulerAngles.y, 0);
+
         transform.rotation = rotation;
     }
 }

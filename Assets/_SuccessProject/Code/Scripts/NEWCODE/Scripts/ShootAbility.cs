@@ -1,11 +1,12 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections;
 using UnityEngine;
 using Utils;
 
-public class ShootAbility : MonoBehaviour , IHaveCooldown
+public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
 {
     [SerializeField] GameObject dmgBullet;
     [SerializeField] GameObject fakeBullet;
@@ -25,7 +26,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     private bool isReloading = false;
 
     private ThirdPersonInput playerInput;
-    private Animator animator;
+    private MecanimWrapper mechanim;
 
     
     [SerializeField] CoolDownSystem coolDownSystem;
@@ -42,13 +43,15 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     //test p
     public Ray ray = new Ray();
+    public bool isFiring;
+    public bool wasFiring;
 
     private void OnEnable()
     {
         playerInput = GetComponent<ThirdPersonInput>();
         photonView = GetComponent<PhotonView>();
         myTeam = GetComponent<PlayerTeam>();
-        animator = GetComponent<Animator>();
+        mechanim = GetComponentInChildren<MecanimWrapper>();
 
         if (photonView.IsMine && PhotonNetwork.IsConnectedAndReady)
         {
@@ -68,7 +71,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
 
     private void Start()
     {
-        currentAmmo = maxAmmo;
+        SetMaxAmmo();
         cD = shootingDelay;
     }
 
@@ -76,10 +79,15 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     {
         SetBullet(shootDir, sprayMultiplier, dmgBullet);
         DescreaseAmmo(1);
-
-        animator.SetTrigger("Fire");
-
+/*
+        mechanim.Fire();
+*/
         photonView.RPC("GlobalShoot", RpcTarget.Others, shootDir, sprayMultiplier);
+    }
+
+    public void SetMaxAmmo()
+    {
+        currentAmmo = maxAmmo;
     }
 
     private void DescreaseAmmo(int amount)
@@ -140,22 +148,32 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
     {
         if (coolDownSystem.IsOnCoolDown(iD) || isReloading) return;
 
+        if(crosshairHitpoint == Vector3.zero)
+        {
+            //end firingAnim
+            mechanim.EndFire();
+            return;
+        }
+
         Vector3 shootDir = (crosshairHitpoint - shootingPoint.transform.position).normalized;
+
 
         /*Ray ray = new Ray();*/
         ray.origin = shootingPoint.transform.position;
         ray.direction = shootDir;
 
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit))
+        if(Physics.Raycast(ray, out hit, 100f))
         {
             if(hit.collider.gameObject.CompareTag("Enemy"))
             {
                 Shoot(shootDir, autoShotSprayMultiplier);
                 coolDownSystem.PutOnCooldown(this);
+
+                //startFiring anim
+                mechanim.StartFire();
             }
         }
-
     }
 
     private void CreateSprayRotation(float sprayMultiplier)
@@ -186,6 +204,15 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown
         //globally we shoot fake bullet - others do not need to know about dmg to enemy(if enemny's health is scynchronized)
     {
         SetBullet(shootDir, sprayMult, fakeBullet);
-        animator.SetTrigger("Fire");
+/*        mechanim.Fire();*/
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == GameEvents.PLAYER_RESPAWNED)
+        {
+            currentAmmo = maxAmmo;
+        }
     }
 }
