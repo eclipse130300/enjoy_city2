@@ -16,6 +16,8 @@ public class TransformSynchronizer : MonoBehaviour
     public UpdateMod updateMod = UpdateMod.lateUpdate;
     public string key = "";
     private static Dictionary<string, TransformSynchronizer> objects = new Dictionary<string, TransformSynchronizer>();
+
+    public string doNotSyncTag = "DoNotSync";
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,9 @@ public class TransformSynchronizer : MonoBehaviour
         {
             for (int i = 0; i < transform.childCount; i++)
             {
+                if (transform.GetChild(i).gameObject.CompareTag(doNotSyncTag)) continue;
+
+
                 TransformSynchronizer suynchronizer = transform.GetChild(i).gameObject.AddComponent<TransformSynchronizer>();
                 suynchronizer.isMaster = isMaster;
                 suynchronizer.addInRuntime = addInRuntime;

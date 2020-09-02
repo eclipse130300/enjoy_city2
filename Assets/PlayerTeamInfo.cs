@@ -23,12 +23,9 @@ public class PlayerTeamInfo : MonoBehaviour
         nickName.text = nick;
 
         Color col = teamColor;
+        //let's make info panel transparent a little
         col.a = 0.5f;
         bgImage.color = col;
-
-        //let's make info panel transparent a little
-       
-
 
         if (PhotonNetwork.IsConnectedAndReady)
         {

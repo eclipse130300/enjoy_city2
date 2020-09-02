@@ -65,4 +65,6 @@ public static class GameEvents
     public const string PAINTBALL_POWER_UP_CD = "PAINTBALL_POWER_UP_CD";
 
     public const string PAINTBALL_PLAYER_SPAWNED = "PAINTBALL_PLAYER_SPAWNED";
+    public const string FIRING = "FIRING";
+    public const string RELOADING = "RELOADING";
 }

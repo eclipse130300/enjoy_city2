@@ -44,7 +44,6 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
     //test p
     public Ray ray = new Ray();
     public bool isFiring;
-    public bool wasFiring;
 
     private void OnEnable()
     {
@@ -111,7 +110,16 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
         if (currentAmmo == maxAmmo) return;
         if (isReloading) return;
 
+        //make RPC reload 
+        photonView.RPC("TriggerReload", RpcTarget.AllViaServer);
+        Messenger.Broadcast(GameEvents.RELOADING, reloadTime);
         StartCoroutine(Reloading(reloadTime));
+    }
+
+    [PunRPC]
+    private void TriggerReload()
+    {
+        mechanim.Reload();
     }
 
     IEnumerator Reloading(float time)
@@ -150,9 +158,15 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
 
         if(crosshairHitpoint == Vector3.zero)
         {
-            //end firingAnim
-            mechanim.EndFire();
-            return;
+            if (isFiring)
+            {
+                //end firingAnim
+                mechanim.EndFire();
+                isFiring = false;
+                Messenger.Broadcast(GameEvents.FIRING, crosshairHitpoint);
+
+                return;
+            }
         }
 
         Vector3 shootDir = (crosshairHitpoint - shootingPoint.transform.position).normalized;
@@ -170,8 +184,13 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
                 Shoot(shootDir, autoShotSprayMultiplier);
                 coolDownSystem.PutOnCooldown(this);
 
-                //startFiring anim
-                mechanim.StartFire();
+                if (!isFiring)
+                {
+                    //startFiring anim
+                    mechanim.StartFire();
+                    isFiring = true;
+                    Messenger.Broadcast(GameEvents.FIRING, crosshairHitpoint);
+                }
             }
         }
     }

@@ -12,8 +12,12 @@ public class MecanimWrapper : MonoBehaviour, IOnEventCallback
     public Transform lookTarget;
     public Transform rightLeg;
     public Transform leftLeg;
+    public Transform leftHand;
     public bool ikActive = true;
     public LayerMask groundMask;
+
+    public Vector3 leftHandGoal;
+
     public void SetHorizontalSpeed(float speed) {
         if (animator == null) return;
 
@@ -94,6 +98,11 @@ public class MecanimWrapper : MonoBehaviour, IOnEventCallback
         animator.SetBool("isFiring", false);
     }
 
+    public void Reload()
+    {
+        animator.SetTrigger("reload");
+    }
+
     public void SetLayerWeight(int layer, float value)
     {
         animator.SetLayerWeight(layer, value);
@@ -119,11 +128,11 @@ public class MecanimWrapper : MonoBehaviour, IOnEventCallback
     {
         if (animator)
         {
-
             //if the IK is active, set the position and rotation directly to the goal. 
             if (ikActive)
             {
-                if (getGroundPos(transform.position, Vector3.down) == Vector3.zero) return;
+                /*                if (getGroundPos(transform.position, Vector3.down) == Vector3.zero) return;*/
+
                 // Set the look target position, if one has been assigned
                 if (lookTarget != null)
                 {
@@ -143,6 +152,15 @@ public class MecanimWrapper : MonoBehaviour, IOnEventCallback
                     animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
                     animator.SetIKPosition(AvatarIKGoal.RightFoot, getGroundPos(rightLeg.position, Vector3.down));
                 }
+                if(leftHand != null && leftHandGoal != Vector3.zero)
+                {
+                    animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+
+                    animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandGoal);
+                    Debug.Log(leftHandGoal);
+
+                }
+
 
             }
 
@@ -164,6 +182,18 @@ public class MecanimWrapper : MonoBehaviour, IOnEventCallback
         }
         return Vector3.zero;
 
+    }
+
+    public void SetLeftHandIKGoal(Vector3 IKgoldWorldCoordinates)
+    {
+        leftHandGoal = IKgoldWorldCoordinates;
+        Debug.Log("SetLeftHandIKGoal");
+    }
+
+    public void DisposeLeftHandIKGoal()
+    {
+        leftHandGoal = Vector3.zero;
+        Debug.Log("DisposeLeftHandIKGoal");
     }
 
     public void OnEvent(EventData photonEvent)
