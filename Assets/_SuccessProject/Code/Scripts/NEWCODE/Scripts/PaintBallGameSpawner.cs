@@ -33,22 +33,22 @@ public class PaintBallGameSpawner : MonoBehaviourSingleton<PaintBallGameSpawner>
         Loader.Instance.AllSceneLoaded -= InstantinateOnScenesLoaded;
     }
 
-    private Vector3 PickStartSpawnPoint(PaintBallPlayer player)
+    private GameObject PickStartSpawnPoint(PaintBallPlayer player)
     {
         //we take pedestal index as spawnpoint
         PaintBallSpawnPoint point = spawnPoints.Where(x => x.startSpawnIndex == player.myPedestalIndex).ToList()[0];
         //pick random one
 
-        return point.gameObject.transform.position;
+        return point.gameObject;
     }
 
-    private void InstantinatePlayer(Vector3 point) //localfunc
+    private void InstantinatePlayer(GameObject spawnPoint) //localfunc
     {
         //we stop sending ready messeges to master
         StopAllCoroutines();
 
         //instantinate player
-        GameObject player = PhotonNetwork.Instantiate("PaintballPlayer", point, Quaternion.identity);
+        GameObject player = PhotonNetwork.Instantiate("PaintballPlayer", spawnPoint.transform.position, spawnPoint.transform.rotation);
 
         PhotonNetwork.LocalPlayer.TagObject = player;
 

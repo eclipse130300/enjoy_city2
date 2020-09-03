@@ -184,6 +184,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
                 Shoot(shootDir, autoShotSprayMultiplier);
                 coolDownSystem.PutOnCooldown(this);
 
+
                 if (!isFiring)
                 {
                     //startFiring anim
