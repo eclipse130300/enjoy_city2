@@ -197,27 +197,27 @@ public class PaintBallBonusEXPManager : MonoBehaviour, IOnEventCallback
     {
         int teamPTS = PaintBallTeamManager.Instance.GetTeamPoints(fromTeamID) + 1; //TODO think about it...
 
-        if(teamPTS == 1/*00*/)
+        if(teamPTS == 100/*00*/)
         {
             AddTeamEXP(fromTeamID, EXP_FOR_100_TEAM_DMG);
  /*           Debug.Log("Team dmg :" + teamPTS);*/
         }
-        else if(teamPTS == 5)
+        else if(teamPTS == 500)
         {
             AddTeamEXP(fromTeamID, EXP_FOR_500_TEAM_DMG);
 /*            Debug.Log("Team dmg :" + teamPTS);*/
         }
-        else if(teamPTS == 10)
+        else if(teamPTS == 1000)
         {
             AddTeamEXP(fromTeamID , EXP_FOR_1000_TEAM_DMG);
 /*            Debug.Log("Team dmg :" + teamPTS);*/
         }
-        else if (teamPTS == 20)
+        else if (teamPTS == 2000)
         {
             AddTeamEXP(fromTeamID, EXP_FOR_2000_TEAM_DMG);
 /*            Debug.Log("Team dmg :" + teamPTS);*/
         }
-        else if (teamPTS == 30)
+        else if (teamPTS == 3000)
         {
             AddTeamEXP(fromTeamID, EXP_FOR_3000_TEAM_DMG);
 /*            Debug.Log("Team dmg :" + teamPTS);*/

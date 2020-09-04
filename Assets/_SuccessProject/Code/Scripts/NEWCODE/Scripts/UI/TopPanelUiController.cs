@@ -14,6 +14,7 @@ public class TopPanelUiController : MonoBehaviour
     [SerializeField] TextMeshProUGUI softCurrency;
     [SerializeField] TextMeshProUGUI hardCurrency;
     [SerializeField] TextMeshProUGUI NickName;
+    [SerializeField] Image playerIMG;
 
     private SaveManager saveManager;
 
@@ -50,6 +51,7 @@ public class TopPanelUiController : MonoBehaviour
         lvlText.text = saveManager.GetLvl().ToString();
         softCurrency.text = saveManager.GetSoftCurrency().ToString();
         hardCurrency.text = saveManager.GetHardCurrency().ToString();
+        playerIMG.sprite = saveManager.GetBodySprite();
     }
 
     private void UpdateCurrency()

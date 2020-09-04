@@ -108,6 +108,12 @@ public class MecanimWrapper : MonoBehaviour, IOnEventCallback
         animator.SetLayerWeight(layer, value);
     }
 
+    public void SuperShotState()
+    {
+        animator.SetTrigger("superShot");
+    }
+
+
     public void SetFloatParameterForAllChildren(string parameterName, float value, Animator[] children)
     {
         foreach (Animator child in children)

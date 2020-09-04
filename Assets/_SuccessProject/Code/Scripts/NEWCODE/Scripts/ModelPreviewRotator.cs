@@ -5,7 +5,7 @@ using UnityEngine;
 public class ModelPreviewRotator : MonoBehaviour
 {
     public FixedTouchField touchField;
-    public float rotationSpeed;
+    public float rotationSpeed = 10f;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class ModelPreviewRotator : MonoBehaviour
     {
         if(touchField.Pressed)
         {
-            transform.Rotate(Vector3.up * -touchField.TouchDist.x * rotationSpeed);
+            transform.Rotate(Vector3.up * -touchField.TouchDist.x * rotationSpeed * Time.deltaTime);
         }
     }
 }

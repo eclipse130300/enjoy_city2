@@ -47,7 +47,6 @@ public class PaintBallGameSpawner : MonoBehaviourSingleton<PaintBallGameSpawner>
         //we stop sending ready messeges to master
         StopAllCoroutines();
 
-        //instantinate player
         GameObject player = PhotonNetwork.Instantiate("PaintballPlayer", spawnPoint.transform.position, spawnPoint.transform.rotation);
 
         PhotonNetwork.LocalPlayer.TagObject = player;
@@ -74,7 +73,7 @@ public class PaintBallGameSpawner : MonoBehaviourSingleton<PaintBallGameSpawner>
         PhotonNetwork.RaiseEvent(GameEvents.PLAYER_IS_READY_PAINTBALL_GAME, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    private Vector3 PickRandomSpawnPoint(TEAM playerTeam)
+    private GameObject PickRandomSpawnPoint(TEAM playerTeam)
     {
         //get all avalilible points
         List<PaintBallSpawnPoint> availiblePoints = spawnPoints.Where(x => x.team == playerTeam).Where(x => x.isOccupied == false).ToList();
@@ -84,13 +83,14 @@ public class PaintBallGameSpawner : MonoBehaviourSingleton<PaintBallGameSpawner>
         //occupy this point
         randomPoint.isOccupied = true;
 
-        return randomPoint.gameObject.transform.position;
+        return randomPoint.gameObject;
     }
 
     public void RespawnPlayer(GameObject player, TEAM playerTeam)
     {
         var point = PickRandomSpawnPoint(playerTeam);
-        player.transform.position = point;
+        player.transform.position = point.transform.position;
+        player.transform.rotation = point.transform.rotation;
     }
 
 }

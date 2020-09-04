@@ -12,6 +12,7 @@ public class SuperShotAbility : MonoBehaviour, IHaveCooldown
     [SerializeField] float shooperShotReloadDuration = 15f;
 
     private ShootAbility shootAbility;
+    private MecanimWrapper mecanim;
     private PhotonView photon;
     [SerializeField] CoolDownSystem firstCDsys;
 
@@ -24,6 +25,11 @@ public class SuperShotAbility : MonoBehaviour, IHaveCooldown
     {
         shootAbility = GetComponent<ShootAbility>();
         photon = GetComponent<PhotonView>();
+    }
+
+    private void Start()
+    {
+        mecanim = GetComponentInChildren<MecanimWrapper>();
     }
 
     private void OnEnable()
@@ -51,8 +57,10 @@ public class SuperShotAbility : MonoBehaviour, IHaveCooldown
 
             while (shootAbility.currentAmmo > 0)
             {
-                shootAbility.Shoot(shootDir, superShotSprayMultiplier);
+                shootAbility.Shoot(shootDir, superShotSprayMultiplier, true);
             }
+
+            mecanim.SuperShotState();
 
             Messenger.Broadcast(GameEvents.SUPER_SHOT_CD, shooperShotReloadDuration);
         }

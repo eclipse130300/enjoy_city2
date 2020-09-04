@@ -300,7 +300,7 @@ public class PaintBallUiController : MonoBehaviour, IOnEventCallback
                 {
                     Messenger.Broadcast(GameEvents.AUTO_SHOOT, hit.point); 
                 }
-                else if(!hitGO.CompareTag("Enemy"))
+                else if(!hitGO.CompareTag("Enemy") || hitGO.GetComponent<PlayerHealth>().isInvulnerable)
                 {
                     Messenger.Broadcast(GameEvents.AUTO_SHOOT, Vector3.zero); //meaning we didn't hit anything - terrible code, but works...
                 }

@@ -13,6 +13,14 @@ public class BodyManager : MonoBehaviour
     private SaveManager saveManager;
     private SkinsManager skinsManager;
     private PhotonView photon;
+
+    private Animator BodyAnimator
+    {
+        get
+        {
+            return GetComponent<Animator>() != null ? GetComponent<Animator>() : GetComponentInChildren<Animator>();
+        }
+    }
 /*
     private bool IsSpawned { get { return currentBodyConfig != null; } }*/
 
@@ -72,20 +80,19 @@ public class BodyManager : MonoBehaviour
             child.gameObject.SetActive(false);
         }
 
-        //than instantiate pref
         var body = Instantiate(bodyCfg.game_body_prefab);
 
         body.transform.SetParent(gameObject.transform);
         body.transform.localPosition = Vector3.zero;
         body.transform.localRotation = Quaternion.identity;
 
-        if (body.GetComponent<Animator>() != null)
+/*        if (body.GetComponent<Animator>() != null)
         {
             Destroy(body.GetComponent<Animator>());  //cleanUp animator if we have one
-        }
+        }*/
 
-        //apply other stuff
-        var animator = GetComponent<Animator>();
+
+        var animator = body.GetComponent<Animator>();
 /*        if (animator == null) body.transform.parent.gameObject.AddComponent<Animator>();*/
 
         animator.runtimeAnimatorController = bodyCfg.controller;
@@ -96,9 +103,5 @@ public class BodyManager : MonoBehaviour
 
         skinsManager.skinHolder = body.transform;
 /*        skinsManager.PutOnClothes();*/
-    }
-
-    private void OnDestroy()
-    {
     }
 }

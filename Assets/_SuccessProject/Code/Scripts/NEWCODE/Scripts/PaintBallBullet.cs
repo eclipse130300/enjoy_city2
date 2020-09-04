@@ -156,7 +156,6 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
                 }
             }
 
-            //otherwise we just explode it
             ExplodeBullet(hit.point, hit.collider.gameObject.GetComponent<Renderer>());
         }
     }
@@ -166,8 +165,8 @@ public class PaintBallBullet : MonoBehaviour, IUpdatable
         if (alreadyProcessed)
             return;
 
-        //notify the controller
-        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, markSize), bulletColor);
+/*        //notify the controller if our hittables will work!!!!!!!! now it's not working cause of the dllNotfoundexception on mobile
+        HittablesController.Instance.OnShotHit(new HitData(collisionPoint, hitDirection, markSize), bulletColor);*/
 
         //remove bullet from scene
         gameObject.SetActive(false);

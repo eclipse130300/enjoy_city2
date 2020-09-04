@@ -74,5 +74,10 @@ namespace SocialGTA {
         }
 
         #endregion
+
+        public void OnClearConfigsClick()
+        {
+            SaveManager.Instance.DeleteAllConfigs();
+        }
     }
 }

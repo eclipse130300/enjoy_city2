@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using Utils;
 
 public class SaveManager : MonoBehaviourSingleton<SaveManager>
@@ -33,28 +34,24 @@ public class SaveManager : MonoBehaviourSingleton<SaveManager>
         PlayerPrefs.DeleteAll();
         Debug.Log("ALL! CONFIGS DELETED!");
     }
-/*    [MenuItem("DEBUG/DELETE BOUGHT ITEMS(ROOM, SKINS)")]
-    static void DeleteShopDataConfig()
-    {
-        PlayerPrefs.DeleteKey(savePrefix + shopDataConfig.ToString());
-        Debug.Log("BOUGHT ITEMS DELETED!");
-    }
 
-    [MenuItem("DEBUG/DELETE IMPORTANT DATA(EXP, LVL, MONEY)")]
-    static void DeleteImportantDataConfig()
-    {
-        PlayerPrefs.DeleteKey(savePrefix + importantDataConfig.ToString());
-        Debug.Log("IMPORTANT DATA DELETED!");
-    }
-
-    [MenuItem("DEBUG/DELETE CHANGABLE DATA(NICK, CURRENT SKINS, GENDER)")]
-    static void DeleteChangableDataConfig()
-    {
-        PlayerPrefs.DeleteKey(savePrefix + changableDataConfig.ToString());
-        Debug.Log("CHANGABLE DATA DELETED!");
-    }*/
     #endregion
 #endif
+    public void DeleteAllConfigs()
+    {
+        shopDataConfig = new ShopDataConfig();
+        importantDataConfig = new ImportantDataConfig();
+        changableDataConfig = new ChangableDataConfig();
+        PlayerPrefs.DeleteAll();
+        Debug.Log("ALL! CONFIGS DELETED!");
+    }
+
+    public Sprite GetBodySprite()
+    {
+        var body = LoadBody();
+        return body.bodyIcon;
+    }
+
     public string GetNickName()
     {
        return changableDataConfig.GetNickName();

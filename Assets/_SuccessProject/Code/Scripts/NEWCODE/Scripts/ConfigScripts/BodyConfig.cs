@@ -6,6 +6,7 @@ using System;
 using CMS.Editor;
 using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -25,6 +26,7 @@ namespace CMS.Config
         public RuntimeAnimatorController controller;
         public Avatar avatar;
         public bool isDefault;
+        public Sprite bodyIcon;
 
 #if UNITY_EDITOR
         public override void Draw()
@@ -40,6 +42,8 @@ namespace CMS.Config
             controller = ScriptableGUIUtils.DrawObjectField("animator_controller", controller);
             avatar = ScriptableGUIUtils.DrawObjectField("avatar", avatar);
             isDefault = ScriptableGUIUtils.DrawField("isDefault?", isDefault);
+
+            bodyIcon = ScriptableGUIUtils.DrawObjectField("bodyIcon", bodyIcon);
         }
 #endif
     }

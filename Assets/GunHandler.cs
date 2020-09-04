@@ -25,8 +25,8 @@ public class GunHandler : MonoBehaviour
     private GameObject leftHandGrab;
     public string leftHandGrabTag = "LeftHandGrab";
 
-    private GameObject shootingPoint;
-    public string shootingPointTag = "ShootingPoint"; 
+/*    private GameObject shootingPoint;*/
+/*    public string shootingPointTag = "ShootingPoint"; */
 
     private MecanimWrapper mecanim;
     private ShootAbility shootAbility;
@@ -58,8 +58,9 @@ public class GunHandler : MonoBehaviour
         {
             Messenger.AddListener<Vector3>(GameEvents.AUTO_SHOOT, RotateGun); //this is for local player - constant rotating
             Messenger.AddListener<Vector3>(GameEvents.FIRING, GlobalRotationRPC); //this is global rotating - just rotate on start fire and end fire
-
             Messenger.AddListener<float>(GameEvents.RELOADING, DisableAutoRotation);
+
+/*            Messenger.AddListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, RotateGun);*/
         }
 
     }
@@ -71,6 +72,8 @@ public class GunHandler : MonoBehaviour
             Messenger.RemoveListener<Vector3>(GameEvents.AUTO_SHOOT, RotateGun);
             Messenger.RemoveListener<Vector3>(GameEvents.FIRING, GlobalRotationRPC);
             Messenger.RemoveListener<float>(GameEvents.RELOADING, DisableAutoRotation);
+
+/*            Messenger.RemoveListener<Vector3>(GameEvents.SUPER_SHOT_PRESSED, RotateGun);*/
         }
     }
 
@@ -91,6 +94,7 @@ public class GunHandler : MonoBehaviour
         mecanim.DisposeLeftHandIKGoal(); //our hand is no more stick to the gun!
 
         MakeDefaultRotation();
+        Debug.Log("I MAKE DEFAULT ROTATION!");
 
         yield return new WaitForSeconds(time);
 
@@ -108,6 +112,8 @@ public class GunHandler : MonoBehaviour
             MakeDefaultRotation();
             return;
         }
+
+        Debug.Log("I ROTATE GUN!!");
 
         //let's rotate towards the target
         Vector3 lookVec = shootPoint - spawnedGun.transform.position;
@@ -137,13 +143,15 @@ public class GunHandler : MonoBehaviour
             {
                 leftHandGrab = spawnedGun.transform.GetChild(i).gameObject;
             }
-            if (spawnedGun.transform.GetChild(i).tag == shootingPointTag)  //and shooting point as well
+            //shooting point from gun is bullshit - it fires before animation plays...
+
+/*            if (spawnedGun.transform.GetChild(i).tag == shootingPointTag)  //and shooting point as well
             {
                 shootingPoint = spawnedGun.transform.GetChild(i).gameObject;
-            }
+            }*/
         }
 
-        shootAbility.shootingPoint = this.shootingPoint; //we have default, but it's more precise
+/*        shootAbility.shootingPoint = this.shootingPoint; //we have default, but it's more precise*/
 
         MakeDefaultRotation();
     }

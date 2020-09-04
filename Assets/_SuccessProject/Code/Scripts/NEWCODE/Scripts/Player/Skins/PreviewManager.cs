@@ -38,6 +38,13 @@ public class PreviewManager : MonoBehaviour
         Messenger.AddListener<ItemVariant>(GameEvents.ITEM_VARIANT_CHANGED, OnItemVariantChanged); //texture as well
         Messenger.AddListener<GameMode>(GameEvents.INVENTORY_GAME_MODE_CHANGED, OnGameModeChanged);
 
+/*        TryBuyAllDefaultItems(); //in case it is our 1rst launch, lets buy all default items!
+
+        OnGameModeChanged(GameMode.SandBox);*/
+    }
+
+    private void Start()
+    {
         TryBuyAllDefaultItems(); //in case it is our 1rst launch, lets buy all default items!
 
         OnGameModeChanged(GameMode.SandBox);

@@ -44,6 +44,7 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
     //test p
     public Ray ray = new Ray();
     public bool isFiring;
+    public bool isSuperShooting = false;
 
     private void OnEnable()
     {
@@ -74,10 +75,12 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
         cD = shootingDelay;
     }
 
-    public void Shoot(Vector3 shootDir, float sprayMultiplier = 1f)
+    public void Shoot(Vector3 shootDir, float sprayMultiplier = 1f, bool isSuperShooting = false)
     {
         SetBullet(shootDir, sprayMultiplier, dmgBullet);
         DescreaseAmmo(1);
+
+        this.isSuperShooting = isSuperShooting;
 /*
         mechanim.Fire();
 */
@@ -110,8 +113,12 @@ public class ShootAbility : MonoBehaviour , IHaveCooldown, IOnEventCallback
         if (currentAmmo == maxAmmo) return;
         if (isReloading) return;
 
-        //make RPC reload 
-        photonView.RPC("TriggerReload", RpcTarget.AllViaServer);
+        if (!isSuperShooting)
+        {
+            //make RPC reload 
+            photonView.RPC("TriggerReload", RpcTarget.AllViaServer);
+        }
+
         Messenger.Broadcast(GameEvents.RELOADING, reloadTime);
         StartCoroutine(Reloading(reloadTime));
     }

@@ -14,6 +14,7 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
     ThirdPersonInput input;
     ShootAbility shootAbility;
     Animator animator;
+    MecanimWrapper mechanim;
 
     [SerializeField] GameObject teamCanvasGO;
 
@@ -27,7 +28,7 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
         input = GetComponent<ThirdPersonInput>();
         shootAbility = GetComponent<ShootAbility>();
         photon = GetComponent<PhotonView>();
-        animator = GetComponent<Animator>();
+
     }
 
     private void OnEnable()
@@ -42,8 +43,15 @@ public class PaintBallPlayerManipulator : MonoBehaviour, IPunInstantiateMagicCal
 
     private void Start()
     {
+        //this components we can get only after body will be spawned
+        animator = GetComponentInChildren<Animator>();
+        mechanim = GetComponentInChildren<MecanimWrapper>();
+
+        //let's active gun layer on our animator
         animator.SetLayerWeight(2, 1f);
         animator.SetLayerWeight(1, 1f);
+
+/*        mechanim.ikActive = true;*/
     }
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
